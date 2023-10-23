@@ -17,5 +17,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "prettier",
+    "date" : "2023-10-23T14:19:48.192767061Z",
+    "properties" : {
+      "projectName" : "arch-unit-ts",
+      "baseName" : "archUnitTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
