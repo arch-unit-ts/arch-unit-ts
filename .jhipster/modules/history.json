@@ -35,5 +35,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "optional-typescript",
+    "date" : "2023-10-23T14:22:02.067542364Z",
+    "properties" : {
+      "projectName" : "arch-unit-ts",
+      "baseName" : "archUnitTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
