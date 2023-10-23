@@ -11,11 +11,21 @@
     "node_modules"
   ],
   "scripts": {
+    "test": "echo 'Error: no test specified'",
+    "eslint:ci": "eslint './**/*.{ts,js}'",
+    "eslint": "eslint './**/*.{ts,js}' --fix",
     "prepare": "husky install",
     "prettier:check": "prettier --check '{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}'",
     "prettier:format": "prettier --write '{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}'"
   },
   "devDependencies": {
+    "typescript": "5.2.2",
+    "@typescript-eslint/eslint-plugin": "6.8.0",
+    "@typescript-eslint/parser": "6.8.0",
+    "eslint": "8.52.0",
+    "eslint-import-resolver-typescript": "3.6.1",
+    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-prettier": "5.0.1",
     "@prettier/plugin-xml": "3.2.1",
     "husky": "8.0.3",
     "lint-staged": "15.0.2",

@@ -26,5 +26,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "typescript",
+    "date" : "2023-10-23T14:19:48.208231844Z",
+    "properties" : {
+      "projectName" : "arch-unit-ts",
+      "baseName" : "archUnitTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
