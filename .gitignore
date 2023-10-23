@@ -1,7 +1,6 @@
 ######################
 # Project Specific
 ######################
-/src/main/webapp/content/css/main.css
 /target/classes/static/**
 /src/test/javascript/coverage/
 
@@ -14,11 +13,6 @@ node_modules/
 npm-debug.log.*
 /.awcache/*
 /.cache-loader/*
-
-######################
-# SASS
-######################
-.sass-cache/
 
 ######################
 # Eclipse
@@ -77,26 +71,6 @@ out/
 *.code-workspace
 
 ######################
-# Maven
-######################
-/log/
-/target/
-
-######################
-# Gradle
-######################
-.gradle/
-/build/
-
-######################
-# Package Files
-######################
-*.jar
-*.war
-*.ear
-*.db
-
-######################
 # Windows
 ######################
 # Windows image file caches
@@ -139,16 +113,6 @@ infinitest.filters
 .merge_file*
 
 ######################
-# Gradle Wrapper
-######################
-!gradle/wrapper/gradle-wrapper.jar
-
-######################
-# Maven Wrapper
-######################
-!.mvn/wrapper/maven-wrapper.jar
-
-######################
 # ESLint
 ######################
 .eslintcache
@@ -163,9 +127,3 @@ dist/
 # Svelte
 ######################
 .svelte-kit/
-
-######################
-# OAuth 2.0
-######################
-okta.sh
-auth0.sh

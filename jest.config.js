@@ -1,7 +1,7 @@
 module.exports = {
   roots: ['<rootDir>/src'],
   moduleNameMapper: {
-    '^@/(.*)': '<rootDir>/src/main/webapp/app/$1',
+    '^@/(.*)': '<rootDir>/src/main/$1',
   },
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
@@ -10,7 +10,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['./src/main/webapp/**/*.ts'],
+  collectCoverageFrom: ['./src/main/**/*.ts'],
   coverageDirectory: '<rootDir>/src/test/javascript/coverage/',
   coverageReporters: ['lcov'],
   coverageThreshold: {

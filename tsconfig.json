@@ -9,7 +9,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/main/webapp/app/*"]
+      "@/*": ["src/main/*"]
     }
   },
   "include": ["src/**/*"],
