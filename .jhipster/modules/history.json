@@ -8,5 +8,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "application-service-hexagonal-architecture-documentation",
+    "date" : "2023-10-23T14:19:48.177821818Z",
+    "properties" : {
+      "projectName" : "arch-unit-ts",
+      "baseName" : "archUnitTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
