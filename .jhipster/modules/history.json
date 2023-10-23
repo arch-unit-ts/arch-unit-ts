@@ -1,0 +1,12 @@
+{
+  "actions" : [ {
+    "module" : "init",
+    "date" : "2023-10-23T14:19:48.156911499Z",
+    "properties" : {
+      "projectName" : "arch-unit-ts",
+      "baseName" : "archUnitTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  } ]
+}
