@@ -1,0 +1,18 @@
+image: node:latest
+
+stages:
+  - build
+
+before_script:
+  - npm install
+
+format-check:
+  stage: build
+  script:
+    - npm install
+    - npm run prettier:check
+
+verify:
+  stage: build
+  script:
+    - npm test
