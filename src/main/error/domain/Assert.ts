@@ -41,4 +41,11 @@ export class Assert {
       throw new Error(`${field} should not have less than ${length} characters`);
     }
   }
+
+  static path(path: string) {
+    this.notNullOrUndefined("path", path);
+    if (new RegExp('^(?:\/[a-zA-Z0-9_\-]+)*\/?[a-zA-Z0-9_\-]+(?:\/[a-zA-Z0-9_\-]+)*$').test(path) === false) {      
+      throw new Error(`path should be valid`);
+    }
+  }
 }

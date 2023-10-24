@@ -70,4 +70,26 @@ describe('Assert', () => {
       expect(() => Assert.min('fieldName', 0, 1)).toThrow('fieldName should not be less than 1');
     });
   });
+
+  describe('path', () => {
+    it.each([null, undefined])('Should throw when null or undefinied', path => {
+      expect(() => Assert.path(path)).toThrow('path should not be null');
+    });
+
+    it.each([' ', ''])('Should throw when empty', path => {
+      expect(() => Assert.path(path)).toThrow('path should be valid');
+    });
+
+    it.each(['/path]to/directory', 'path{to/directory', 'path/to:directory'])('Should throw when path contains forbidden char', path => {
+      expect(() => Assert.path(path)).toThrow('path should be valid');
+    });
+
+    it('Should end by a valid character', () => {
+      expect(() => Assert.path('path/to/directory/')).toThrow('path should be valid');
+    });
+
+    it.each(['path/to/directory', '/path/to/directory', 'path', '/path', 'path_to-directory'])('Should not throw', path => {
+      expect(() => Assert.path(path)).not.toThrow();
+    });
+  });
 });
