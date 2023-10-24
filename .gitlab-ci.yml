@@ -1,0 +1,17 @@
+image: node:latest
+
+stages:
+  - build
+
+before_script:
+  - npm install
+
+format-check:
+  stage: build
+  script:
+    - npm run format:check
+
+verify:
+  stage: build
+  script:
+    - npm test
