@@ -15,11 +15,13 @@
     "test": "npm run jest --",
     "test:watch": "jest --watch",
     "test:watch:all": "jest --watchAll",
+    "eslint:check": "eslint './**/*.{ts,js}'",
     "eslint:ci": "eslint './**/*.{ts,js}'",
-    "eslint": "eslint './**/*.{ts,js}' --fix",
+    "eslint:fix": "eslint './**/*.{ts,js}' --fix",
     "prepare": "husky install",
-    "prettier:check": "prettier --check '{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}'",
-    "prettier:format": "prettier --write '{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}'"
+    "prettier:check": "prettier --check '{,src/**/}*.{md,json,yml,xml}'",
+    "prettier:format": "prettier --write '{,src/**/}*.{md,json,yml,xml}'",
+    "format:check": "npm run prettier:check && npm run eslint:check"
   },
   "devDependencies": {
     "@prettier/plugin-xml": "3.2.1",
