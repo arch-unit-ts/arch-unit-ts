@@ -9,7 +9,6 @@ before_script:
 format-check:
   stage: build
   script:
-    - npm install
     - npm run prettier:check
 
 verify:
