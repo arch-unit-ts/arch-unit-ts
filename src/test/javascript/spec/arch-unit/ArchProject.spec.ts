@@ -7,8 +7,8 @@ describe('ArchProject', () => {
 
   describe('containsExactly', () => {
     it('Should contain exactly', () => {
-      const archProject = new ArchProject('src/main');
-      expect(archProject.get().containsExactly(['arch-unit', 'common', 'error'])).toBe(true);
+      const archProject = new ArchProject('src/test/fake-src');
+      expect(archProject.get().containsExactly(['architecture-unit', 'common-unit', 'error-unit'])).toBe(true);
     });
 
     it('Should be false with wrong directories', () => {
