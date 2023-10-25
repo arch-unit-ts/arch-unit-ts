@@ -1,23 +1,23 @@
+import * as path from 'path';
+
 import { SourceFile } from 'ts-morph';
 
-export class ArchFile {
-  private readonly name: string;
-  private readonly importPaths: string[];
+import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
 
-  constructor(file: SourceFile, srcPaths: string[]) {
+export class ArchFile {
+  readonly name: string;
+  readonly directory: DirectoryName;
+  readonly importPaths: string[];
+
+  constructor(file: SourceFile) {
     this.name = file.getBaseName();
-    this.importPaths = file.getImportDeclarations().map(importDeclaration => {
-      const moduleSpecifierSourceFile = importDeclaration.getModuleSpecifierSourceFileOrThrow();
-      return this.stripeSourcePath(moduleSpecifierSourceFile.getFilePath(), srcPaths);
-    });
+    this.directory = DirectoryName.of(file.getDirectory().getBaseName());
+    this.importPaths = file
+      .getImportDeclarations()
+      .map(importDeclaration => importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath().replace(path.resolve(), ''));
   }
 
-  private stripeSourcePath(path: string, srcPaths: string[]): string {
-    for (const srcPath of srcPaths) {
-      if (path.startsWith(srcPath)) {
-        return path.substring(srcPath.length);
-      }
-    }
-    return path;
+  hasImport(importSearched: string) {
+    return this.importPaths.some(importPath => importPath.includes(importSearched));
   }
 }

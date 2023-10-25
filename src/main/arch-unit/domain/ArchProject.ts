@@ -15,7 +15,7 @@ export class ArchProject {
     if (!tsMorphRootDirectory) {
       throw new Error(`The directory ${rootPackage} was not found`);
     }
-    this.rootDirectory = new ArchDirectory(tsMorphRootDirectory, [tsMorphRootDirectory.getPath()]);
+    this.rootDirectory = new ArchDirectory(tsMorphRootDirectory);
   }
 
   public get(): ArchDirectory {

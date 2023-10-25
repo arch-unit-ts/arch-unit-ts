@@ -1,4 +1,4 @@
-import { DirectoryName } from '../../../../main/arch-unit/domain/DirectoryName';
+import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
 
 describe('FolderName', () => {
   it.each([undefined, null])('should not build for null or undefined', blank => {
