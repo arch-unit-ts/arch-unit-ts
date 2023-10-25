@@ -1,4 +1,4 @@
-import { ArchProject } from '../../../../main/arch-unit/domain/ArchProject';
+import { ArchProject } from '@/arch-unit/domain/ArchProject';
 
 describe('ArchProject', () => {
   it('Should throw when folder does not exist', () => {
@@ -8,12 +8,12 @@ describe('ArchProject', () => {
   describe('containsExactly', () => {
     it('Should contain exactly', () => {
       const archProject = new ArchProject('src/test/fake-src');
-      expect(archProject.get().containsExactly(['architecture-unit', 'common-unit', 'error-unit'])).toBe(true);
+      expect(archProject.get().containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one'])).toBe(true);
     });
 
     it('Should be false with wrong directories', () => {
-      const archProject = new ArchProject('src/main');
-      expect(archProject.get().containsExactly(['common'])).toBe(false);
+      const archProject = new ArchProject('src/test/fake-src');
+      expect(archProject.get().containsExactly(['bananes'])).toBe(false);
     });
   });
 });
