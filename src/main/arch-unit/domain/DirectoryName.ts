@@ -5,7 +5,7 @@ export class DirectoryName {
 
   private constructor(directoryName: string) {
     Assert.notBlank('directoryName', directoryName);
-    this.directoryName = directoryName;
+    this.directoryName = directoryName.trim();
   }
 
   get(): string {
