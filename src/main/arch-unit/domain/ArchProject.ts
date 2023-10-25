@@ -1,19 +1,22 @@
 import { Project } from 'ts-morph';
 
+import { Path } from './Path';
+
 import { ArchDirectory } from '@/arch-unit/domain/ArchDirectory';
 
 export class ArchProject {
   private readonly rootDirectory: ArchDirectory;
 
-  constructor(rootPackage: string) {
+  constructor(rootPackageRaw: string) {
     const tsMorphProject = new Project({
       tsConfigFilePath: 'tsconfig.json',
     });
-    tsMorphProject.addSourceFilesAtPaths(`${rootPackage}/**/*.ts`);
+    const rootPackage = Path.of(rootPackageRaw);
 
-    const tsMorphRootDirectory = tsMorphProject.getDirectory(rootPackage);
+    tsMorphProject.addSourceFilesAtPaths(`${rootPackage.get()}/**/*.ts`);
+    const tsMorphRootDirectory = tsMorphProject.getDirectory(rootPackage.get());
     if (!tsMorphRootDirectory) {
-      throw new Error(`The directory ${rootPackage} was not found`);
+      throw new Error(`The directory ${rootPackage.get()} was not found`);
     }
     this.rootDirectory = new ArchDirectory(tsMorphRootDirectory);
   }

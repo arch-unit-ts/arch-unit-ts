@@ -77,7 +77,7 @@ describe('Assert', () => {
     });
 
     it.each([' ', ''])('Should throw when empty', path => {
-      expect(() => Assert.path(path)).toThrow('path should be valid');
+      expect(() => Assert.path(path)).toThrow('path should not be blank');
     });
 
     it.each(['/path]to/directory', 'path{to/directory', 'path/to:directory'])('Should throw when path contains forbidden char', path => {

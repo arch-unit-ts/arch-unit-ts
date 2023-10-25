@@ -43,9 +43,9 @@ export class Assert {
   }
 
   static path(path: string) {
-    this.notNullOrUndefined("path", path);
-    if (new RegExp('^(?:\/[a-zA-Z0-9_\-]+)*\/?[a-zA-Z0-9_\-]+(?:\/[a-zA-Z0-9_\-]+)*$').test(path) === false) {      
-      throw new Error(`path should be valid`);
+    this.notBlank('path', path);
+    if (!new RegExp('^(?:/[a-zA-Z0-9_-]+)*/?[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_-]+)*$').test(path)) {
+      throw new Error('path should be valid');
     }
   }
 }
