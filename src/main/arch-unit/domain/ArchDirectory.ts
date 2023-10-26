@@ -19,6 +19,6 @@ export class ArchDirectory {
   }
 
   filterFilesByName(fileName: string): ArchFile[] {
-    return this.directories.flatMap(directory => directory.files.filter(file => file.name.includes(fileName)));
+    return this.directories.flatMap(directory => directory.files.filter(file => file.name.get().includes(fileName)));
   }
 }

@@ -14,13 +14,13 @@ describe('ArchDirectory', () => {
     const directory = new ArchDirectory(tsMorphRootDirectory);
     const files = directory.filterFilesByName('package-info');
 
-    expect(files[0].name).toEqual('package-info.ts');
+    expect(files[0].name.get()).toEqual('package-info.ts');
     expect(files[0].directory.get()).toEqual('business-context-one');
 
-    expect(files[1].name).toEqual('package-info.ts');
+    expect(files[1].name.get()).toEqual('package-info.ts');
     expect(files[1].directory.get()).toEqual('business-context-two');
 
-    expect(files[2].name).toEqual('package-info.ts');
+    expect(files[2].name.get()).toEqual('package-info.ts');
     expect(files[2].directory.get()).toEqual('shared-kernel-one');
   });
 });

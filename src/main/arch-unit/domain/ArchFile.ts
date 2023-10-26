@@ -3,14 +3,15 @@ import * as path from 'path';
 import { SourceFile } from 'ts-morph';
 
 import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
+import { FileName } from '@/arch-unit/domain/FileName';
 
 export class ArchFile {
-  readonly name: string;
+  readonly name: FileName;
   readonly directory: DirectoryName;
   readonly importPaths: string[];
 
   constructor(file: SourceFile) {
-    this.name = file.getBaseName();
+    this.name = FileName.of(file.getBaseName());
     this.directory = DirectoryName.of(file.getDirectory().getBaseName());
     this.importPaths = file
       .getImportDeclarations()
