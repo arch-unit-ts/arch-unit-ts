@@ -7,16 +7,15 @@ import { ArchDirectory } from '@/arch-unit/domain/ArchDirectory';
 export class ArchProject {
   private readonly rootDirectory: ArchDirectory;
 
-  constructor(rootPackageRaw: string) {
+  constructor(rootPackagePath: Path) {
     const tsMorphProject = new Project({
       tsConfigFilePath: 'tsconfig.json',
     });
-    const rootPackage = Path.of(rootPackageRaw);
 
-    tsMorphProject.addSourceFilesAtPaths(`${rootPackage.get()}/**/*.ts`);
-    const tsMorphRootDirectory = tsMorphProject.getDirectory(rootPackage.get());
+    tsMorphProject.addSourceFilesAtPaths(`${rootPackagePath.get()}/**/*.ts`);
+    const tsMorphRootDirectory = tsMorphProject.getDirectory(rootPackagePath.get());
     if (!tsMorphRootDirectory) {
-      throw new Error(`The directory ${rootPackage.get()} was not found`);
+      throw new Error(`The directory ${rootPackagePath.get()} was not found`);
     }
     this.rootDirectory = new ArchDirectory(tsMorphRootDirectory);
   }

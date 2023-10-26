@@ -2,6 +2,7 @@ import { ArchProject } from '@/arch-unit/domain/ArchProject';
 import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
 import { BusinessContext } from '@/arch-unit/domain/hexagonal/BusinessContext';
 import { SharedKernel } from '@/arch-unit/domain/hexagonal/SharedKernel';
+import { Path } from '@/arch-unit/domain/Path';
 
 describe('HexagonalArchTest', () => {
   it('Should get shared kernels', () => {
@@ -17,7 +18,7 @@ describe('HexagonalArchTest', () => {
 });
 
 function packagesWithContext(contextName: string): DirectoryName[] {
-  const archProject = new ArchProject('src/test/fake-src');
+  const archProject = new ArchProject(Path.of('src/test/fake-src'));
   return archProject
     .get()
     .filterFilesByName('package-info')
