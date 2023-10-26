@@ -4,8 +4,9 @@ export class Path {
   private readonly path: string;
 
   private constructor(path: string) {
+    Assert.notBlank('path', path);
     const pathTrimmed = path.trim();
-    Assert.path(pathTrimmed);
+    Assert.path('path', pathTrimmed);
     this.path = pathTrimmed;
   }
 

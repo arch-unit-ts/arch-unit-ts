@@ -42,10 +42,10 @@ export class Assert {
     }
   }
 
-  static path(path: string) {
-    this.notBlank('path', path);
+  static path(field: string, path: string) {
+    this.notBlank(field, path);
     if (!new RegExp('^(?:/[a-zA-Z0-9_-]+)*/?[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_-]+)*$').test(path)) {
-      throw new Error('path should be valid');
+      throw new Error(`${field} should be a path`);
     }
   }
 }
