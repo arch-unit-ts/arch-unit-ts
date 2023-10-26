@@ -17,4 +17,8 @@ export class Path {
   static of(path: string): Path {
     return new Path(path);
   }
+
+  contains(path: string) {
+    return this.path.includes(path);
+  }
 }

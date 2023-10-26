@@ -44,7 +44,9 @@ export class Assert {
 
   static path(field: string, path: string) {
     this.notBlank(field, path);
-    if (!new RegExp('^(?:/[a-zA-Z0-9_-]+)*/?[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_-]+)*$').test(path)) {
+    const filePathPattern: RegExp = /^(\/?[a-zA-Z0-9_-]+)+(\.[a-zA-Z0-9]+)*$/;
+
+    if (!filePathPattern.test(path)) {
       throw new Error(`${field} should be a path`);
     }
   }

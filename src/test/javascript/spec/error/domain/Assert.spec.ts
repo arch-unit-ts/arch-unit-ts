@@ -90,8 +90,11 @@ describe('Assert', () => {
       expect(() => Assert.path('path', 'path/to/directory/')).toThrow('path should be a path');
     });
 
-    it.each(['path/to/directory', '/path/to/directory', 'path', '/path', 'path_to-directory'])('Should not throw', path => {
-      expect(() => Assert.path('path', path)).not.toThrow();
-    });
+    it.each(['path/to/directory', '/path/to/directory', 'path', '/path/Bananas.ts', 'path_to-directory'])(
+      'Should not throw for %s',
+      path => {
+        expect(() => Assert.path('path', path)).not.toThrow();
+      }
+    );
   });
 });

@@ -16,7 +16,7 @@ describe('ArchFile', () => {
 
     expect(fruitFile.name.get()).toEqual('Fruit.ts');
     expect(fruitFile.directory.get()).toEqual('business-context-one');
-    expect(fruitFile.importPaths).toEqual([
+    expect(fruitFile.importPaths.map(path => path.get())).toEqual([
       '/src/test/fake-src/business-context-one/FruitColor.ts',
       '/src/test/fake-src/business-context-one/FruitType.ts',
     ]);

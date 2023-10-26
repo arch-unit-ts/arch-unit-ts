@@ -18,4 +18,13 @@ describe('Path', () => {
   it('should trim', () => {
     expect(Path.of(' /src/bananas \n  ').get()).toEqual('/src/bananas');
   });
+
+  describe('contains', () => {
+    it('should contains', () => {
+      expect(Path.of(' /src/bananas/Bananas.ts').contains('Bananas')).toEqual(true);
+    });
+    it('should not contains', () => {
+      expect(Path.of(' /src/bananas/Banana.ts').contains('Apple.ts')).toEqual(false);
+    });
+  });
 });
