@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import { SourceFile } from 'ts-morph';
 
 import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
@@ -16,7 +14,7 @@ export class ArchFile {
     this.directory = DirectoryName.of(file.getDirectory().getBaseName());
     this.importPaths = file
       .getImportDeclarations()
-      .map(importDeclaration => Path.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath().replace(path.resolve(), '')));
+      .map(importDeclaration => Path.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath()));
   }
 
   hasImport(importSearched: string) {

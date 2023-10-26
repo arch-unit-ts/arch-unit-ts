@@ -1,6 +1,16 @@
+import { Project, SourceFile } from 'ts-morph';
+
 import { EMPTY_STRINGS } from '../fixture.config';
 
 import { Path } from '@/arch-unit/domain/Path';
+
+function getSourceFile(fileName: string): SourceFile {
+  const tsMorphProject = new Project({
+    tsConfigFilePath: 'tsconfig.json',
+  });
+
+  return tsMorphProject.getSourceFile(fileName);
+}
 
 describe('Path', () => {
   it.each([undefined, null])('should not build for %s', blank => {
@@ -26,5 +36,11 @@ describe('Path', () => {
     it('should not contains', () => {
       expect(Path.of(' /src/bananas/Banana.ts').contains('Apple.ts')).toEqual(false);
     });
+  });
+
+  it('should remove source folder path', () => {
+    const sourceFile = getSourceFile('Fruit.ts');
+
+    expect(Path.of(sourceFile.getFilePath()).get()).toEqual('/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
   });
 });

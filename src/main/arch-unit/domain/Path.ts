@@ -1,3 +1,5 @@
+import * as typeScriptPath from 'path';
+
 import { Assert } from '@/error/domain/Assert';
 
 export class Path {
@@ -7,7 +9,7 @@ export class Path {
     Assert.notBlank('path', path);
     const pathTrimmed = path.trim();
     Assert.path('path', pathTrimmed);
-    this.path = pathTrimmed;
+    this.path = pathTrimmed.replace(typeScriptPath.resolve(), '');
   }
 
   get(): string {
