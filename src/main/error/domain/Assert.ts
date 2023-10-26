@@ -41,4 +41,13 @@ export class Assert {
       throw new Error(`${field} should not have less than ${length} characters`);
     }
   }
+
+  static path(field: string, path: string) {
+    this.notBlank(field, path);
+    const filePathPattern: RegExp = /^(\/?[a-zA-Z0-9_-]+)+(\.[a-zA-Z0-9]+)*$/;
+
+    if (!filePathPattern.test(path)) {
+      throw new Error(`${field} should be a path`);
+    }
+  }
 }

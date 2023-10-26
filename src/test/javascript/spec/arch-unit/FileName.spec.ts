@@ -1,4 +1,4 @@
-import { EMPTY_STRINGS } from './fixture.config';
+import { EMPTY_STRINGS } from '../fixture.config';
 
 import { FileName } from '@/arch-unit/domain/FileName';
 
