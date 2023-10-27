@@ -82,19 +82,16 @@ describe('Assert', () => {
       expect(() => Assert.path('path', path)).toThrow('path should not be blank');
     });
 
-    it.each(['/path]to/directory', 'path{to/directory', 'path/to:directory'])('Should throw when path contains forbidden char', path => {
+    it.each(['/path]to/package', 'path{to/package', 'path/to:package'])('Should throw when path contains forbidden char', path => {
       expect(() => Assert.path('path', path)).toThrow('path should be a path');
     });
 
     it('Should end with a valid character', () => {
-      expect(() => Assert.path('path', 'path/to/directory/')).toThrow('path should be a path');
+      expect(() => Assert.path('path', 'path/to/package/')).toThrow('path should be a path');
     });
 
-    it.each(['path/to/directory', '/path/to/directory', 'path', '/path/Bananas.ts', 'path_to-directory'])(
-      'Should not throw for %s',
-      path => {
-        expect(() => Assert.path('path', path)).not.toThrow();
-      }
-    );
+    it.each(['path/to/package', '/path/to/package', 'path', '/path/Bananas.ts', 'path_to-package'])('Should not throw for %s', path => {
+      expect(() => Assert.path('path', path)).not.toThrow();
+    });
   });
 });

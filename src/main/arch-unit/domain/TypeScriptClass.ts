@@ -1,17 +1,17 @@
 import { SourceFile } from 'ts-morph';
 
-import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
-import { FileName } from '@/arch-unit/domain/FileName';
+import { ClassName } from '@/arch-unit/domain/ClassName';
+import { PackageName } from '@/arch-unit/domain/PackageName';
 import { Path } from '@/arch-unit/domain/Path';
 
-export class ArchFile {
-  readonly name: FileName;
-  readonly directory: DirectoryName;
+export class TypeScriptClass {
+  readonly name: ClassName;
+  readonly packageName: PackageName;
   readonly importPaths: Path[];
 
   constructor(file: SourceFile) {
-    this.name = FileName.of(file.getBaseName());
-    this.directory = DirectoryName.of(file.getDirectory().getBaseName());
+    this.name = ClassName.of(file.getBaseName());
+    this.packageName = PackageName.of(file.getDirectory().getBaseName());
     this.importPaths = file
       .getImportDeclarations()
       .map(importDeclaration => Path.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath()));

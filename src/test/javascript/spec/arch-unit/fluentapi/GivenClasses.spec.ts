@@ -1,5 +1,5 @@
-import { ArchProject } from '../../../../../main/arch-unit/domain/ArchProject';
 import { Path } from '../../../../../main/arch-unit/domain/Path';
+import { TypeScriptProject } from '../../../../../main/arch-unit/domain/TypeScriptProject';
 import { EMPTY_STRINGS } from '../../fixture.config';
 
 import { GivenClasses } from '@/arch-unit/domain/fluentapi/GivenClasses';
@@ -28,7 +28,7 @@ describe('GivenClasses', () => {
     it('Should return itself and set package', () => {
       const givenClasses = new GivenClasses();
       expect(givenClasses.resideInAPackage('myPackage')).toEqual(givenClasses);
-      expect(givenClasses.directoryNameToCheck.orElseThrow().get()).toEqual('myPackage');
+      expect(givenClasses.packageNameToCheck.orElseThrow().get()).toEqual('myPackage');
     });
   });
 
@@ -67,7 +67,7 @@ describe('GivenClasses', () => {
   describe('check', () => {
     it('Should throw if packageToCheck is absent', () => {
       const givenClasses = new GivenClasses();
-      expect(() => givenClasses.check(new ArchProject(Path.of('src/test/fake-src/business-context-two')))).toThrow(
+      expect(() => givenClasses.check(new TypeScriptProject(Path.of('src/test/fake-src/business-context-two')))).toThrow(
         'The package to check is needed.'
       );
     });
