@@ -1,12 +1,12 @@
-import { ArchProject } from '@/arch-unit/domain/ArchProject';
-import { DirectoryName } from '@/arch-unit/domain/DirectoryName';
 import { Reason } from '@/arch-unit/domain/fluentapi/Reason';
+import { PackageName } from '@/arch-unit/domain/PackageName';
 import { Path } from '@/arch-unit/domain/Path';
+import { TypeScriptProject } from '@/arch-unit/domain/TypeScriptProject';
 import { Optional } from '@/common/domain/Optional';
 
 export class GivenClasses {
-  directoryNameToCheck: Optional<DirectoryName> = Optional.empty();
-  dependingOn: Optional<DirectoryName> = Optional.empty();
+  packageNameToCheck: Optional<PackageName> = Optional.empty();
+  dependingOn: Optional<PackageName> = Optional.empty();
   reason: Optional<Reason> = Optional.empty();
 
   that(): GivenClasses {
@@ -19,7 +19,7 @@ export class GivenClasses {
 
   resideInAPackage(packageName: string): GivenClasses {
     try {
-      this.directoryNameToCheck = Optional.of(DirectoryName.of(packageName));
+      this.packageNameToCheck = Optional.of(PackageName.of(packageName));
       return this;
     } catch (e) {
       throw new Error('The package name should not be blank.');
@@ -32,7 +32,7 @@ export class GivenClasses {
 
   from(packageName: string) {
     try {
-      this.dependingOn = Optional.of(DirectoryName.of(packageName));
+      this.dependingOn = Optional.of(PackageName.of(packageName));
       return this;
     } catch (e) {
       throw new Error('The package to check from should not be blank.');
@@ -48,17 +48,15 @@ export class GivenClasses {
     }
   }
 
-  check(project: ArchProject) {
-    const directoryName = this.directoryNameToCheck.orElseThrow(() => new Error('The package to check is needed.'));
-
+  check(project: TypeScriptProject) {
     project
       .get()
-      .getDirectory(directoryName)
+      .getPackage(this.packageNameToCheck.orElseThrow(() => new Error('The package to check is needed.')))
       .ifPresent(directory => {
         const imports: Path[] = directory.allImports();
         const pathToCheck = project
           .get()
-          .getDirectory(this.dependingOn.orElseThrow())
+          .getPackage(this.dependingOn.orElseThrow())
           .map(directory => directory.path)
           .orElseThrow();
         const hasInvalidImport = imports.some(anImport => !anImport.contains(pathToCheck.get()));

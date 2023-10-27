@@ -1,10 +1,11 @@
-import { ArchProject } from '@/arch-unit/domain/ArchProject';
+import { TypeScriptProject } from '../../../../../main/arch-unit/domain/TypeScriptProject';
+
 import { classes } from '@/arch-unit/domain/fluentapi/Classes';
 import { Path } from '@/arch-unit/domain/Path';
 
 describe('Classes', () => {
   it('Should have valid domain dependencies', () => {
-    const archProject = new ArchProject(Path.of('src/test/fake-src/business-context-one'));
+    const archProject = new TypeScriptProject(Path.of('src/test/fake-src/business-context-one'));
 
     expect(() =>
       classes()
@@ -19,7 +20,7 @@ describe('Classes', () => {
   });
 
   it('Should have invalid domain dependencies', () => {
-    const archProject = new ArchProject(Path.of('src/test/fake-src/business-context-two'));
+    const archProject = new TypeScriptProject(Path.of('src/test/fake-src/business-context-two'));
 
     expect(() =>
       classes()
