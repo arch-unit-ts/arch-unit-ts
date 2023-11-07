@@ -20,7 +20,7 @@ function packagesWithContext(contextName: string): Path[] {
   const archProject = new TypeScriptProject(Path.of('src/test/fake-src'));
   return archProject
     .get()
-    .filterClassesByName('package-info')
+    .filterClassesByClassName('package-info')
     .filter(typeScriptClass => typeScriptClass.hasImport(contextName))
     .map(typeScriptClass => typeScriptClass.packagePath);
 }

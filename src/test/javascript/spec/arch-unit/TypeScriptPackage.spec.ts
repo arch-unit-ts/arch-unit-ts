@@ -4,12 +4,12 @@ import { PackageName } from '../../../../main/arch-unit/domain/PackageName';
 import { TypeScriptPackage } from '../../../../main/arch-unit/domain/TypeScriptPackage';
 
 describe('TypeScriptPackage', () => {
-  it('Should build', () => {
-    const tsMorphProject = new Project({
-      tsConfigFilePath: 'tsconfig.json',
-    });
-    tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
+  const tsMorphProject = new Project({
+    tsConfigFilePath: 'tsconfig.json',
+  });
+  tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
 
+  it('Should build', () => {
     const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
     const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
@@ -20,17 +20,12 @@ describe('TypeScriptPackage', () => {
     expect(typeScriptPackage.path.get()).toBe('/src/test/fake-src/business-context-one/domain');
   });
 
-  describe('filterClassesByName', () => {
+  describe('filterClassesByClassName', () => {
     it('Should filter', () => {
-      const tsMorphProject = new Project({
-        tsConfigFilePath: 'tsconfig.json',
-      });
-      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
-
       const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-      const classes = typeScriptPackage.filterClassesByName('package-info');
+      const classes = typeScriptPackage.filterClassesByClassName('package-info');
 
       expect(classes[0].name.get()).toEqual('package-info.ts');
       expect(classes[0].packagePath.get()).toEqual('/src/test/fake-src/business-context-one');
@@ -45,11 +40,6 @@ describe('TypeScriptPackage', () => {
 
   describe('allClasses', () => {
     it('Should get all', () => {
-      const tsMorphProject = new Project({
-        tsConfigFilePath: 'tsconfig.json',
-      });
-      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
-
       const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
@@ -66,11 +56,6 @@ describe('TypeScriptPackage', () => {
 
   describe('allDependencies', () => {
     it('Should get all', () => {
-      const tsMorphProject = new Project({
-        tsConfigFilePath: 'tsconfig.json',
-      });
-      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
-
       const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
@@ -86,11 +71,6 @@ describe('TypeScriptPackage', () => {
 
   describe('getPackage', () => {
     it('Should not find package', () => {
-      const tsMorphProject = new Project({
-        tsConfigFilePath: 'tsconfig.json',
-      });
-      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
-
       const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
@@ -99,16 +79,29 @@ describe('TypeScriptPackage', () => {
     });
 
     it('Should find package', () => {
-      const tsMorphProject = new Project({
-        tsConfigFilePath: 'tsconfig.json',
-      });
-      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
-
       const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
       expect(typeScriptPackage.getPackage(PackageName.of('fruit')).isPresent()).toBe(true);
+    });
+  });
+  describe('filterClassesByPackageIdentifier', () => {
+    it('should find classes', () => {
+      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src');
+
+      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
+
+      expect(
+        typeScriptPackage.filterClassesByPackageIdentifier('business-context-one').map(typeScriptClass => typeScriptClass.path().get())
+      ).toEqual([
+        '/src/test/fake-src/business-context-one/package-info.ts',
+        '/src/test/fake-src/business-context-one/domain/Client.ts',
+        '/src/test/fake-src/business-context-one/domain/ClientName.ts',
+        '/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
+        '/src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
+        '/src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
+      ]);
     });
   });
 });

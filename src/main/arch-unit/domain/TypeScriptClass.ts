@@ -3,7 +3,6 @@ import { ImportDeclaration, SourceFile } from 'ts-morph';
 import { ClassName } from '@/arch-unit/domain/ClassName';
 import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
 import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
-import { PackageName } from '@/arch-unit/domain/PackageName';
 import { Path } from '@/arch-unit/domain/Path';
 
 export class TypeScriptClass {
@@ -29,7 +28,11 @@ export class TypeScriptClass {
   }
 
   static resideInAPackage(packageIdentifier: string): DescribedPredicate<TypeScriptClass> {
-    return new PackageMatchesPredicate(PackageName.of(packageIdentifier), `reside in a package '${packageIdentifier}'`);
+    return new PackageMatchesPredicate([packageIdentifier], `reside in a package '${packageIdentifier}'`);
+  }
+
+  static resideInAnyPackage(packageIdentifiers: string[]) {
+    return new PackageMatchesPredicate(packageIdentifiers, `reside in any package '${packageIdentifiers.join(', ')}'`);
   }
 
   path() {
@@ -38,14 +41,14 @@ export class TypeScriptClass {
 }
 
 class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
-  packageToMatch: PackageName;
+  packageIdentifiers: string[];
 
-  constructor(packageToMatch: PackageName, description: string) {
+  constructor(packageIdentifiers: string[], description: string) {
     super(description);
-    this.packageToMatch = packageToMatch;
+    this.packageIdentifiers = packageIdentifiers;
   }
 
   test(typeScriptClass: TypeScriptClass): boolean {
-    return typeScriptClass.packagePath.contains(this.packageToMatch.get());
+    return this.packageIdentifiers.some(packageIdentifier => typeScriptClass.packagePath.contains(packageIdentifier));
   }
 }

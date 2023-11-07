@@ -1,3 +1,5 @@
 export interface ClassesThat<CONJUNCTION> {
-  resideInAPackage(packageName: string): CONJUNCTION;
+  resideInAPackage(packageIdentifier: string): CONJUNCTION;
+
+  resideInAnyPackage(...packageIdentifiers: string[]): CONJUNCTION;
 }

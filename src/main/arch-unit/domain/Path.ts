@@ -7,9 +7,9 @@ export class Path {
 
   private constructor(path: string) {
     Assert.notBlank('path', path);
-    const pathTrimmed = path.trim();
+    const pathTrimmed = path.trim().replace(typeScriptPath.resolve().replace(/\\/g, '/'), '');
     Assert.path('path', pathTrimmed);
-    this.path = pathTrimmed.replace(typeScriptPath.resolve(), '');
+    this.path = pathTrimmed;
   }
 
   get(): string {

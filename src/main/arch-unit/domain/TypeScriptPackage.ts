@@ -23,7 +23,7 @@ export class TypeScriptPackage {
     return !this.packages.some(folder => !names.includes(folder.name.get()));
   }
 
-  filterClassesByName(className: string): TypeScriptClass[] {
+  filterClassesByClassName(className: string): TypeScriptClass[] {
     return this.packages.flatMap(typesScriptPackage =>
       typesScriptPackage.classes.filter(typeScriptClass => typeScriptClass.name.get().includes(className))
     );
@@ -41,5 +41,13 @@ export class TypeScriptPackage {
 
   getPackage(packageToCheck: PackageName): Optional<TypeScriptPackage> {
     return Optional.ofUndefinable(this.packages.find(typesScriptPackage => typesScriptPackage.name.get() === packageToCheck.get()));
+  }
+
+  filterClassesByPackageIdentifier(packageIdentifier: string): TypeScriptClass[] {
+    const classesCurrentPackage = this.classes.filter(typeScriptClass => typeScriptClass.packagePath.get().includes(packageIdentifier));
+    const classesChildrenPackages = this.packages.flatMap(typeScriptPackage =>
+      typeScriptPackage.filterClassesByPackageIdentifier(packageIdentifier)
+    );
+    return [...classesCurrentPackage, ...classesChildrenPackages];
   }
 }
