@@ -33,17 +33,17 @@ describe('TypeScriptPackage', () => {
       const classes = typeScriptPackage.filterClassesByName('package-info');
 
       expect(classes[0].name.get()).toEqual('package-info.ts');
-      expect(classes[0].packageName.get()).toEqual('business-context-one');
+      expect(classes[0].packagePath.get()).toEqual('/src/test/fake-src/business-context-one');
 
       expect(classes[1].name.get()).toEqual('package-info.ts');
-      expect(classes[1].packageName.get()).toEqual('business-context-two');
+      expect(classes[1].packagePath.get()).toEqual('/src/test/fake-src/business-context-two');
 
       expect(classes[2].name.get()).toEqual('package-info.ts');
-      expect(classes[2].packageName.get()).toEqual('shared-kernel-one');
+      expect(classes[2].packagePath.get()).toEqual('/src/test/fake-src/shared-kernel-one');
     });
   });
 
-  describe('allImports', () => {
+  describe('allClasses', () => {
     it('Should get all', () => {
       const tsMorphProject = new Project({
         tsConfigFilePath: 'tsconfig.json',
@@ -54,7 +54,28 @@ describe('TypeScriptPackage', () => {
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
-      expect(typeScriptPackage.allImports().map(importFound => importFound.get())).toEqual([
+      expect(typeScriptPackage.allClasses().map(typeScriptClass => typeScriptClass.name.get())).toEqual([
+        'Client.ts',
+        'ClientName.ts',
+        'Fruit.ts',
+        'FruitColor.ts',
+        'FruitType.ts',
+      ]);
+    });
+  });
+
+  describe('allDependencies', () => {
+    it('Should get all', () => {
+      const tsMorphProject = new Project({
+        tsConfigFilePath: 'tsconfig.json',
+      });
+      tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
+
+      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+
+      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
+
+      expect(typeScriptPackage.allDependencies().map(dependency => dependency.path.get())).toEqual([
         '/src/test/fake-src/business-context-one/domain/ClientName.ts',
         '/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
         '/src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
@@ -62,6 +83,7 @@ describe('TypeScriptPackage', () => {
       ]);
     });
   });
+
   describe('getPackage', () => {
     it('Should not find package', () => {
       const tsMorphProject = new Project({
