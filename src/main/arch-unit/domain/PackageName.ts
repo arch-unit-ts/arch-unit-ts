@@ -12,6 +12,10 @@ export class PackageName {
     return this.packageName;
   }
 
+  equals(packageToCheck: PackageName): boolean {
+    return packageToCheck.packageName === this.packageName;
+  }
+
   static of(name: string): PackageName {
     return new PackageName(name);
   }

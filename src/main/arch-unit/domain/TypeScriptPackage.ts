@@ -1,5 +1,6 @@
 import { Directory } from 'ts-morph';
 
+import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
 import { PackageName } from '@/arch-unit/domain/PackageName';
 import { Path } from '@/arch-unit/domain/Path';
 import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
@@ -14,7 +15,7 @@ export class TypeScriptPackage {
   constructor(directory: Directory) {
     this.name = PackageName.of(directory.getBaseName());
     this.packages = directory.getDirectories().map(directory => new TypeScriptPackage(directory));
-    this.classes = directory.getSourceFiles().map(file => new TypeScriptClass(file));
+    this.classes = directory.getSourceFiles().map(file => TypeScriptClass.of(file));
     this.path = Path.of(directory.getPath());
   }
 
@@ -28,9 +29,13 @@ export class TypeScriptPackage {
     );
   }
 
-  allImports(): Path[] {
-    const currentPackageImport = this.classes.flatMap(typeScriptClass => typeScriptClass.importPaths);
-    const subPackagesImport = this.packages.flatMap(typesScriptPackage => typesScriptPackage.allImports());
+  allClasses(): TypeScriptClass[] {
+    return [...this.classes, ...this.packages.flatMap(typesScriptPackage => typesScriptPackage.allClasses())];
+  }
+
+  allDependencies(): Dependency[] {
+    const currentPackageImport = this.classes.flatMap(typeScriptClass => typeScriptClass.dependencies);
+    const subPackagesImport = this.packages.flatMap(typesScriptPackage => typesScriptPackage.allDependencies());
     return [...currentPackageImport, ...subPackagesImport];
   }
 
