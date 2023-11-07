@@ -1,3 +1,5 @@
+import { SharedKernel } from '../../../../../main/arch-unit/domain/hexagonal/SharedKernel';
+
 import { classes } from '@/arch-unit/domain/fluentapi/ArchRuleDefinition';
 import { Path } from '@/arch-unit/domain/Path';
 import { TypeScriptProject } from '@/arch-unit/domain/TypeScriptProject';
@@ -13,7 +15,7 @@ describe('ArchRuleDefinition', () => {
           .resideInAPackage('domain')
           .should()
           .onlyDependOnClassesThat()
-          .resideInAPackage('domain')
+          .resideInAnyPackage('domain', ...packagesWithContext(SharedKernel.name))
           .because('Domain model should only depend on domains and a very limited set of external dependencies')
           .check(archProject.get().allClasses())
       ).not.toThrow();
@@ -28,7 +30,7 @@ describe('ArchRuleDefinition', () => {
           .resideInAPackage('domain')
           .should()
           .onlyDependOnClassesThat()
-          .resideInAPackage('domain')
+          .resideInAnyPackage('domain', ...packagesWithContext(SharedKernel.name))
           .because('Domain model should only depend on domains and a very limited set of external dependencies')
           .check(archProject.get().allClasses())
       ).toThrow(
@@ -37,4 +39,13 @@ describe('ArchRuleDefinition', () => {
       );
     });
   });
+
+  function packagesWithContext(contextName: string): string[] {
+    const archProject = new TypeScriptProject(Path.of('src/test/fake-src'));
+    return archProject
+      .get()
+      .filterClassesByClassName('package-info')
+      .filter(typeScriptClass => typeScriptClass.hasImport(contextName))
+      .map(typeScriptClass => typeScriptClass.packagePath.get());
+  }
 });
