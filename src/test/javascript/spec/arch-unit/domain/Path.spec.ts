@@ -1,10 +1,9 @@
 import { SourceFile } from 'ts-morph';
 
-import { EMPTY_STRINGS } from '../fixture.config';
+import { Path } from '../../../../../main/arch-unit/domain/Path';
+import { EMPTY_STRINGS } from '../../fixture.config';
 
 import { MorphProjectFixture } from './MorphProjectFixture';
-
-import { Path } from '@/arch-unit/domain/Path';
 
 function getSourceFile(fileName: string): SourceFile {
   return MorphProjectFixture.fakeSrc().getSourceFile(fileName);

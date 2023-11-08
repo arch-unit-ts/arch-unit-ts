@@ -1,4 +1,4 @@
-import { TypeScriptClass } from '../../../../main/arch-unit/domain/TypeScriptClass';
+import { TypeScriptClass } from '../../../../../main/arch-unit/domain/TypeScriptClass';
 
 import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 

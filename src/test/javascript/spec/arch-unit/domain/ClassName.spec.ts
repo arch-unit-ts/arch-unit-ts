@@ -1,6 +1,5 @@
-import { EMPTY_STRINGS } from '../fixture.config';
-
-import { ClassName } from '@/arch-unit/domain/ClassName';
+import { ClassName } from '../../../../../main/arch-unit/domain/ClassName';
+import { EMPTY_STRINGS } from '../../fixture.config';
 
 describe('ClassName', () => {
   it.each([null, undefined])('should not build for %s', className => {

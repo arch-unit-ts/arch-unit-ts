@@ -35,7 +35,7 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
 
   onlyDependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      this.conditionPredicates.push(ArchConditions.dependOnClassesThat(describedPredicate));
+      this.conditionPredicates.push(ArchConditions.onlyDependOnClassesThat(describedPredicate));
       return this;
     });
   }

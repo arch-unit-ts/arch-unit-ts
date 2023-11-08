@@ -1,5 +1,5 @@
-import { PackageName } from '../../../../main/arch-unit/domain/PackageName';
-import { EMPTY_STRINGS } from '../fixture.config';
+import { PackageName } from '../../../../../main/arch-unit/domain/PackageName';
+import { EMPTY_STRINGS } from '../../fixture.config';
 
 import { PackageNameFixture } from './PackageNameFixture';
 

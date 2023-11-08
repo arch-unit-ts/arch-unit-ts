@@ -1,6 +1,6 @@
-import { PathFixture } from './PathFixture';
+import { Dependency } from '../../../../../main/arch-unit/domain/fluentapi/Dependency';
 
-import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
+import { PathFixture } from './PathFixture';
 
 describe('Dependency', () => {
   it.each([undefined, null])('should not build without path [%s]', nullOrUndefined => {

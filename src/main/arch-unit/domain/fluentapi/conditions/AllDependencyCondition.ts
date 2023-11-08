@@ -3,7 +3,7 @@ import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
 import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
 import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 
-export class AnyDependencyCondition extends ArchCondition<TypeScriptClass> {
+export class AllDependencyCondition extends ArchCondition<TypeScriptClass> {
   private readonly conditionPredicate: DescribedPredicate<TypeScriptClass>;
 
   constructor(description: string, conditionPredicate: DescribedPredicate<TypeScriptClass>) {
