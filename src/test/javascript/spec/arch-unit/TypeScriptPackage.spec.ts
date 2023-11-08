@@ -1,16 +1,13 @@
-import { Project } from 'ts-morph';
+import { MorphProjectFixture } from './MorphProjectFixture';
 
-import { PackageName } from '../../../../main/arch-unit/domain/PackageName';
-import { TypeScriptPackage } from '../../../../main/arch-unit/domain/TypeScriptPackage';
+import { PackageName } from '@/arch-unit/domain/PackageName';
+import { TypeScriptPackage } from '@/arch-unit/domain/TypeScriptPackage';
 
 describe('TypeScriptPackage', () => {
-  const tsMorphProject = new Project({
-    tsConfigFilePath: 'tsconfig.json',
-  });
-  tsMorphProject.addSourceFilesAtPaths('src/test/fake-src/**/*.ts');
+  const fakeSrcMorphProject = MorphProjectFixture.fakeSrc();
 
   it('Should build', () => {
-    const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+    const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
     const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
@@ -22,7 +19,7 @@ describe('TypeScriptPackage', () => {
 
   describe('filterClassesByClassName', () => {
     it('Should filter', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
       const classes = typeScriptPackage.filterClassesByClassName('package-info');
@@ -40,7 +37,7 @@ describe('TypeScriptPackage', () => {
 
   describe('allClasses', () => {
     it('Should get all', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
@@ -56,7 +53,7 @@ describe('TypeScriptPackage', () => {
 
   describe('allDependencies', () => {
     it('Should get all', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
@@ -71,7 +68,7 @@ describe('TypeScriptPackage', () => {
 
   describe('getPackage', () => {
     it('Should not find package', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
@@ -79,7 +76,7 @@ describe('TypeScriptPackage', () => {
     });
 
     it('Should find package', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
@@ -88,7 +85,7 @@ describe('TypeScriptPackage', () => {
   });
   describe('filterClassesByPackageIdentifier', () => {
     it('should find classes', () => {
-      const tsMorphRootDirectory = tsMorphProject.getDirectory('src/test/fake-src');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
