@@ -1,15 +1,13 @@
-import { Project, SourceFile } from 'ts-morph';
+import { SourceFile } from 'ts-morph';
 
 import { EMPTY_STRINGS } from '../fixture.config';
+
+import { MorphProjectFixture } from './MorphProjectFixture';
 
 import { Path } from '@/arch-unit/domain/Path';
 
 function getSourceFile(fileName: string): SourceFile {
-  const tsMorphProject = new Project({
-    tsConfigFilePath: 'tsconfig.json',
-  });
-
-  return tsMorphProject.getSourceFile(fileName);
+  return MorphProjectFixture.fakeSrc().getSourceFile(fileName);
 }
 
 describe('Path', () => {
