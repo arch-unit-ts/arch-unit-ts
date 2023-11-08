@@ -1,6 +1,5 @@
-import { TypeScriptProject } from '../../../../main/arch-unit/domain/TypeScriptProject';
-
-import { Path } from '@/arch-unit/domain/Path';
+import { Path } from '../../../../../main/arch-unit/domain/Path';
+import { TypeScriptProject } from '../../../../../main/arch-unit/domain/TypeScriptProject';
 
 describe('TypeScriptProject', () => {
   it('Should throw when folder does not exist', () => {

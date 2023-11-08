@@ -1,7 +1,7 @@
-import { MorphProjectFixture } from './MorphProjectFixture';
+import { PackageName } from '../../../../../main/arch-unit/domain/PackageName';
+import { TypeScriptPackage } from '../../../../../main/arch-unit/domain/TypeScriptPackage';
 
-import { PackageName } from '@/arch-unit/domain/PackageName';
-import { TypeScriptPackage } from '@/arch-unit/domain/TypeScriptPackage';
+import { MorphProjectFixture } from './MorphProjectFixture';
 
 describe('TypeScriptPackage', () => {
   const fakeSrcMorphProject = MorphProjectFixture.fakeSrc();

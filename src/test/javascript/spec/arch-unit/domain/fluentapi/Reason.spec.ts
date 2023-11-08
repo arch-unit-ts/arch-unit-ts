@@ -1,6 +1,5 @@
-import { EMPTY_STRINGS } from '../../fixture.config';
-
-import { Reason } from '@/arch-unit/domain/fluentapi/Reason';
+import { Reason } from '../../../../../../main/arch-unit/domain/fluentapi/Reason';
+import { EMPTY_STRINGS } from '../../../fixture.config';
 
 describe('Reason', () => {
   it.each([undefined, null])('should not build for %s', blank => {
