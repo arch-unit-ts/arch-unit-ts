@@ -5,20 +5,27 @@ import { ClassesShouldConjunction } from '@/arch-unit/domain/fluentapi/ClassesSh
 import { ClassesThat } from '@/arch-unit/domain/fluentapi/ClassesThat';
 import { ClassesThatInternal } from '@/arch-unit/domain/fluentapi/ClassesThatInternal';
 import { ClassesTransformer } from '@/arch-unit/domain/fluentapi/ClassesTransformer';
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
 import { ArchConditions } from '@/arch-unit/domain/fluentapi/conditions/ArchConditions';
 import { EvaluationResult } from '@/arch-unit/domain/fluentapi/EvaluationResult';
+import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
 import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 import { Optional } from '@/common/domain/Optional';
 
 export class ClassesShouldInternal implements ArchRule, ClassesShould {
   private readonly classesTransformer: ClassesTransformer;
   private readonly conditionPredicates: ArchCondition<TypeScriptClass>[];
+  private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
   private overriddenDescription: Optional<string>;
 
-  constructor(classesTransformer: ClassesTransformer, conditionPredicates: ArchCondition<TypeScriptClass>[]) {
+  constructor(
+    classesTransformer: ClassesTransformer,
+    conditionPredicates: ArchCondition<TypeScriptClass>[],
+    prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
+  ) {
     this.classesTransformer = classesTransformer;
     this.conditionPredicates = conditionPredicates;
+    this.prepareCondition = prepareCondition;
   }
 
   because(reason: string): ArchRule {
@@ -35,7 +42,16 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
 
   onlyDependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      this.conditionPredicates.push(ArchConditions.onlyDependOnClassesThat(describedPredicate));
+      // FIXME le prepareCondition ne devrait pas être appliqué sur chaque condition mais uniquement sur une condition finale consolidée
+      this.conditionPredicates.push(this.prepareCondition(ArchConditions.onlyDependOnClassesThat(describedPredicate)));
+      return this;
+    });
+  }
+
+  dependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
+    return new ClassesThatInternal(describedPredicate => {
+      // FIXME le prepareCondition ne devrait pas être appliqué sur chaque condition mais uniquement sur une condition finale consolidée
+      this.conditionPredicates.push(this.prepareCondition(ArchConditions.dependOnClassesThat(describedPredicate)));
       return this;
     });
   }
@@ -43,7 +59,7 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
   evaluate(classes: TypeScriptClass[]): EvaluationResult {
     const classesFiltered = this.classesTransformer.transform(classes);
 
-    const conditionEvents: ConditionEvent[] = [];
+    const conditionEvents: ConditionEvents = new SimpleConditionEvents();
 
     classesFiltered.forEach(typeScriptClass =>
       this.conditionPredicates.forEach(conditionPredicate => conditionPredicate.check(typeScriptClass, conditionEvents))

@@ -1,20 +1,20 @@
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
 
 export class EvaluationResult {
-  private readonly conditionEvents: ConditionEvent[];
+  private readonly conditionEvents: ConditionEvents;
 
-  constructor(conditionsEvents: ConditionEvent[]) {
+  constructor(conditionsEvents: ConditionEvents) {
     this.conditionEvents = conditionsEvents;
   }
 
   errorMessage(): string {
     return this.conditionEvents
-      .filter(conditionEvent => conditionEvent.violation)
+      .getViolating()
       .map(conditionEvent => conditionEvent.description)
       .join('\n');
   }
 
   hasErrors() {
-    return this.conditionEvents.filter(conditionEvent => conditionEvent.violation).length > 0;
+    return this.conditionEvents.getViolating().length > 0;
   }
 }
