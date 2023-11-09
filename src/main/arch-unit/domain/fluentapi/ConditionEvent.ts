@@ -7,4 +7,8 @@ export class ConditionEvent {
     this.description = description;
     this.violation = violation;
   }
+
+  invert(): ConditionEvent {
+    return new ConditionEvent(this.description, !this.violation);
+  }
 }

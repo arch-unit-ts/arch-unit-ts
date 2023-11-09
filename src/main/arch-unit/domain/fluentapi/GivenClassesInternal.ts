@@ -1,3 +1,4 @@
+import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
 import { ClassesShould } from '@/arch-unit/domain/fluentapi/ClassesShould';
 import { ClassesShouldInternal } from '@/arch-unit/domain/fluentapi/ClassesShouldInternal';
 import { ClassesThat } from '@/arch-unit/domain/fluentapi/ClassesThat';
@@ -10,9 +11,18 @@ import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 
 export class GivenClassesInternal implements GivenClasses {
   private readonly predicates: DescribedPredicate<TypeScriptClass>[];
+  private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
 
-  constructor(predicates: DescribedPredicate<TypeScriptClass>[]) {
+  constructor(
+    predicates: DescribedPredicate<TypeScriptClass>[],
+    prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
+  ) {
     this.predicates = predicates;
+    this.prepareCondition = prepareCondition;
+  }
+
+  static of(predicates: DescribedPredicate<TypeScriptClass>[]): GivenClassesInternal {
+    return new GivenClassesInternal(predicates, (archCondition: ArchCondition<TypeScriptClass>) => archCondition);
   }
 
   that(): ClassesThat<GivenClassesConjunction> {
@@ -23,6 +33,6 @@ export class GivenClassesInternal implements GivenClasses {
   }
 
   should(): ClassesShould {
-    return new ClassesShouldInternal(new ClassesTransformer(this.predicates), []);
+    return new ClassesShouldInternal(new ClassesTransformer(this.predicates), [], this.prepareCondition);
   }
 }

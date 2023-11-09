@@ -1,11 +1,11 @@
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
 
 export abstract class ArchCondition<T> {
-  private readonly description: string;
+  readonly description: string;
 
   protected constructor(description: string) {
     this.description = description;
   }
 
-  abstract check(item: T, events: ConditionEvent[]): void;
+  abstract check(item: T, events: ConditionEvents): void;
 }
