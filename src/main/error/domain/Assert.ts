@@ -12,36 +12,6 @@ export class Assert {
     }
   }
 
-  static maxLength(field: string, input: string, length: number): void {
-    if (input.length && input.length > length) {
-      throw new Error(`${field} should not exceed ${length} characters`);
-    }
-  }
-
-  static positive(field: string, input: number) {
-    if (input < 0) {
-      throw new Error(`${field} should be a positive number`);
-    }
-  }
-
-  static max(field: string, value: number, max: number) {
-    if (value > max) {
-      throw new Error(`${field} should not exceed ${max}`);
-    }
-  }
-
-  static min(field: string, value: number, min: number) {
-    if (value < min) {
-      throw new Error(`${field} should not be less than ${min}`);
-    }
-  }
-
-  static minLength(field: string, input: string, length: number) {
-    if (input.length && input.length < length) {
-      throw new Error(`${field} should not have less than ${length} characters`);
-    }
-  }
-
   static path(field: string, path: string) {
     this.notBlank(field, path);
     const filePathPattern: RegExp = /^(\/?[a-zA-Z0-9_-]+)+(\.[a-zA-Z0-9]+)*$/;

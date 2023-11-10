@@ -6,7 +6,7 @@ describe('ConditionEvent', () => {
       const conditionEvent = ConditionEventFixture.violation();
       const invertedConditionEvent = conditionEvent.invert();
 
-      expect(invertedConditionEvent.description).toEqual('description');
+      expect(invertedConditionEvent.description).toEqual('description violation 1');
       expect(invertedConditionEvent.violation).toEqual(false);
     });
   });
