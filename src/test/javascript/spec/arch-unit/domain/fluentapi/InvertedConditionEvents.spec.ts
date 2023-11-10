@@ -1,3 +1,4 @@
+import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
 import { InvertingConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/InvertingConditionEvents';
 import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
@@ -14,7 +15,7 @@ describe('InvertingConditionEvents', () => {
     it('should not add ok event', () => {
       const invertingConditionEvents = new InvertingConditionEvents(new SimpleConditionEvents());
       invertingConditionEvents.add(ConditionEventFixture.ok());
-      expect(invertingConditionEvents.getViolating()).toEqual([ConditionEventFixture.violation()]);
+      expect(invertingConditionEvents.getViolating()).toEqual([new ConditionEvent('description ok', true)]);
     });
   });
 });

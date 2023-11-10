@@ -11,7 +11,8 @@
     "paths": {
       "@/*": ["src/main/*"],
       "@fake-src/*": ["src/test/fake-src/*"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/fixture.config.ts"]

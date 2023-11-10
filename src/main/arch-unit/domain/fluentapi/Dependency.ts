@@ -1,19 +1,19 @@
-import { Path } from '@/arch-unit/domain/Path';
+import { RelativePath } from '@/arch-unit/domain/RelativePath';
 import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 import { Assert } from '@/error/domain/Assert';
 
 export class Dependency {
-  readonly path: Path;
+  readonly path: RelativePath;
   readonly typeScriptClass: TypeScriptClass;
 
-  public constructor(path: Path, typeScriptClass: TypeScriptClass) {
+  public constructor(path: RelativePath, typeScriptClass: TypeScriptClass) {
     Assert.notNullOrUndefined('path', path);
     Assert.notNullOrUndefined('typeScriptClass', typeScriptClass);
     this.path = path;
     this.typeScriptClass = typeScriptClass;
   }
 
-  static of(path: Path, typeScriptClass: TypeScriptClass): Dependency {
+  static of(path: RelativePath, typeScriptClass: TypeScriptClass): Dependency {
     return new Dependency(path, typeScriptClass);
   }
 }

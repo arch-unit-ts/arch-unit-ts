@@ -1,12 +1,16 @@
-import { classes, noClasses } from '../../../../../../main/arch-unit/domain/fluentapi/ArchRuleDefinition';
-import { BusinessContext } from '../../../../../../main/arch-unit/domain/hexagonal/BusinessContext';
-import { SharedKernel } from '../../../../../../main/arch-unit/domain/hexagonal/SharedKernel';
-import { Path } from '../../../../../../main/arch-unit/domain/Path';
-import { TypeScriptProject } from '../../../../../../main/arch-unit/domain/TypeScriptProject';
+import { describe } from 'vitest';
+
+import { TypeScriptProjectFixture } from '../TypeScriptProjectFixture';
+
+import { classes, noClasses } from '@/arch-unit/domain/fluentapi/ArchRuleDefinition';
+import { BusinessContext } from '@/arch-unit/domain/hexagonal/BusinessContext';
+import { SharedKernel } from '@/arch-unit/domain/hexagonal/SharedKernel';
+import { RelativePath } from '@/arch-unit/domain/RelativePath';
+import { TypeScriptProject } from '@/arch-unit/domain/TypeScriptProject';
 
 describe('HexagonalArchTest', () => {
   function packagesWithContext(contextName: string): string[] {
-    const archProject = new TypeScriptProject(Path.of('src/test/fake-src'));
+    const archProject = TypeScriptProjectFixture.fakeSrc();
     return archProject
       .get()
       .filterClassesByClassName('package-info')
@@ -21,7 +25,9 @@ describe('HexagonalArchTest', () => {
     describe('shouldNotDependOnOtherBoundedContextDomains', () => {
       it('Should not depend on other bounded context domains', () => {
         const businessContextOne = 'src/test/fake-src/business-context-one';
-        const archProject = new TypeScriptProject(Path.of(businessContextOne));
+
+        console.log('FAKE SRC 2', TypeScriptProjectFixture.fakeSrc2());
+        const classes = TypeScriptProjectFixture.fakeSrc2().get().filterClassesByPackageIdentifier(businessContextOne);
 
         expect(() =>
           noClasses()
@@ -31,13 +37,13 @@ describe('HexagonalArchTest', () => {
             .dependOnClassesThat()
             .resideInAnyPackage(...otherBusinessContextsDomains(businessContextOne))
             .because('Contexts can only depend on classes in the same context or shared kernels')
-            .check(archProject.get().allClasses())
+            .check(classes)
         ).not.toThrow();
       });
 
       it('Should fail when depend on other bounded context domains', () => {
         const businessContextTwo = 'src/test/fake-src/business-context-two';
-        const archProject = new TypeScriptProject(Path.of(businessContextTwo));
+        const archProject = new TypeScriptProject(RelativePath.of(businessContextTwo));
         expect(() =>
           noClasses()
             .that()
@@ -49,7 +55,7 @@ describe('HexagonalArchTest', () => {
             .check(archProject.get().allClasses())
         ).toThrow(
           'Architecture violation : Contexts can only depend on classes in the same context or shared kernels.\n' +
-            'Errors : Wrong dependency in /src/test/fake-src/business-context-two/domain/Basket.ts: /src/test/fake-src/business-context-one/domain/fruit/Fruit.ts'
+            'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts'
         );
       });
     });
@@ -62,7 +68,7 @@ describe('HexagonalArchTest', () => {
   describe('Domain', () => {
     describe('shouldNotDependOnOutside', () => {
       it('Should not depend on outside', () => {
-        const archProject = new TypeScriptProject(Path.of('src/test/fake-src/business-context-one'));
+        const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-one'));
 
         expect(() =>
           classes()
@@ -77,7 +83,7 @@ describe('HexagonalArchTest', () => {
       });
 
       it('Should fail when depend on outside', () => {
-        const archProject = new TypeScriptProject(Path.of('src/test/fake-src/business-context-two'));
+        const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
 
         expect(() =>
           classes()
@@ -90,7 +96,7 @@ describe('HexagonalArchTest', () => {
             .check(archProject.get().allClasses())
         ).toThrow(
           'Architecture violation : Domain model should only depend on domains and a very limited set of external dependencies.\n' +
-            'Errors : Wrong dependency in /src/test/fake-src/business-context-two/domain/Basket.ts: /src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
+            'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
         );
       });
     });

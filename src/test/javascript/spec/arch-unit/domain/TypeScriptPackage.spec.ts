@@ -14,7 +14,7 @@ describe('TypeScriptPackage', () => {
     expect(typeScriptPackage.name.get()).toBe('domain');
     expect(typeScriptPackage.packages.map(typeScriptPackage => typeScriptPackage.name.get())).toEqual(['fruit']);
     expect(typeScriptPackage.classes.map(typeScriptClass => typeScriptClass.name.get())).toEqual(['Client.ts', 'ClientName.ts']);
-    expect(typeScriptPackage.path.get()).toBe('/src/test/fake-src/business-context-one/domain');
+    expect(typeScriptPackage.path.get()).toBe('src/test/fake-src/business-context-one/domain');
   });
 
   describe('filterClassesByClassName', () => {
@@ -25,13 +25,13 @@ describe('TypeScriptPackage', () => {
       const classes = typeScriptPackage.filterClassesByClassName('package-info');
 
       expect(classes[0].name.get()).toEqual('package-info.ts');
-      expect(classes[0].packagePath.get()).toEqual('/src/test/fake-src/business-context-one');
+      expect(classes[0].packagePath.get()).toEqual('src/test/fake-src/business-context-one');
 
       expect(classes[1].name.get()).toEqual('package-info.ts');
-      expect(classes[1].packagePath.get()).toEqual('/src/test/fake-src/business-context-two');
+      expect(classes[1].packagePath.get()).toEqual('src/test/fake-src/business-context-two');
 
       expect(classes[2].name.get()).toEqual('package-info.ts');
-      expect(classes[2].packagePath.get()).toEqual('/src/test/fake-src/shared-kernel-one');
+      expect(classes[2].packagePath.get()).toEqual('src/test/fake-src/shared-kernel-one');
     });
   });
 
@@ -58,10 +58,10 @@ describe('TypeScriptPackage', () => {
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
       expect(typeScriptPackage.allDependencies().map(dependency => dependency.path.get())).toEqual([
-        '/src/test/fake-src/business-context-one/domain/ClientName.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
+        'src/test/fake-src/business-context-one/domain/ClientName.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
       ]);
     });
   });
@@ -92,12 +92,12 @@ describe('TypeScriptPackage', () => {
       expect(
         typeScriptPackage.filterClassesByPackageIdentifier('business-context-one').map(typeScriptClass => typeScriptClass.path().get())
       ).toEqual([
-        '/src/test/fake-src/business-context-one/package-info.ts',
-        '/src/test/fake-src/business-context-one/domain/Client.ts',
-        '/src/test/fake-src/business-context-one/domain/ClientName.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
-        '/src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
+        'src/test/fake-src/business-context-one/package-info.ts',
+        'src/test/fake-src/business-context-one/domain/Client.ts',
+        'src/test/fake-src/business-context-one/domain/ClientName.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
       ]);
     });
   });
