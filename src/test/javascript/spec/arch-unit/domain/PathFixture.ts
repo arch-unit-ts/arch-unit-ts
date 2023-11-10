@@ -1,5 +1,5 @@
-import { Path } from '@/arch-unit/domain/Path';
+import { RelativePath } from '@/arch-unit/domain/RelativePath';
 
 export class PathFixture {
-  static fruit = (): Path => Path.of('/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
+  static fruit = (): RelativePath => RelativePath.of('/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
 }

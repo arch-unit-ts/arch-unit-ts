@@ -14,18 +14,13 @@ export class AnyDependencyCondition extends ArchCondition<TypeScriptClass> {
   }
 
   check(typeScriptClass: TypeScriptClass, events: ConditionEvents): void {
-    const anyDepedency = typeScriptClass.dependencies.some(dependency => !this.testPredicateOnDepedency(dependency));
+    const anyDependency = typeScriptClass.dependencies.some(dependency => this.testPredicateOnDependency(dependency));
     typeScriptClass.dependencies.forEach(dependency =>
-      events.add(
-        new ConditionEvent(
-          `Wrong dependency in ${typeScriptClass.path().get()}: ${dependency.path.get()}`,
-          !anyDepedency || !this.testPredicateOnDepedency(dependency)
-        )
-      )
+      events.add(new ConditionEvent(`Wrong dependency in ${typeScriptClass.path().get()}: ${dependency.path.get()}`, !anyDependency))
     );
   }
 
-  private testPredicateOnDepedency(dependency: Dependency) {
+  private testPredicateOnDependency(dependency: Dependency) {
     return this.conditionPredicate.test(new TypeScriptClass(dependency.typeScriptClass.name.get(), dependency.path.get(), []));
   }
 }

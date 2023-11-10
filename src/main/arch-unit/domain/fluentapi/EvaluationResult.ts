@@ -7,14 +7,14 @@ export class EvaluationResult {
     this.conditionEvents = conditionsEvents;
   }
 
-  errorMessage(): string {
+  violationReport(): string {
     return this.conditionEvents
       .getViolating()
       .map(conditionEvent => conditionEvent.description)
       .join('\n');
   }
 
-  hasErrors() {
+  hasErrors(): boolean {
     return this.conditionEvents.getViolating().length > 0;
   }
 }

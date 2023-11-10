@@ -1,13 +1,13 @@
 import { Project } from 'ts-morph';
 
-import { Path } from './Path';
+import { RelativePath } from './RelativePath';
 
 import { TypeScriptPackage } from '@/arch-unit/domain/TypeScriptPackage';
 
 export class TypeScriptProject {
   private readonly rootPackage: TypeScriptPackage;
 
-  constructor(rootPackagePath: Path) {
+  constructor(rootPackagePath: RelativePath) {
     const tsMorphProject = new Project({
       tsConfigFilePath: 'tsconfig.json',
     });

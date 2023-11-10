@@ -2,7 +2,7 @@ import { Directory } from 'ts-morph';
 
 import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
 import { PackageName } from '@/arch-unit/domain/PackageName';
-import { Path } from '@/arch-unit/domain/Path';
+import { RelativePath } from '@/arch-unit/domain/RelativePath';
 import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 import { Optional } from '@/common/domain/Optional';
 
@@ -10,13 +10,13 @@ export class TypeScriptPackage {
   readonly name: PackageName;
   readonly packages: TypeScriptPackage[];
   readonly classes: TypeScriptClass[];
-  readonly path: Path;
+  readonly path: RelativePath;
 
   constructor(directory: Directory) {
     this.name = PackageName.of(directory.getBaseName());
     this.packages = directory.getDirectories().map(directory => new TypeScriptPackage(directory));
     this.classes = directory.getSourceFiles().map(file => TypeScriptClass.of(file));
-    this.path = Path.of(directory.getPath());
+    this.path = RelativePath.of(directory.getPath());
   }
 
   containsExactly(names: string[]): boolean {
