@@ -55,6 +55,25 @@ describe('HexagonalArchTest', () => {
         );
       });
     });
+    describe('Infrastructure Check', () => {
+      const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
+      describe('shouldNotHaveDependenciesBetweenPrimaryAndSecondary', () => {
+        it('shouldPrimaryNotDependOnSecondary', () => {
+          expect(() => {
+            noClasses()
+              .that()
+              .resideInAPackage('infrastructure/primary')
+              .should()
+              .dependOnClassesThat()
+              .resideInAPackage('infrastructure/secondary')
+              .because('Primary should not interact with secondary')
+              .check(archProject.get().allClasses());
+          }).toThrow(
+            'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
+          );
+        });
+      });
+    });
 
     function otherBusinessContextsDomains(context: string): string[] {
       return businessContexts.filter(other => context !== other).map(name => name + '/domain');
