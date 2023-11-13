@@ -55,10 +55,11 @@ describe('HexagonalArchTest', () => {
         );
       });
     });
-    describe('Infrastructure Check', () => {
-      const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
-      describe('shouldNotHaveDependenciesBetweenPrimaryAndSecondary', () => {
-        it('shouldPrimaryNotDependOnSecondary', () => {
+    describe('Primary', () => {
+      const archProjectBusinessTwo = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
+      const archProjectBusinessOne = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-one'));
+      describe('should not depend on secondary', () => {
+        it('should fail when primary depends on secondary', () => {
           expect(() => {
             noClasses()
               .that()
@@ -67,11 +68,71 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage('infrastructure/secondary')
               .because('Primary should not interact with secondary')
-              .check(archProject.get().allClasses());
+              .check(archProjectBusinessTwo.get().allClasses());
           }).toThrow(
             'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
           );
         });
+        it('should succeed because primary depends on secondary', () => {
+          expect(() => {
+            noClasses()
+              .that()
+              .resideInAPackage('infrastructure/primary')
+              .should()
+              .dependOnClassesThat()
+              .resideInAPackage('infrastructure/secondary')
+              .because('Primary should not interact with secondary')
+              .check(archProjectBusinessOne.get().allClasses());
+          }).not.toThrow();
+        });
+      });
+    });
+
+    describe('Secondary', () => {
+      const archProjectBusinessTwo = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
+      const archProjectBusinessOne = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-one'));
+      it('should not depend on application', () => {
+        expect(() => {
+          noClasses()
+            .that()
+            .resideInAPackage('infrastructure/secondary')
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage('application')
+            .because('Secondary should not depend on application')
+            .check(archProjectBusinessTwo.get().allClasses());
+        }).toThrow(
+          'Architecture violation : Secondary should not depend on application.\n' +
+            'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/Service.ts'
+        );
+      });
+      it('should fail because depend on same context primary', () => {
+        expect(() => {
+          noClasses()
+            .that()
+            .resideInAPackage(archProjectBusinessTwo.get().name.get() + '/infrastructure/secondary')
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage(archProjectBusinessTwo.get().name.get() + '/infrastructure/primary')
+            .because("Secondary should not loop to its own context's primary")
+            .check(archProjectBusinessTwo.get().allClasses());
+        }).toThrow(
+          "Architecture violation : Secondary should not loop to its own context's primary.\n" +
+            'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/Service.ts\n' +
+            'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
+        );
+      });
+      it('should success because not depend on same context primary', () => {
+        expect(() => {
+          noClasses()
+            .that()
+            .resideInAPackage(archProjectBusinessOne.get().name.get() + '/infrastructure/secondary')
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage(archProjectBusinessOne.get().name.get() + '/infrastructure/primary')
+            .because("Secondary should not loop to its own context's primary")
+            .check(archProjectBusinessOne.get().allClasses());
+        }).not.toThrow();
       });
     });
 

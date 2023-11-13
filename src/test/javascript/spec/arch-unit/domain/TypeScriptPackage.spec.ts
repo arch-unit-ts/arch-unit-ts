@@ -98,6 +98,8 @@ describe('TypeScriptPackage', () => {
         'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
         'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
         'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
+        'src/test/fake-src/business-context-one/infrastructure/primary/Field.ts',
+        'src/test/fake-src/business-context-one/infrastructure/secondary/FruitJson.ts',
       ]);
     });
   });
