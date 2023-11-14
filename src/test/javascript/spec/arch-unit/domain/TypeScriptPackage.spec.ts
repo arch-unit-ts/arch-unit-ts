@@ -93,6 +93,7 @@ describe('TypeScriptPackage', () => {
         typeScriptPackage.filterClassesByPackageIdentifier('business-context-one').map(typeScriptClass => typeScriptClass.path().get())
       ).toEqual([
         'src/test/fake-src/business-context-one/package-info.ts',
+        'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
         'src/test/fake-src/business-context-one/domain/Client.ts',
         'src/test/fake-src/business-context-one/domain/ClientName.ts',
         'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
