@@ -1,6 +1,7 @@
 import { Project } from 'ts-morph';
 
 import { RelativePath } from './RelativePath';
+import { TypeScriptClass } from './TypeScriptClass';
 import { TypeScriptPackage } from './TypeScriptPackage';
 
 export class TypeScriptProject {
@@ -21,5 +22,13 @@ export class TypeScriptProject {
 
   public get(): TypeScriptPackage {
     return this.rootPackage;
+  }
+
+  filterClassesByClassName(className: string): TypeScriptClass[] {
+    return this.rootPackage.filterClassesByClassName(className);
+  }
+
+  allClasses() {
+    return this.rootPackage.allClasses();
   }
 }
