@@ -1,4 +1,4 @@
-import { Optional } from '@/common/domain/Optional';
+import { Optional } from '../../../../../main/common/domain/Optional';
 
 describe('Optional', () => {
   describe('Empty check', () => {

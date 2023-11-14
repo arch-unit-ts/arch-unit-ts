@@ -1,6 +1,7 @@
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { ConditionEvent } from './ConditionEvent';
 
 export interface ConditionEvents {
   add(event: ConditionEvent): void;
+
   getViolating(): ConditionEvent[];
 }

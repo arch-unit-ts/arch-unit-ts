@@ -1,4 +1,4 @@
-import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
+import { ConditionEvents } from './ConditionEvents';
 
 export abstract class ArchCondition<T> {
   readonly description: string;

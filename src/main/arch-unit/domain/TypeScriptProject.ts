@@ -1,8 +1,7 @@
 import { Project } from 'ts-morph';
 
 import { RelativePath } from './RelativePath';
-
-import { TypeScriptPackage } from '@/arch-unit/domain/TypeScriptPackage';
+import { TypeScriptPackage } from './TypeScriptPackage';
 
 export class TypeScriptProject {
   private readonly rootPackage: TypeScriptPackage;

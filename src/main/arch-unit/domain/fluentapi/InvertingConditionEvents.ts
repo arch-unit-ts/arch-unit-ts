@@ -1,5 +1,5 @@
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
-import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
+import { ConditionEvent } from './ConditionEvent';
+import { ConditionEvents } from './ConditionEvents';
 
 export class InvertingConditionEvents implements ConditionEvents {
   readonly delegate: ConditionEvents;
