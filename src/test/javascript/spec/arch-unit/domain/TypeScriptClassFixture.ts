@@ -13,6 +13,6 @@ export class TypeScriptClassFixture {
   };
 
   static fakeSrcClasses = (): TypeScriptClass[] => {
-    return TypeScriptProjectFixture.fakeSrc().get().allClasses();
+    return TypeScriptProjectFixture.fakeSrc().allClasses();
   };
 }

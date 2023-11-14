@@ -9,7 +9,6 @@ describe('HexagonalArchTest', () => {
   function packagesWithContext(contextName: string): string[] {
     const archProject = TypeScriptProjectFixture.fakeSrc();
     return archProject
-      .get()
       .filterClassesByClassName('package-info')
       .filter(typeScriptClass => typeScriptClass.hasImport(contextName))
       .map(typeScriptClass => typeScriptClass.packagePath.get());
@@ -33,7 +32,7 @@ describe('HexagonalArchTest', () => {
             .dependOnClassesThat()
             .resideInAnyPackage(...otherBusinessContextsDomains(businessContextOne))
             .because('Contexts can only depend on classes in the same context or shared kernels')
-            .check(archProjectBusinessOne.get().allClasses())
+            .check(archProjectBusinessOne.allClasses())
         ).not.toThrow();
       });
 
@@ -46,7 +45,7 @@ describe('HexagonalArchTest', () => {
             .onlyDependOnClassesThat()
             .resideInAnyPackage(...otherBusinessContextsDomains(businessContextTwo))
             .because('Contexts can only depend on classes in the same context or shared kernels')
-            .check(archProjectBusinessTwo.get().allClasses())
+            .check(archProjectBusinessTwo.allClasses())
         ).toThrow(
           'Architecture violation : Contexts can only depend on classes in the same context or shared kernels.\n' +
             'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts'
@@ -65,7 +64,7 @@ describe('HexagonalArchTest', () => {
               .onlyDependOnClassesThat()
               .resideInAnyPackage('domain', ...sharedKernels)
               .because('Domain model should only depend on domains and a very limited set of external dependencies')
-              .check(archProjectBusinessOne.get().allClasses())
+              .check(archProjectBusinessOne.allClasses())
           ).not.toThrow();
         });
 
@@ -78,7 +77,7 @@ describe('HexagonalArchTest', () => {
               .onlyDependOnClassesThat()
               .resideInAnyPackage('domain', ...sharedKernels)
               .because('Domain model should only depend on domains and a very limited set of external dependencies')
-              .check(archProjectBusinessTwo.get().allClasses())
+              .check(archProjectBusinessTwo.allClasses())
           ).toThrow(
             'Architecture violation : Domain model should only depend on domains and a very limited set of external dependencies.\n' +
               'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
@@ -98,7 +97,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage('infrastructure/secondary')
               .because('Primary should not interact with secondary')
-              .check(archProjectBusinessTwo.get().allClasses());
+              .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
           );
@@ -112,7 +111,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage('infrastructure/secondary')
               .because('Primary should not interact with secondary')
-              .check(archProjectBusinessOne.get().allClasses());
+              .check(archProjectBusinessOne.allClasses());
           }).not.toThrow();
         });
       });
@@ -129,7 +128,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage('application')
               .because('Secondary should not depend on application')
-              .check(archProjectBusinessTwo.get().allClasses());
+              .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             'Architecture violation : Secondary should not depend on application.\n' +
               'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts'
@@ -144,7 +143,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage('application')
               .because('Secondary should not depend on application')
-              .check(archProjectBusinessOne.get().allClasses());
+              .check(archProjectBusinessOne.allClasses());
           }).not.toThrow();
         });
       });
@@ -158,7 +157,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage(archProjectBusinessTwo.get().name.get() + '/infrastructure/primary')
               .because("Secondary should not loop to its own context's primary")
-              .check(archProjectBusinessTwo.get().allClasses());
+              .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             "Architecture violation : Secondary should not loop to its own context's primary.\n" +
               'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts\n' +
@@ -174,7 +173,7 @@ describe('HexagonalArchTest', () => {
               .dependOnClassesThat()
               .resideInAPackage(businessContextOne + '/infrastructure/primary')
               .because("Secondary should not loop to its own context's primary")
-              .check(archProjectBusinessOne.get().allClasses());
+              .check(archProjectBusinessOne.allClasses());
           }).not.toThrow();
         });
       });
@@ -190,7 +189,7 @@ describe('HexagonalArchTest', () => {
             .dependOnClassesThat()
             .resideInAnyPackage(businessContextOne + '/infrastructure')
             .because('Application should not depend on infrastructure')
-            .check(archProjectBusinessOne.get().allClasses());
+            .check(archProjectBusinessOne.allClasses());
         }).not.toThrow();
       });
       it('should fail when depend on infrastructure', () => {
@@ -202,7 +201,7 @@ describe('HexagonalArchTest', () => {
             .dependOnClassesThat()
             .resideInAnyPackage(businessContextTwo + '/infrastructure')
             .because('Application should not depend on infrastructure')
-            .check(archProjectBusinessTwo.get().allClasses());
+            .check(archProjectBusinessTwo.allClasses());
         }).toThrow(
           'Architecture violation : Application should not depend on infrastructure.\n' +
             'Errors : Wrong dependency in src/test/fake-src/business-context-two/application/BasketApplicationService.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'

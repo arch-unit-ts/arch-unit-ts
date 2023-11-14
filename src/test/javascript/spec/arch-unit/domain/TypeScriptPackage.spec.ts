@@ -1,4 +1,3 @@
-import { PackageName } from '../../../../../main/arch-unit/domain/PackageName';
 import { TypeScriptPackage } from '../../../../../main/arch-unit/domain/TypeScriptPackage';
 
 import { MorphProjectFixture } from './MorphProjectFixture';
@@ -15,6 +14,17 @@ describe('TypeScriptPackage', () => {
     expect(typeScriptPackage.packages.map(typeScriptPackage => typeScriptPackage.name.get())).toEqual(['fruit']);
     expect(typeScriptPackage.classes.map(typeScriptClass => typeScriptClass.name.get())).toEqual(['Client.ts', 'ClientName.ts']);
     expect(typeScriptPackage.path.get()).toBe('src/test/fake-src/business-context-one/domain');
+  });
+
+  describe('containsExactly', () => {
+    const typeScriptPackage = new TypeScriptPackage(fakeSrcMorphProject.getDirectory('src/test/fake-src'));
+    it('Should contain exactly', () => {
+      expect(typeScriptPackage.containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one'])).toBe(true);
+    });
+
+    it('Should be false with wrong directories', () => {
+      expect(typeScriptPackage.containsExactly(['bananes'])).toBe(false);
+    });
   });
 
   describe('filterClassesByClassName', () => {
@@ -47,60 +57,6 @@ describe('TypeScriptPackage', () => {
         'Fruit.ts',
         'FruitColor.ts',
         'FruitType.ts',
-      ]);
-    });
-  });
-
-  describe('allDependencies', () => {
-    it('Should get all', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
-
-      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-
-      expect(typeScriptPackage.allDependencies().map(dependency => dependency.path.get())).toEqual([
-        'src/test/fake-src/business-context-one/domain/ClientName.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
-      ]);
-    });
-  });
-
-  describe('getPackage', () => {
-    it('Should not find package', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
-
-      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-
-      expect(typeScriptPackage.getPackage(PackageName.of('test')).isEmpty()).toBe(true);
-    });
-
-    it('Should find package', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
-
-      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-
-      expect(typeScriptPackage.getPackage(PackageName.of('fruit')).isPresent()).toBe(true);
-    });
-  });
-  describe('filterClassesByPackageIdentifier', () => {
-    it('should find classes', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src');
-
-      const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-
-      expect(
-        typeScriptPackage.filterClassesByPackageIdentifier('business-context-one').map(typeScriptClass => typeScriptClass.path().get())
-      ).toEqual([
-        'src/test/fake-src/business-context-one/package-info.ts',
-        'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
-        'src/test/fake-src/business-context-one/domain/Client.ts',
-        'src/test/fake-src/business-context-one/domain/ClientName.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
-        'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
-        'src/test/fake-src/business-context-one/infrastructure/primary/Field.ts',
-        'src/test/fake-src/business-context-one/infrastructure/secondary/FruitJson.ts',
       ]);
     });
   });

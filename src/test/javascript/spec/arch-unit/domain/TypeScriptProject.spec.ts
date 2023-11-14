@@ -10,14 +10,47 @@ describe('TypeScriptProject', () => {
     );
   });
 
-  describe('containsExactly', () => {
-    const archProject = TypeScriptProjectFixture.fakeSrc();
-    it('Should contain exactly', () => {
-      expect(archProject.get().containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one'])).toBe(true);
-    });
+  describe('filterClassesByClassName', () => {
+    it('Should filter', () => {
+      const typeScriptProject = TypeScriptProjectFixture.fakeSrc();
 
-    it('Should be false with wrong directories', () => {
-      expect(archProject.get().containsExactly(['bananes'])).toBe(false);
+      const classes = typeScriptProject.filterClassesByClassName('package-info');
+
+      expect(classes[0].name.get()).toEqual('package-info.ts');
+      expect(classes[0].packagePath.get()).toEqual('src/test/fake-src/business-context-one');
+
+      expect(classes[1].name.get()).toEqual('package-info.ts');
+      expect(classes[1].packagePath.get()).toEqual('src/test/fake-src/business-context-two');
+
+      expect(classes[2].name.get()).toEqual('package-info.ts');
+      expect(classes[2].packagePath.get()).toEqual('src/test/fake-src/shared-kernel-one');
+    });
+  });
+
+  describe('allClasses', () => {
+    it('Should get all', () => {
+      expect(
+        TypeScriptProjectFixture.fakeSrc()
+          .allClasses()
+          .map(typeScriptClass => typeScriptClass.path().get())
+      ).toEqual([
+        'src/test/fake-src/business-context-one/package-info.ts',
+        'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
+        'src/test/fake-src/business-context-one/domain/Client.ts',
+        'src/test/fake-src/business-context-one/domain/ClientName.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
+        'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
+        'src/test/fake-src/business-context-one/infrastructure/primary/Field.ts',
+        'src/test/fake-src/business-context-one/infrastructure/secondary/FruitJson.ts',
+        'src/test/fake-src/business-context-two/package-info.ts',
+        'src/test/fake-src/business-context-two/application/BasketApplicationService.ts',
+        'src/test/fake-src/business-context-two/domain/Basket.ts',
+        'src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts',
+        'src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts',
+        'src/test/fake-src/shared-kernel-one/package-info.ts',
+        'src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts',
+      ]);
     });
   });
 });
