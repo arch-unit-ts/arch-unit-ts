@@ -1,6 +1,6 @@
-import { ArchCondition } from '../ArchCondition';
-import { ConditionEvents } from '../ConditionEvents';
-import { InvertingConditionEvents } from '../InvertingConditionEvents';
+import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
+import { InvertingConditionEvents } from '@/arch-unit/domain/fluentapi/InvertingConditionEvents';
 
 export class NeverCondition<T> extends ArchCondition<T> {
   private readonly condition: ArchCondition<T>;

@@ -1,6 +1,6 @@
 import * as typeScriptPath from 'path';
 
-import { Assert } from '../../error/domain/Assert';
+import { Assert } from '@/error/domain/Assert';
 
 export class RelativePath {
   private readonly path: string;

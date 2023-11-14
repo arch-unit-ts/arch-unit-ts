@@ -1,7 +1,7 @@
-import { TypeScriptClass } from '../../../../../main/arch-unit/domain/TypeScriptClass';
-
 import { MorphProjectFixture } from './MorphProjectFixture';
 import { TypeScriptProjectFixture } from './TypeScriptProjectFixture';
+
+import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 
 export class TypeScriptClassFixture {
   static fruit = (): TypeScriptClass => {

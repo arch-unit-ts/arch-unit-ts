@@ -1,9 +1,8 @@
-import { TypeScriptClass } from '../../TypeScriptClass';
-import { ArchCondition } from '../ArchCondition';
-import { DescribedPredicate } from '../DescribedPredicate';
-
-import { AllDependencyCondition } from './AllDependencyCondition';
-import { AnyDependencyCondition } from './AnyDependencyCondition';
+import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
+import { AllDependencyCondition } from '@/arch-unit/domain/fluentapi/conditions/AllDependencyCondition';
+import { AnyDependencyCondition } from '@/arch-unit/domain/fluentapi/conditions/AnyDependencyCondition';
+import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
+import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 
 export abstract class ArchConditions {
   static onlyDependOnClassesThat = (predicate: DescribedPredicate<TypeScriptClass>): ArchCondition<TypeScriptClass> => {

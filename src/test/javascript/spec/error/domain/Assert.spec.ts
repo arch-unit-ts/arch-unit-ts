@@ -1,5 +1,6 @@
-import { Assert } from '../../../../../main/error/domain/Assert';
 import { EMPTY_STRINGS } from '../../fixture.config';
+
+import { Assert } from '@/error/domain/Assert';
 
 describe('Assert', () => {
   describe('notNullOrUndefined', () => {

@@ -1,17 +1,16 @@
-import { Optional } from '../../../common/domain/Optional';
-import { TypeScriptClass } from '../TypeScriptClass';
-
-import { ArchCondition } from './ArchCondition';
-import { ArchRule } from './ArchRule';
-import { ClassesShould } from './ClassesShould';
-import { ClassesShouldConjunction } from './ClassesShouldConjunction';
-import { ClassesThat } from './ClassesThat';
-import { ClassesThatInternal } from './ClassesThatInternal';
-import { ClassesTransformer } from './ClassesTransformer';
-import { ConditionEvents } from './ConditionEvents';
-import { ArchConditions } from './conditions/ArchConditions';
-import { EvaluationResult } from './EvaluationResult';
-import { SimpleConditionEvents } from './SimpleConditionEvents';
+import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
+import { ArchRule } from '@/arch-unit/domain/fluentapi/ArchRule';
+import { ClassesShould } from '@/arch-unit/domain/fluentapi/ClassesShould';
+import { ClassesShouldConjunction } from '@/arch-unit/domain/fluentapi/ClassesShouldConjunction';
+import { ClassesThat } from '@/arch-unit/domain/fluentapi/ClassesThat';
+import { ClassesThatInternal } from '@/arch-unit/domain/fluentapi/ClassesThatInternal';
+import { ClassesTransformer } from '@/arch-unit/domain/fluentapi/ClassesTransformer';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
+import { ArchConditions } from '@/arch-unit/domain/fluentapi/conditions/ArchConditions';
+import { EvaluationResult } from '@/arch-unit/domain/fluentapi/EvaluationResult';
+import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
+import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
+import { Optional } from '@/common/domain/Optional';
 
 export class ClassesShouldInternal implements ArchRule, ClassesShould {
   private readonly classesTransformer: ClassesTransformer;

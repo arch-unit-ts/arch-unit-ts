@@ -12,7 +12,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['./src/main/**/*.ts'],
   coverageDirectory: '<rootDir>/src/test/javascript/coverage/',
-  coveragePathIgnorePatterns: ['<rootDir>/src/main/arch-unit/domain/hexagonal/', '<rootDir>/src/main/main.ts'],
+  coveragePathIgnorePatterns: ['<rootDir>/src/main/arch-unit/domain/hexagonal/'],
   coverageReporters: ['lcov'],
   coverageThreshold: {
     global: {

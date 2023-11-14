@@ -1,8 +1,9 @@
-import { ConditionEvent } from '../../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
-import { AnyDependencyCondition } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/AnyDependencyCondition';
-import { SimpleConditionEvents } from '../../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 import { PackageMatchesPredicate } from '../../PackageMatchesPredicate';
 import { TypeScriptClassFixture } from '../../TypeScriptClassFixture';
+
+import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { AnyDependencyCondition } from '@/arch-unit/domain/fluentapi/conditions/AnyDependencyCondition';
+import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
 describe('AnyDependencyCondition', () => {
   describe('check', () => {

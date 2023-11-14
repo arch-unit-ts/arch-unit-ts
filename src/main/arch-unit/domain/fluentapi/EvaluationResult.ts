@@ -1,4 +1,4 @@
-import { ConditionEvents } from './ConditionEvents';
+import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
 
 export class EvaluationResult {
   private readonly conditionEvents: ConditionEvents;

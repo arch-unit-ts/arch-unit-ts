@@ -1,7 +1,7 @@
-import { EvaluationResult } from '../../../../../../main/arch-unit/domain/fluentapi/EvaluationResult';
-import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
-
 import { ConditionEventsFixture } from './ConditionEventsFixture';
+
+import { EvaluationResult } from '@/arch-unit/domain/fluentapi/EvaluationResult';
+import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
 export class EvaluationResultFixture {
   static evaluationResult = (): EvaluationResult => {

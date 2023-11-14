@@ -1,6 +1,6 @@
-import { Assert } from '../../../error/domain/Assert';
-import { RelativePath } from '../RelativePath';
-import { TypeScriptClass } from '../TypeScriptClass';
+import { RelativePath } from '@/arch-unit/domain/RelativePath';
+import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
+import { Assert } from '@/error/domain/Assert';
 
 export class Dependency {
   readonly path: RelativePath;

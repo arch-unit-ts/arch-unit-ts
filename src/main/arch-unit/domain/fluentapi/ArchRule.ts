@@ -1,6 +1,5 @@
-import { TypeScriptClass } from '../TypeScriptClass';
-
-import { CanBeEvaluated } from './CanBeEvaluated';
+import { CanBeEvaluated } from '@/arch-unit/domain/fluentapi/CanBeEvaluated';
+import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
 
 export interface ArchRule extends CanBeEvaluated {
   because(reason: string): ArchRule;
