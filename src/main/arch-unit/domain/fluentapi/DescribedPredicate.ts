@@ -1,4 +1,4 @@
-import { Predicate } from '@/arch-unit/domain/fluentapi/Predicate';
+import { Predicate } from './Predicate';
 
 export abstract class DescribedPredicate<T> implements Predicate<T> {
   readonly description: string;

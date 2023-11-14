@@ -1,10 +1,9 @@
+import { ArchRuleDefinition } from '../../../../../../main/arch-unit/domain/fluentapi/ArchRuleDefinition';
+import { BusinessContext } from '../../../../../../main/arch-unit/domain/hexagonal/BusinessContext';
+import { SharedKernel } from '../../../../../../main/arch-unit/domain/hexagonal/SharedKernel';
+import { RelativePath } from '../../../../../../main/arch-unit/domain/RelativePath';
+import { TypeScriptProject } from '../../../../../../main/arch-unit/domain/TypeScriptProject';
 import { TypeScriptProjectFixture } from '../TypeScriptProjectFixture';
-
-import { classes, noClasses } from '@/arch-unit/domain/fluentapi/ArchRuleDefinition';
-import { BusinessContext } from '@/arch-unit/domain/hexagonal/BusinessContext';
-import { SharedKernel } from '@/arch-unit/domain/hexagonal/SharedKernel';
-import { RelativePath } from '@/arch-unit/domain/RelativePath';
-import { TypeScriptProject } from '@/arch-unit/domain/TypeScriptProject';
 
 describe('HexagonalArchTest', () => {
   function packagesWithContext(contextName: string): string[] {
@@ -26,7 +25,7 @@ describe('HexagonalArchTest', () => {
         const archProject = new TypeScriptProject(RelativePath.of(businessContextOne));
 
         expect(() =>
-          noClasses()
+          ArchRuleDefinition.noClasses()
             .that()
             .resideInAnyPackage(businessContextOne)
             .should()
@@ -41,7 +40,7 @@ describe('HexagonalArchTest', () => {
         const businessContextTwo = 'src/test/fake-src/business-context-two';
         const archProject = new TypeScriptProject(RelativePath.of(businessContextTwo));
         expect(() =>
-          noClasses()
+          ArchRuleDefinition.noClasses()
             .that()
             .resideInAnyPackage(businessContextTwo)
             .should()
@@ -67,7 +66,7 @@ describe('HexagonalArchTest', () => {
         const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-one'));
 
         expect(() =>
-          classes()
+          ArchRuleDefinition.classes()
             .that()
             .resideInAPackage('domain')
             .should()
@@ -82,7 +81,7 @@ describe('HexagonalArchTest', () => {
         const archProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/business-context-two'));
 
         expect(() =>
-          classes()
+          ArchRuleDefinition.classes()
             .that()
             .resideInAPackage('domain')
             .should()

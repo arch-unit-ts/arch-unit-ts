@@ -1,5 +1,5 @@
-import { RelativePath } from '@/arch-unit/domain/RelativePath';
-import { TypeScriptProject } from '@/arch-unit/domain/TypeScriptProject';
+import { RelativePath } from '../../../../../main/arch-unit/domain/RelativePath';
+import { TypeScriptProject } from '../../../../../main/arch-unit/domain/TypeScriptProject';
 
 export class TypeScriptProjectFixture {
   static fakeSrc = (): TypeScriptProject => {

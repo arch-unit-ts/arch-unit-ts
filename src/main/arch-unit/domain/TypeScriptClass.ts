@@ -1,9 +1,9 @@
 import { ImportDeclaration, SourceFile } from 'ts-morph';
 
-import { ClassName } from '@/arch-unit/domain/ClassName';
-import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
-import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
-import { RelativePath } from '@/arch-unit/domain/RelativePath';
+import { ClassName } from './ClassName';
+import { Dependency } from './fluentapi/Dependency';
+import { DescribedPredicate } from './fluentapi/DescribedPredicate';
+import { RelativePath } from './RelativePath';
 
 export class TypeScriptClass {
   readonly name: ClassName;
