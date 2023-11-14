@@ -1,4 +1,4 @@
-import { ClassesShould } from '@/arch-unit/domain/fluentapi/ClassesShould';
+import { ClassesShould } from './ClassesShould';
 
 export interface GivenClassesConjunction {
   should(): ClassesShould;

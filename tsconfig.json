@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "declaration": true,
     "module": "commonjs",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "outFile": "dist/main.js",
+    "rootDir": "./src/main",
+    "outDir": "./dist",
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/main/*"],
       "@fake-src/*": ["src/test/fake-src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/main/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/fixture.config.ts"]
 }

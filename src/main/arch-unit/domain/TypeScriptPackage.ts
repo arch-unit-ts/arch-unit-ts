@@ -1,10 +1,11 @@
 import { Directory } from 'ts-morph';
 
-import { Dependency } from '@/arch-unit/domain/fluentapi/Dependency';
-import { PackageName } from '@/arch-unit/domain/PackageName';
-import { RelativePath } from '@/arch-unit/domain/RelativePath';
-import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
-import { Optional } from '@/common/domain/Optional';
+import { Optional } from '../../common/domain/Optional';
+
+import { Dependency } from './fluentapi/Dependency';
+import { PackageName } from './PackageName';
+import { RelativePath } from './RelativePath';
+import { TypeScriptClass } from './TypeScriptClass';
 
 export class TypeScriptPackage {
   readonly name: PackageName;

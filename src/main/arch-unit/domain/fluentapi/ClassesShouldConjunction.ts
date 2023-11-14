@@ -1,3 +1,3 @@
-import { ArchRule } from '@/arch-unit/domain/fluentapi/ArchRule';
+import { ArchRule } from './ArchRule';
 
 export interface ClassesShouldConjunction extends ArchRule {}

@@ -1,0 +1,16 @@
+/documentation
+/src
+/.husky
+/.idea
+/.jhipster
+jest.config.js
+README.md
+tsconfig.json
+tsconfig.*.json
+.editorconfig
+.eslintrc.js
+.gitattributes
+.gitlab-ci.yml
+.lintstagedrc.js
+.prettierignore
+.prettierrc

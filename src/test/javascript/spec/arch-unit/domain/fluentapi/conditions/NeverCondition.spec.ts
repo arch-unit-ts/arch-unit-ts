@@ -1,9 +1,8 @@
+import { AllDependencyCondition } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/AllDependencyCondition';
+import { NeverCondition } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/NeverCondition';
+import { SimpleConditionEvents } from '../../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 import { PackageMatchesPredicate } from '../../PackageMatchesPredicate';
 import { TypeScriptClassFixture } from '../../TypeScriptClassFixture';
-
-import { AllDependencyCondition } from '@/arch-unit/domain/fluentapi/conditions/AllDependencyCondition';
-import { NeverCondition } from '@/arch-unit/domain/fluentapi/conditions/NeverCondition';
-import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
 describe('NeverCondition', () => {
   describe('check', () => {

@@ -1,7 +1,7 @@
-import { ConditionEventFixture } from './ConditionEventFixture';
+import { ConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvents';
+import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
-import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
-import { SimpleConditionEvents } from '@/arch-unit/domain/fluentapi/SimpleConditionEvents';
+import { ConditionEventFixture } from './ConditionEventFixture';
 
 export class ConditionEventsFixture {
   static simpleConditionEvents = (): ConditionEvents => {

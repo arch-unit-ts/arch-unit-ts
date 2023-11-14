@@ -1,4 +1,4 @@
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
+import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
 
 export class ConditionEventFixture {
   static violation = (): ConditionEvent => {

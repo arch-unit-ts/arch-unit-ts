@@ -1,12 +1,16 @@
 {
   "name": "arch-unit-ts",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.18",
   "description": "arch-unit-ts",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": {
+    "name": "T.E."
+  },
   "engines": {
     "node": ">=18.18.2"
   },
+  "main": "dist/main.js",
+  "typings": "src/main/main.ts",
   "cacheDirectories": [
     "node_modules"
   ],

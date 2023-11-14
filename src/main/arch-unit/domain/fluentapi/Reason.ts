@@ -1,4 +1,4 @@
-import { Assert } from '@/error/domain/Assert';
+import { Assert } from '../../../error/domain/Assert';
 
 export class Reason {
   private readonly reason: string;

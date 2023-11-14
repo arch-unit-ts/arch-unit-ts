@@ -1,18 +1,21 @@
-import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
-import { NeverCondition } from '@/arch-unit/domain/fluentapi/conditions/NeverCondition';
-import { GivenClassesInternal } from '@/arch-unit/domain/fluentapi/GivenClassesInternal';
-import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
+import { TypeScriptClass } from '../TypeScriptClass';
 
-export const classes = (): GivenClassesInternal => {
-  return GivenClassesInternal.of([]);
-};
+import { ArchCondition } from './ArchCondition';
+import { NeverCondition } from './conditions/NeverCondition';
+import { GivenClassesInternal } from './GivenClassesInternal';
 
-export const noClasses = (): GivenClassesInternal => {
-  return new GivenClassesInternal([], negateCondition());
-};
-
-const negateCondition = function () {
-  return function (condition: ArchCondition<TypeScriptClass>) {
-    return new NeverCondition(condition);
+export abstract class ArchRuleDefinition {
+  public static classes = (): GivenClassesInternal => {
+    return GivenClassesInternal.of([]);
   };
-};
+
+  public static noClasses = (): GivenClassesInternal => {
+    return new GivenClassesInternal([], ArchRuleDefinition.negateCondition());
+  };
+
+  private static negateCondition = function () {
+    return function (condition: ArchCondition<TypeScriptClass>) {
+      return new NeverCondition(condition);
+    };
+  };
+}

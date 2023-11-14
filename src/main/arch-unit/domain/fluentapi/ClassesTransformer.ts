@@ -1,5 +1,6 @@
-import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
-import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
+import { TypeScriptClass } from '../TypeScriptClass';
+
+import { DescribedPredicate } from './DescribedPredicate';
 
 export class ClassesTransformer {
   private readonly predicates: DescribedPredicate<TypeScriptClass>[];

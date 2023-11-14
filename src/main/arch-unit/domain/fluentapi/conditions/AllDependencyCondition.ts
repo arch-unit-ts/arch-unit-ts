@@ -1,8 +1,8 @@
-import { ArchCondition } from '@/arch-unit/domain/fluentapi/ArchCondition';
-import { ConditionEvent } from '@/arch-unit/domain/fluentapi/ConditionEvent';
-import { ConditionEvents } from '@/arch-unit/domain/fluentapi/ConditionEvents';
-import { DescribedPredicate } from '@/arch-unit/domain/fluentapi/DescribedPredicate';
-import { TypeScriptClass } from '@/arch-unit/domain/TypeScriptClass';
+import { TypeScriptClass } from '../../TypeScriptClass';
+import { ArchCondition } from '../ArchCondition';
+import { ConditionEvent } from '../ConditionEvent';
+import { ConditionEvents } from '../ConditionEvents';
+import { DescribedPredicate } from '../DescribedPredicate';
 
 export class AllDependencyCondition extends ArchCondition<TypeScriptClass> {
   private readonly conditionPredicate: DescribedPredicate<TypeScriptClass>;
