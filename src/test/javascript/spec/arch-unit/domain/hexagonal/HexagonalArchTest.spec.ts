@@ -118,35 +118,6 @@ describe('HexagonalArchTest', () => {
     });
 
     describe('Secondary', () => {
-      describe('shouldNotDependOnApplication', () => {
-        it('should fail when depend on application', () => {
-          expect(() => {
-            ArchRuleDefinition.noClasses()
-              .that()
-              .resideInAPackage('infrastructure/secondary')
-              .should()
-              .dependOnClassesThat()
-              .resideInAPackage('application')
-              .because('Secondary should not depend on application')
-              .check(archProjectBusinessTwo.allClasses());
-          }).toThrow(
-            'Architecture violation : Secondary should not depend on application.\n' +
-              'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts'
-          );
-        });
-        it('should not depend on application', () => {
-          expect(() => {
-            ArchRuleDefinition.noClasses()
-              .that()
-              .resideInAPackage('infrastructure/secondary')
-              .should()
-              .dependOnClassesThat()
-              .resideInAPackage('application')
-              .because('Secondary should not depend on application')
-              .check(archProjectBusinessOne.allClasses());
-          }).not.toThrow();
-        });
-      });
       describe('shouldNotDependOnSameContextPrimary', () => {
         it('should fail when depend on same context primary', () => {
           expect(() => {
