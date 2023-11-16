@@ -6,11 +6,11 @@ import { GivenClassesInternal } from './GivenClassesInternal';
 
 export abstract class ArchRuleDefinition {
   public static classes = (): GivenClassesInternal => {
-    return GivenClassesInternal.of([]);
+    return GivenClassesInternal.withoutPrepareCondition();
   };
 
   public static noClasses = (): GivenClassesInternal => {
-    return new GivenClassesInternal([], ArchRuleDefinition.negateCondition());
+    return new GivenClassesInternal(ArchRuleDefinition.negateCondition());
   };
 
   private static negateCondition = function () {

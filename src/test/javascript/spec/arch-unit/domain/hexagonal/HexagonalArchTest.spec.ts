@@ -152,10 +152,10 @@ describe('HexagonalArchTest', () => {
           expect(() => {
             ArchRuleDefinition.noClasses()
               .that()
-              .resideInAPackage(archProjectBusinessTwo.get().name.get() + '/infrastructure/secondary')
+              .resideInAPackage(businessContextTwo + '/infrastructure/secondary')
               .should()
               .dependOnClassesThat()
-              .resideInAPackage(archProjectBusinessTwo.get().name.get() + '/infrastructure/primary')
+              .resideInAPackage(businessContextTwo + '/infrastructure/primary')
               .because("Secondary should not loop to its own context's primary")
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(

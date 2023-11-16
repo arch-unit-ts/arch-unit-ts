@@ -20,10 +20,6 @@ export class TypeScriptProject {
     this.rootPackage = new TypeScriptPackage(tsMorphRootDirectory);
   }
 
-  public get(): TypeScriptPackage {
-    return this.rootPackage;
-  }
-
   filterClassesByClassName(className: string): TypeScriptClass[] {
     return this.rootPackage.filterClassesByClassName(className);
   }
