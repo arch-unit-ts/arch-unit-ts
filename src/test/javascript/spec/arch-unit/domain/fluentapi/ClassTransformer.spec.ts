@@ -1,14 +1,11 @@
-import { ClassesTransformer } from '../../../../../../main/arch-unit/domain/fluentapi/ClassesTransformer';
-import { PackageMatchesPredicate } from '../PackageMatchesPredicate';
 import { TypeScriptClassFixture } from '../TypeScriptClassFixture';
+
+import { ClassesTransformerFixture } from './ClassesTransformerFixture';
 
 describe('ClassTransformer', () => {
   describe('transform', () => {
     it('should filter class based on predicates', () => {
-      const classesTransformer = new ClassesTransformer([
-        new PackageMatchesPredicate(['business-context-one'], 'context-one'),
-        new PackageMatchesPredicate(['fruit'], 'fruit'),
-      ]);
+      const classesTransformer = ClassesTransformerFixture.contextOneFruitTransformer();
 
       const classesAfterTransform = classesTransformer.transform(TypeScriptClassFixture.fakeSrcClasses());
 

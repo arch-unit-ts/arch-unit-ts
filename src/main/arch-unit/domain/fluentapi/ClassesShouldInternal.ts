@@ -17,7 +17,7 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
   private readonly classesTransformer: ClassesTransformer;
   private readonly conditionPredicates: ArchCondition<TypeScriptClass>[];
   private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
-  private overriddenDescription: Optional<string>;
+  private overriddenDescription: Optional<string> = Optional.empty();
 
   constructor(
     classesTransformer: ClassesTransformer,
@@ -57,6 +57,10 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
     });
   }
 
+  getDescription(): string {
+    return this.overriddenDescription.orElse('');
+  }
+
   evaluate(classes: TypeScriptClass[]): EvaluationResult {
     const classesFiltered = this.classesTransformer.transform(classes);
 
@@ -67,9 +71,5 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
     );
 
     return new EvaluationResult(conditionEvents);
-  }
-
-  getDescription(): string {
-    return this.overriddenDescription.orElse('');
   }
 }

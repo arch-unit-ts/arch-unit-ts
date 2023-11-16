@@ -14,16 +14,13 @@ export class GivenClassesInternal implements GivenClasses {
   private readonly predicates: DescribedPredicate<TypeScriptClass>[];
   private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
 
-  constructor(
-    predicates: DescribedPredicate<TypeScriptClass>[],
-    prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
-  ) {
-    this.predicates = predicates;
+  constructor(prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>) {
+    this.predicates = [];
     this.prepareCondition = prepareCondition;
   }
 
-  static of(predicates: DescribedPredicate<TypeScriptClass>[]): GivenClassesInternal {
-    return new GivenClassesInternal(predicates, (archCondition: ArchCondition<TypeScriptClass>) => archCondition);
+  static withoutPrepareCondition(): GivenClassesInternal {
+    return new GivenClassesInternal((archCondition: ArchCondition<TypeScriptClass>) => archCondition);
   }
 
   that(): ClassesThat<GivenClassesConjunction> {
