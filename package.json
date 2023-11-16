@@ -1,6 +1,6 @@
 {
   "name": "arch-unit-ts",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "arch-unit-ts",
   "license": "MIT",
   "author": {
@@ -15,6 +15,8 @@
     "node_modules"
   ],
   "scripts": {
+    "build": "tsc",
+    "dopublish": "npm i && npm run build && npm publish",
     "jest": "jest src/test/javascript/spec --logHeapUsage --maxWorkers=2 --no-cache",
     "test": "npm run jest --",
     "test:watch": "jest --watch",
