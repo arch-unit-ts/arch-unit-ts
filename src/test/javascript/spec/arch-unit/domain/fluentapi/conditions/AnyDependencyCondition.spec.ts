@@ -1,13 +1,13 @@
 import { ConditionEvent } from '../../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
 import { AnyDependencyCondition } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/AnyDependencyCondition';
 import { SimpleConditionEvents } from '../../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
-import { PackageMatchesPredicate } from '../../PackageMatchesPredicate';
 import { TypeScriptClassFixture } from '../../TypeScriptClassFixture';
+import { DescribedPredicateFixture } from '../DescribedPredicateFixture';
 
 describe('AnyDependencyCondition', () => {
   describe('check', () => {
     it('should add violation', () => {
-      const anyDependencyCondition = new AnyDependencyCondition('', new PackageMatchesPredicate(['jambon'], ''));
+      const anyDependencyCondition = new AnyDependencyCondition('', DescribedPredicateFixture.packageMatchesPredicate(['jambon'], ''));
       const conditionEvents = new SimpleConditionEvents();
       anyDependencyCondition.check(TypeScriptClassFixture.client(), conditionEvents);
       expect(conditionEvents.getViolating()).toEqual([
@@ -22,7 +22,7 @@ describe('AnyDependencyCondition', () => {
       ]);
     });
     it('should not add violation', () => {
-      const anyDependencyCondition = new AnyDependencyCondition('', new PackageMatchesPredicate(['fruit'], ''));
+      const anyDependencyCondition = new AnyDependencyCondition('', DescribedPredicateFixture.packageMatchesPredicate(['fruit'], ''));
       const conditionEvents = new SimpleConditionEvents();
       anyDependencyCondition.check(TypeScriptClassFixture.client(), conditionEvents);
       expect(conditionEvents.getViolating()).toEqual([]);

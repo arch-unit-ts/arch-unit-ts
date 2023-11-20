@@ -3,13 +3,13 @@ import { AllDependencyCondition } from '../../../../../../../main/arch-unit/doma
 import { AnyDependencyCondition } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/AnyDependencyCondition';
 import { ArchConditions } from '../../../../../../../main/arch-unit/domain/fluentapi/conditions/ArchConditions';
 import { TypeScriptClass } from '../../../../../../../main/arch-unit/domain/TypeScriptClass';
-import { PackageMatchesPredicate } from '../../PackageMatchesPredicate';
+import { DescribedPredicateFixture } from '../DescribedPredicateFixture';
 
 describe('ArchConditions', () => {
   describe('onlyDependOnClassesThat', () => {
     it('should build AllDependencyCondition', () => {
       const allDependencyCondition: ArchCondition<TypeScriptClass> = ArchConditions.onlyDependOnClassesThat(
-        new PackageMatchesPredicate([], 'the predicate')
+        DescribedPredicateFixture.packageMatchesPredicate([], 'the predicate')
       );
 
       expect(allDependencyCondition instanceof AllDependencyCondition).toEqual(true);
@@ -20,7 +20,7 @@ describe('ArchConditions', () => {
   describe('dependOnClassesThat', () => {
     it('should build AnyDependencyCondition', () => {
       const anyDependencyCondition: ArchCondition<TypeScriptClass> = ArchConditions.dependOnClassesThat(
-        new PackageMatchesPredicate([], 'the predicate')
+        DescribedPredicateFixture.packageMatchesPredicate([], 'the predicate')
       );
 
       expect(anyDependencyCondition instanceof AnyDependencyCondition).toEqual(true);

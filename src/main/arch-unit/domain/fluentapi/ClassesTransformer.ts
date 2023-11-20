@@ -1,15 +1,24 @@
 import { TypeScriptClass } from '../TypeScriptClass';
 
-import { DescribedPredicate } from './DescribedPredicate';
+import { PredicateAggregator } from './PredicateAggregator';
 
 export class ClassesTransformer {
-  private readonly predicates: DescribedPredicate<TypeScriptClass>[];
+  private readonly predicateAggregator: PredicateAggregator<TypeScriptClass>;
 
-  constructor(predicates: DescribedPredicate<TypeScriptClass>[]) {
-    this.predicates = predicates;
+  constructor(predicateAggregator: PredicateAggregator<TypeScriptClass>) {
+    this.predicateAggregator = predicateAggregator;
   }
 
   transform(classes: TypeScriptClass[]): TypeScriptClass[] {
-    return classes.filter(aClass => this.predicates.every(predicate => predicate.test(aClass)));
+    if (this.predicateAggregator.getPredicate().isEmpty()) {
+      return classes;
+    }
+
+    return classes.filter(aClass =>
+      this.predicateAggregator
+        .getPredicate()
+        .map(predicate => predicate.test(aClass))
+        .orElseThrow()
+    );
   }
 }

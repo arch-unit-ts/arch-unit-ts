@@ -10,7 +10,7 @@ export class ArchConditionFixture {
   static allKoCondition = (): ArchCondition<TypeScriptClass> => new KoCondition("I'm ko");
 }
 
-export class OkCondition extends ArchCondition<TypeScriptClass> {
+class OkCondition extends ArchCondition<TypeScriptClass> {
   constructor(description: string) {
     super(description);
   }
@@ -20,7 +20,7 @@ export class OkCondition extends ArchCondition<TypeScriptClass> {
   }
 }
 
-export class KoCondition extends ArchCondition<TypeScriptClass> {
+class KoCondition extends ArchCondition<TypeScriptClass> {
   constructor(description: string) {
     super(description);
   }
