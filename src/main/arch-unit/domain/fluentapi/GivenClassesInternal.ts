@@ -7,7 +7,7 @@ import { ClassesThat } from './ClassesThat';
 import { ClassesThatInternal } from './ClassesThatInternal';
 import { ClassesTransformer } from './ClassesTransformer';
 import { GivenClasses } from './GivenClasses';
-import { GivenClassesConjunction } from './GIvenClassesConjunction';
+import { GivenClassesConjunction } from './GivenClassesConjunction';
 import { PredicateAggregator } from './PredicateAggregator';
 
 export class GivenClassesInternal implements GivenClasses, GivenClassesConjunction {
@@ -34,5 +34,17 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
 
   should(): ClassesShould {
     return new ClassesShouldInternal(new ClassesTransformer(this.predicateAggregator), [], this.prepareCondition);
+  }
+
+  and(): ClassesThat<GivenClassesConjunction> {
+    return new ClassesThatInternal(describedPredicate => {
+      return new GivenClassesInternal(this.predicateAggregator.thatANDs().add(describedPredicate), this.prepareCondition);
+    });
+  }
+
+  or(): ClassesThat<GivenClassesConjunction> {
+    return new ClassesThatInternal(describedPredicate => {
+      return new GivenClassesInternal(this.predicateAggregator.thatORs().add(describedPredicate), this.prepareCondition);
+    });
   }
 }
