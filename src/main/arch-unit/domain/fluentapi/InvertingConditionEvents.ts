@@ -15,4 +15,8 @@ export class InvertingConditionEvents implements ConditionEvents {
   getViolating(): ConditionEvent[] {
     return this.delegate.getViolating();
   }
+
+  containViolation(): boolean {
+    return this.delegate.containViolation();
+  }
 }

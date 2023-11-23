@@ -1,21 +1,23 @@
-import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
 import { InvertingConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/InvertingConditionEvents';
+import { SimpleConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvent';
 import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
-import { ConditionEventFixture } from './ConditionEventFixture';
+import { SimpleConditionEventFixture } from './SimpleConditionEventFixture';
 
 describe('InvertingConditionEvents', () => {
   describe('add', () => {
     it('should not add violation', () => {
       const invertingConditionEvents = new InvertingConditionEvents(new SimpleConditionEvents());
-      invertingConditionEvents.add(ConditionEventFixture.violation());
+      invertingConditionEvents.add(SimpleConditionEventFixture.violation());
       expect(invertingConditionEvents.getViolating().length).toEqual(0);
+      expect(invertingConditionEvents.containViolation()).toEqual(false);
     });
 
     it('should not add ok event', () => {
       const invertingConditionEvents = new InvertingConditionEvents(new SimpleConditionEvents());
-      invertingConditionEvents.add(ConditionEventFixture.ok());
-      expect(invertingConditionEvents.getViolating()).toEqual([new ConditionEvent('description ok', true)]);
+      invertingConditionEvents.add(SimpleConditionEventFixture.ok());
+      expect(invertingConditionEvents.getViolating()).toEqual([new SimpleConditionEvent('description ok', true)]);
+      expect(invertingConditionEvents.containViolation()).toEqual(true);
     });
   });
 });

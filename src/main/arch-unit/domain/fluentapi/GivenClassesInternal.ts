@@ -1,11 +1,12 @@
 import { TypeScriptClass } from '../TypeScriptClass';
 
-import { ArchCondition } from './ArchCondition';
 import { ClassesShould } from './ClassesShould';
 import { ClassesShouldInternal } from './ClassesShouldInternal';
 import { ClassesThat } from './ClassesThat';
 import { ClassesThatInternal } from './ClassesThatInternal';
 import { ClassesTransformer } from './ClassesTransformer';
+import { ConditionAggregator } from './ConditionAggregator';
+import { ArchCondition } from './conditions/ArchCondition';
 import { GivenClasses } from './GivenClasses';
 import { GivenClassesConjunction } from './GivenClassesConjunction';
 import { PredicateAggregator } from './PredicateAggregator';
@@ -33,7 +34,11 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
   }
 
   should(): ClassesShould {
-    return new ClassesShouldInternal(new ClassesTransformer(this.predicateAggregator), [], this.prepareCondition);
+    return new ClassesShouldInternal(
+      new ClassesTransformer(this.predicateAggregator),
+      ConditionAggregator.default(),
+      this.prepareCondition
+    );
   }
 
   and(): ClassesThat<GivenClassesConjunction> {

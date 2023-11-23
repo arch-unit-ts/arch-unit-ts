@@ -1,31 +1,32 @@
 import { Optional } from '../../../common/domain/Optional';
 import { TypeScriptClass } from '../TypeScriptClass';
 
-import { ArchCondition } from './ArchCondition';
 import { ArchRule } from './ArchRule';
-import { ClassesShould } from './ClassesShould';
-import { ClassesShouldConjunction } from './ClassesShouldConjunction';
+import { ClassesShould, ClassesShouldConjunction } from './ClassesShould';
 import { ClassesThat } from './ClassesThat';
 import { ClassesThatInternal } from './ClassesThatInternal';
 import { ClassesTransformer } from './ClassesTransformer';
+import { ConditionAggregator } from './ConditionAggregator';
 import { ConditionEvents } from './ConditionEvents';
+import { ArchCondition } from './conditions/ArchCondition';
 import { ArchConditions } from './conditions/ArchConditions';
 import { EvaluationResult } from './EvaluationResult';
 import { SimpleConditionEvents } from './SimpleConditionEvents';
 
-export class ClassesShouldInternal implements ArchRule, ClassesShould {
+export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesShouldConjunction {
   private readonly classesTransformer: ClassesTransformer;
-  private readonly conditionPredicates: ArchCondition<TypeScriptClass>[];
+  private readonly conditionAggregator: ConditionAggregator<TypeScriptClass>;
+
   private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
   private overriddenDescription: Optional<string> = Optional.empty();
 
   constructor(
     classesTransformer: ClassesTransformer,
-    conditionPredicates: ArchCondition<TypeScriptClass>[],
+    conditionAggregator: ConditionAggregator<TypeScriptClass>,
     prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
   ) {
     this.classesTransformer = classesTransformer;
-    this.conditionPredicates = conditionPredicates;
+    this.conditionAggregator = conditionAggregator;
     this.prepareCondition = prepareCondition;
   }
 
@@ -43,17 +44,21 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
 
   onlyDependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      // FIXME le prepareCondition ne devrait pas être appliqué sur chaque condition mais uniquement sur une condition finale consolidée
-      this.conditionPredicates.push(this.prepareCondition(ArchConditions.onlyDependOnClassesThat(describedPredicate)));
-      return this;
+      return new ClassesShouldInternal(
+        this.classesTransformer,
+        this.conditionAggregator.add(ArchConditions.onlyDependOnClassesThat(describedPredicate)),
+        this.prepareCondition
+      );
     });
   }
 
   dependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      // FIXME le prepareCondition ne devrait pas être appliqué sur chaque condition mais uniquement sur une condition finale consolidée
-      this.conditionPredicates.push(this.prepareCondition(ArchConditions.dependOnClassesThat(describedPredicate)));
-      return this;
+      return new ClassesShouldInternal(
+        this.classesTransformer,
+        this.conditionAggregator.add(ArchConditions.dependOnClassesThat(describedPredicate)),
+        this.prepareCondition
+      );
     });
   }
 
@@ -67,9 +72,19 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould {
     const conditionEvents: ConditionEvents = new SimpleConditionEvents();
 
     classesFiltered.forEach(typeScriptClass =>
-      this.conditionPredicates.forEach(conditionPredicate => conditionPredicate.check(typeScriptClass, conditionEvents))
+      this.conditionAggregator
+        .getCondition()
+        .ifPresent(condition => this.prepareCondition(condition).check(typeScriptClass, conditionEvents))
     );
 
     return new EvaluationResult(conditionEvents);
+  }
+
+  andShould(): ClassesShould {
+    return new ClassesShouldInternal(this.classesTransformer, this.conditionAggregator.thatANDs(), this.prepareCondition);
+  }
+
+  orShould(): ClassesShould {
+    return new ClassesShouldInternal(this.classesTransformer, this.conditionAggregator.thatORs(), this.prepareCondition);
   }
 }

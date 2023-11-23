@@ -1,7 +1,8 @@
 import { ImportDeclaration, SourceFile } from 'ts-morph';
 
+import { Assert } from '../../error/domain/Assert';
+
 import { ClassName } from './ClassName';
-import { Dependency } from './fluentapi/Dependency';
 import { DescribedPredicate } from './fluentapi/DescribedPredicate';
 import { RelativePath } from './RelativePath';
 
@@ -53,5 +54,21 @@ class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
 
   test(typeScriptClass: TypeScriptClass): boolean {
     return this.packageIdentifiers.some(packageIdentifier => typeScriptClass.packagePath.contains(packageIdentifier));
+  }
+}
+
+export class Dependency {
+  readonly path: RelativePath;
+  readonly typeScriptClass: TypeScriptClass;
+
+  public constructor(path: RelativePath, typeScriptClass: TypeScriptClass) {
+    Assert.notNullOrUndefined('path', path);
+    Assert.notNullOrUndefined('typeScriptClass', typeScriptClass);
+    this.path = path;
+    this.typeScriptClass = typeScriptClass;
+  }
+
+  static of(path: RelativePath, typeScriptClass: TypeScriptClass): Dependency {
+    return new Dependency(path, typeScriptClass);
   }
 }
