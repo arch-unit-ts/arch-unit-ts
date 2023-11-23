@@ -11,6 +11,11 @@ format-check:
   script:
     - npm run format:check
 
+circular-dependencies:
+  stage: build
+  script:
+    - npx madge --circular --extensions ts ./
+
 verify:
   stage: build
   script:
