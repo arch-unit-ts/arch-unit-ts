@@ -1,4 +1,4 @@
-import { Dependency } from '../../../../../main/arch-unit/domain/fluentapi/Dependency';
+import { Dependency } from '../../../../../main/arch-unit/domain/TypeScriptClass';
 
 import { PathFixture } from './PathFixture';
 

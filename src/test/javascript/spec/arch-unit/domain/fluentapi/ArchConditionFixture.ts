@@ -1,13 +1,12 @@
-import { ArchCondition } from '../../../../../../main/arch-unit/domain/fluentapi/ArchCondition';
-import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
 import { ConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvents';
+import { ArchCondition } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/ArchCondition';
 import { TypeScriptClass } from '../../../../../../main/arch-unit/domain/TypeScriptClass';
 
-import { ConditionEventFixture } from './ConditionEventFixture';
+import { SimpleConditionEventFixture } from './SimpleConditionEventFixture';
 
 export class ArchConditionFixture {
-  static allOkCondition = (): ArchCondition<TypeScriptClass> => new OkCondition("I'm ok");
-  static allKoCondition = (): ArchCondition<TypeScriptClass> => new KoCondition("I'm ko");
+  static okCondition = (): ArchCondition<TypeScriptClass> => new OkCondition("I'm ok");
+  static koCondition = (): ArchCondition<TypeScriptClass> => new KoCondition("I'm ko");
 }
 
 class OkCondition extends ArchCondition<TypeScriptClass> {
@@ -16,7 +15,7 @@ class OkCondition extends ArchCondition<TypeScriptClass> {
   }
 
   check(typeScriptClass: TypeScriptClass, events: ConditionEvents): void {
-    events.add(ConditionEventFixture.ok());
+    events.add(SimpleConditionEventFixture.ok());
   }
 }
 
@@ -26,6 +25,6 @@ class KoCondition extends ArchCondition<TypeScriptClass> {
   }
 
   check(typeScriptClass: TypeScriptClass, events: ConditionEvents): void {
-    events.add(new ConditionEvent(`Error in ${typeScriptClass.name.get()}`, true));
+    events.add(SimpleConditionEventFixture.violationWithClassName(typeScriptClass.name));
   }
 }

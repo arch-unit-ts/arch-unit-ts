@@ -1,7 +1,7 @@
 import { TypeScriptClass } from '../TypeScriptClass';
 
-import { ArchCondition } from './ArchCondition';
-import { NeverCondition } from './conditions/NeverCondition';
+import { ArchCondition } from './conditions/ArchCondition';
+import { ArchConditions } from './conditions/ArchConditions';
 import { GivenClassesInternal } from './GivenClassesInternal';
 import { PredicateAggregator } from './PredicateAggregator';
 
@@ -16,7 +16,7 @@ export abstract class ArchRuleDefinition {
 
   private static negateCondition = function () {
     return function (condition: ArchCondition<TypeScriptClass>) {
-      return new NeverCondition(condition);
+      return ArchConditions.negate(condition);
     };
   };
 }

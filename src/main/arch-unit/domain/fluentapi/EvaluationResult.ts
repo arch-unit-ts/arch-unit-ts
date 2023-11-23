@@ -10,7 +10,7 @@ export class EvaluationResult {
   violationReport(): string {
     return this.conditionEvents
       .getViolating()
-      .map(conditionEvent => conditionEvent.description)
+      .flatMap(conditionEvent => conditionEvent.getDescriptionLines())
       .join('\n');
   }
 
