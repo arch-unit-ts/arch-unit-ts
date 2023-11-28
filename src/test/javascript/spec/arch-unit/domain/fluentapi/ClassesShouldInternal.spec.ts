@@ -24,7 +24,7 @@ describe('ClassesShouldInternal', () => {
       classesShouldInternal.because('Everything went wrong');
 
       expect(() => classesShouldInternal.check(TypeScriptClassFixture.fakeSrcClasses())).toThrow(
-        'Architecture violation : Everything went wrong.\n' +
+        "Architecture violation : Rule classes context-two should I'm ko because Everything went wrong.\n" +
           'Errors : Error in package-info.ts\n' +
           'Error in BasketApplicationService.ts\n' +
           'Error in Basket.ts\n' +

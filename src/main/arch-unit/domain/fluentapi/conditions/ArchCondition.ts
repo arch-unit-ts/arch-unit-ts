@@ -85,7 +85,7 @@ class OrCondition<T> extends JoinCondition<T> {
   constructor(current: ArchCondition<T>, other: ArchCondition<T>) {
     Assert.notNullOrUndefined('current', current);
     Assert.notNullOrUndefined('other', other);
-    super(' or ', [current, other]);
+    super('or', [current, other]);
     this.current = current;
     this.other = other;
   }
@@ -120,7 +120,7 @@ class AndCondition<T> extends JoinCondition<T> {
   constructor(current: ArchCondition<T>, other: ArchCondition<T>) {
     Assert.notNullOrUndefined('current', current);
     Assert.notNullOrUndefined('other', other);
-    super(' and ', [current, other]);
+    super('and', [current, other]);
     this.current = current;
     this.other = other;
   }

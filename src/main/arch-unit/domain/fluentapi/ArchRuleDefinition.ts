@@ -1,5 +1,6 @@
 import { TypeScriptClass } from '../TypeScriptClass';
 
+import { ClassesTransformer } from './ClassesTransformer';
 import { ArchCondition } from './conditions/ArchCondition';
 import { ArchConditions } from './conditions/ArchConditions';
 import { GivenClassesInternal } from './GivenClassesInternal';
@@ -11,7 +12,10 @@ export abstract class ArchRuleDefinition {
   };
 
   public static noClasses = (): GivenClassesInternal => {
-    return new GivenClassesInternal(PredicateAggregator.default(), ArchRuleDefinition.negateCondition());
+    return new GivenClassesInternal(
+      new ClassesTransformer('no classes', PredicateAggregator.default()),
+      ArchRuleDefinition.negateCondition()
+    );
   };
 
   private static negateCondition = function () {

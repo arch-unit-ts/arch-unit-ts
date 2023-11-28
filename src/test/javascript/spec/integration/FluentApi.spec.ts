@@ -17,7 +17,7 @@ describe('FluentApi', () => {
         .because('I want the test to fail')
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
-      'Architecture violation : I want the test to fail.\n' +
+      "Architecture violation : Rule classes reside in a package 'business-context-two' and reside in a package 'domain' or reside in a package 'fruit' should only depend on classes that reside in a package 'not existing package' because I want the test to fail.\n" +
         'Errors : Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
         'Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
         'Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
@@ -41,7 +41,7 @@ describe('FluentApi', () => {
         .because('I want the test to fail')
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
-      'Architecture violation : I want the test to fail.\n' +
+      "Architecture violation : Rule classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
         'Errors : Dependency src/test/fake-src/business-context-one/package-info.ts in src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
         'Dependency src/test/fake-src/business-context-two/package-info.ts in src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
         'Dependency src/test/fake-src/shared-kernel-one/package-info.ts in src/main/arch-unit/domain/hexagonal/SharedKernel.ts'
@@ -63,7 +63,7 @@ describe('FluentApi', () => {
         .because('I want the test to fail')
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
-      'Architecture violation : I want the test to fail.\n' +
+      "Architecture violation : Rule no classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
         'Errors : Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
         'Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
         'Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +

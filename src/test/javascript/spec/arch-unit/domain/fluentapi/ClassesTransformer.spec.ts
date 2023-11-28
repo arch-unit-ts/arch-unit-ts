@@ -5,9 +5,35 @@ import { TypeScriptClassFixture } from '../TypeScriptClassFixture';
 import { ClassesTransformerFixture } from './ClassesTransformerFixture';
 
 describe('ClassesTransformer', () => {
+  it.each([undefined, null])('should not build without description [%s]', nullOrUndefined => {
+    expect(() => new ClassesTransformer(nullOrUndefined, null)).toThrow('description should not be null');
+  });
+
+  it.each([undefined, null])('should not build without predicateAggregator [%s]', nullOrUndefined => {
+    expect(() => new ClassesTransformer('description', nullOrUndefined)).toThrow('predicateAggregator should not be null');
+  });
+
+  describe('getDescription', () => {
+    it('should get description', () => {
+      expect(ClassesTransformerFixture.contextOneFruitTransformer().getDescription()).toEqual('classes');
+    });
+  });
+
+  describe('getDescription', () => {
+    it('should get full description', () => {
+      expect(ClassesTransformerFixture.contextOneFruitTransformer().getFullDescription()).toEqual('classes context-one and fruit');
+    });
+
+    it('should only get classes transformer description when predicate is empty', () => {
+      expect(new ClassesTransformer('classes of transformer', PredicateAggregator.default()).getFullDescription()).toEqual(
+        'classes of transformer'
+      );
+    });
+  });
+
   describe('transform', () => {
     it('should not filter with empty aggregator', () => {
-      const classesTransformer = new ClassesTransformer(PredicateAggregator.default());
+      const classesTransformer = new ClassesTransformer('description classes transformer', PredicateAggregator.default());
 
       const classesAfterTransform = classesTransformer.transform(TypeScriptClassFixture.businessContextOneClasses());
 

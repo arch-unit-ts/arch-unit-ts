@@ -12,44 +12,43 @@ import { GivenClassesConjunction } from './GivenClassesConjunction';
 import { PredicateAggregator } from './PredicateAggregator';
 
 export class GivenClassesInternal implements GivenClasses, GivenClassesConjunction {
-  private readonly predicateAggregator: PredicateAggregator<TypeScriptClass>;
+  private readonly classesTransformer: ClassesTransformer;
   private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
 
   constructor(
-    predicateAggregator: PredicateAggregator<TypeScriptClass>,
+    classesTransformer: ClassesTransformer,
     prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
   ) {
-    this.predicateAggregator = predicateAggregator;
+    this.classesTransformer = classesTransformer;
     this.prepareCondition = prepareCondition;
   }
 
   static default(): GivenClassesInternal {
-    return new GivenClassesInternal(PredicateAggregator.default(), (archCondition: ArchCondition<TypeScriptClass>) => archCondition);
+    return new GivenClassesInternal(
+      new ClassesTransformer('classes', PredicateAggregator.default()),
+      (archCondition: ArchCondition<TypeScriptClass>) => archCondition
+    );
   }
 
   that(): ClassesThat<GivenClassesConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      return new GivenClassesInternal(this.predicateAggregator.add(describedPredicate), this.prepareCondition);
+      return new GivenClassesInternal(this.classesTransformer.addPredicate(describedPredicate), this.prepareCondition);
     });
   }
 
   should(): ClassesShould {
-    return new ClassesShouldInternal(
-      new ClassesTransformer(this.predicateAggregator),
-      ConditionAggregator.default(),
-      this.prepareCondition
-    );
+    return new ClassesShouldInternal(this.classesTransformer, ConditionAggregator.default(), this.prepareCondition);
   }
 
   and(): ClassesThat<GivenClassesConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      return new GivenClassesInternal(this.predicateAggregator.thatANDs().add(describedPredicate), this.prepareCondition);
+      return new GivenClassesInternal(this.classesTransformer.switchModeAnd().addPredicate(describedPredicate), this.prepareCondition);
     });
   }
 
   or(): ClassesThat<GivenClassesConjunction> {
     return new ClassesThatInternal(describedPredicate => {
-      return new GivenClassesInternal(this.predicateAggregator.thatORs().add(describedPredicate), this.prepareCondition);
+      return new GivenClassesInternal(this.classesTransformer.switchModeOr().addPredicate(describedPredicate), this.prepareCondition);
     });
   }
 }

@@ -38,7 +38,9 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
   check(classes: TypeScriptClass[]): void {
     const evaluationResult = this.evaluate(classes);
     if (evaluationResult.hasErrors()) {
-      throw new Error(`Architecture violation : ${this.getDescription()}.\nErrors : ${evaluationResult.violationReport()}`);
+      throw new Error(
+        `Architecture violation : Rule ${this.classesTransformer.getFullDescription()} should ${this.conditionAggregator.getDescription()} because ${this.getDescription()}.\nErrors : ${evaluationResult.violationReport()}`
+      );
     }
   }
 

@@ -7,6 +7,16 @@ describe('ConditionAggregator', () => {
     expect(ConditionAggregator.default().getCondition().isEmpty()).toEqual(true);
   });
 
+  describe('getDescription', () => {
+    it('should get description', () => {
+      expect(ConditionAggregator.default().add(ArchConditionFixture.okCondition()).getDescription()).toEqual("I'm ok");
+    });
+
+    it('should get empty condition description when condition is empty', () => {
+      expect(ConditionAggregator.default().getDescription()).toEqual('(empty condition)');
+    });
+  });
+
   describe('add', () => {
     it('should add to predicate', () => {
       const conditionAggregator = ConditionAggregator.default();

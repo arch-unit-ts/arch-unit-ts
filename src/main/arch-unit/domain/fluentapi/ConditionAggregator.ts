@@ -2,8 +2,9 @@ import { Optional } from '../../../common/domain/Optional';
 import { Assert } from '../../../error/domain/Assert';
 
 import { ArchCondition } from './conditions/ArchCondition';
+import { HasDescription } from './HasDescription';
 
-export class ConditionAggregator<T> {
+export class ConditionAggregator<T> implements HasDescription {
   private readonly addMode: AddMode<T>;
   private readonly condition: Optional<ArchCondition<T>>;
 
@@ -31,6 +32,10 @@ export class ConditionAggregator<T> {
 
   public thatORs(): ConditionAggregator<T> {
     return new ConditionAggregator<T>(AddMode.or(), this.condition);
+  }
+
+  getDescription(): string {
+    return this.condition.map(condition => condition.description).orElse('(empty condition)');
   }
 }
 
