@@ -17,6 +17,6 @@ export class TypeScriptClassFixture {
   };
 
   static businessContextOneClasses = (): TypeScriptClass[] => {
-    return this.fakeSrcClasses().filter(typeScriptClass => typeScriptClass.path().contains('business-context-one'));
+    return this.fakeSrcClasses().filter(typeScriptClass => typeScriptClass.getPath().contains('business-context-one'));
   };
 }

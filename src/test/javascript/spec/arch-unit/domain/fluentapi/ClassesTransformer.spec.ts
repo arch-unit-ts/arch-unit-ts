@@ -37,7 +37,7 @@ describe('ClassesTransformer', () => {
 
       const classesAfterTransform = classesTransformer.transform(TypeScriptClassFixture.businessContextOneClasses());
 
-      expect(classesAfterTransform.map(typeScriptClass => typeScriptClass.path().get())).toEqual([
+      expect(classesAfterTransform.map(typeScriptClass => typeScriptClass.getPath().get())).toEqual([
         'src/test/fake-src/business-context-one/package-info.ts',
         'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
         'src/test/fake-src/business-context-one/domain/Client.ts',
@@ -55,7 +55,7 @@ describe('ClassesTransformer', () => {
 
       const classesAfterTransform = classesTransformer.transform(TypeScriptClassFixture.fakeSrcClasses());
 
-      expect(classesAfterTransform.map(typeScriptClass => typeScriptClass.path().get())).toEqual([
+      expect(classesAfterTransform.map(typeScriptClass => typeScriptClass.getPath().get())).toEqual([
         'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
         'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
         'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',

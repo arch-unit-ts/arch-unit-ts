@@ -12,6 +12,7 @@ export class TypeScriptClass {
   readonly name: ClassName;
   readonly packagePath: RelativePath;
   readonly dependencies: Dependency[];
+  private readonly fullPath: RelativePath;
 
   private constructor(name: ClassName, packagePath: RelativePath, imports: ImportDeclaration[]) {
     Assert.notNullOrUndefined('name', name);
@@ -22,10 +23,11 @@ export class TypeScriptClass {
     this.dependencies = imports.map(importDeclaration =>
       Dependency.of(
         ClassName.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getBaseName()),
-        RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath()),
+        RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getSourceFile().getDirectory().getPath()),
         this
       )
     );
+    this.fullPath = RelativePath.of(`${this.packagePath.get()}/${this.name.get()}`);
   }
 
   static of(file: SourceFile): TypeScriptClass {
@@ -42,7 +44,7 @@ export class TypeScriptClass {
   }
 
   hasImport(importSearched: string) {
-    return this.dependencies.some(dependency => dependency.path.contains(importSearched));
+    return this.dependencies.some(dependency => dependency.typeScriptClass.getPath().contains(importSearched));
   }
 
   static resideInAPackage(packageIdentifier: string): DescribedPredicate<TypeScriptClass> {
@@ -65,8 +67,8 @@ export class TypeScriptClass {
     }
   })();
 
-  path() {
-    return RelativePath.of(`${this.packagePath.get()}/${this.name.get()}`);
+  getPath() {
+    return this.fullPath;
   }
 }
 
@@ -84,7 +86,6 @@ class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
 }
 
 export class Dependency implements HasDescription {
-  readonly path: RelativePath;
   readonly owner: TypeScriptClass;
   readonly typeScriptClass: TypeScriptClass;
 
@@ -92,7 +93,6 @@ export class Dependency implements HasDescription {
     Assert.notNullOrUndefined('name', name);
     Assert.notNullOrUndefined('path', path);
     Assert.notNullOrUndefined('owner', owner);
-    this.path = path;
     this.owner = owner;
     this.typeScriptClass = TypeScriptClass.withoutDependencies(name, path);
   }
@@ -102,7 +102,7 @@ export class Dependency implements HasDescription {
   }
 
   getDescription(): string {
-    return `${this.owner.path().get()} in ${this.path.get()}`;
+    return `${this.typeScriptClass.getPath().get()} in ${this.owner.getPath().get()}`;
   }
 }
 

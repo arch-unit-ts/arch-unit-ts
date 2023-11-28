@@ -2,6 +2,7 @@ import { Dependency } from '../../../../../main/arch-unit/domain/TypeScriptClass
 
 import { ClassNameFixture } from './ClassNameFixture';
 import { PathFixture } from './PathFixture';
+import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
 describe('Dependency', () => {
   it.each([undefined, null])('should not build without name [%s]', nullOrUndefined => {
@@ -13,6 +14,14 @@ describe('Dependency', () => {
   });
 
   it.each([undefined, null])('should not build without owner [%s]', nullOrUndefined => {
-    expect(() => new Dependency(ClassNameFixture.fruit(), PathFixture.fruit(), nullOrUndefined)).toThrow('owner should not be null');
+    expect(() => new Dependency(ClassNameFixture.fruit(), PathFixture.fruitPackage(), nullOrUndefined)).toThrow('owner should not be null');
+  });
+
+  describe('getDescription', () => {
+    it('should get description', () => {
+      expect(
+        new Dependency(ClassNameFixture.fruit(), PathFixture.fruitPackage(), TypeScriptClassFixture.client()).getDescription()
+      ).toEqual('/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/Client.ts');
+    });
   });
 });

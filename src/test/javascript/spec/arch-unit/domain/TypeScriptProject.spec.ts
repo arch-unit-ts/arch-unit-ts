@@ -32,7 +32,7 @@ describe('TypeScriptProject', () => {
       expect(
         TypeScriptProjectFixture.fakeSrc()
           .allClasses()
-          .map(typeScriptClass => typeScriptClass.path().get())
+          .map(typeScriptClass => typeScriptClass.getPath().get())
       ).toEqual([
         'src/test/fake-src/business-context-one/package-info.ts',
         'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
