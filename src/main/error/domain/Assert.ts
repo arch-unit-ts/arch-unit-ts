@@ -17,7 +17,7 @@ export class Assert {
     const filePathPattern: RegExp = /^(\/?[a-zA-Z0-9_-]+)+(\.[a-zA-Z0-9]+)*$/;
 
     if (!filePathPattern.test(path)) {
-      throw new Error(`${field} should be a path`);
+      throw new Error(`${field} '${path}' should be a path`);
     }
   }
 }

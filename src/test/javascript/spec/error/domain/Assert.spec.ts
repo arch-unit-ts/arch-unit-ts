@@ -36,11 +36,11 @@ describe('Assert', () => {
     });
 
     it.each(['/path]to/package', 'path{to/package', 'path/to:package'])('Should throw when path contains forbidden char', path => {
-      expect(() => Assert.path('path', path)).toThrow('path should be a path');
+      expect(() => Assert.path('path', path)).toThrow(`path '${path}' should be a path`);
     });
 
     it('Should end with a valid character', () => {
-      expect(() => Assert.path('path', 'path/to/package/')).toThrow('path should be a path');
+      expect(() => Assert.path('path', 'path/to/package/')).toThrow("path 'path/to/package/' should be a path");
     });
 
     it.each(['path/to/package', '/path/to/package', 'path', '/path/Bananas.ts', 'path_to-package'])('Should not throw for %s', path => {

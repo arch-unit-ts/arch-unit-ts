@@ -18,8 +18,8 @@ describe('Path', () => {
     expect(() => RelativePath.of(blank)).toThrow('path should not be blank');
   });
 
-  it.each(['\\src\\apple', 'src/', 'src/ba+nana'])('should not build when not a path (%s)', blank => {
-    expect(() => RelativePath.of(blank)).toThrow('path should be a path');
+  it.each(['\\src\\apple', 'src/', 'src/ba+nana'])('should not build when not a path (%s)', path => {
+    expect(() => RelativePath.of(path)).toThrow(`path '${path}' should be a path`);
   });
 
   it('should trim', () => {
