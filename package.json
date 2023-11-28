@@ -1,6 +1,6 @@
 {
   "name": "arch-unit-ts",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "arch-unit-ts",
   "license": "MIT",
   "author": {
@@ -16,7 +16,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dopublish": "npm i && npm run build && npm publish",
     "jest": "jest src/test/javascript/spec --logHeapUsage --maxWorkers=2 --no-cache",
     "test": "npm run jest --",
     "test:watch": "jest --watch",
@@ -27,7 +26,11 @@
     "prepare": "husky install",
     "prettier:check": "prettier --check '{,src/**/}*.{md,json,yml,xml}'",
     "prettier:format": "prettier --write '{,src/**/}*.{md,json,yml,xml}'",
-    "format:check": "npm run prettier:check && npm run eslint:check"
+    "format:check": "npm run prettier:check && npm run eslint:check",
+    "version:patch": "npm version patch --git-tag-version false",
+    "version:minor": "npm version minor --git-tag-version false",
+    "version:major": "npm version major --git-tag-version false",
+    "dopublish": "npm i && npm run build && npm publish"
   },
   "devDependencies": {
     "@prettier/plugin-xml": "3.2.1",
