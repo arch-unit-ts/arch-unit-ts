@@ -1,5 +1,5 @@
+import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/SimpleConditionEvents';
 import { EvaluationResult } from '../../../../../../main/arch-unit/domain/fluentapi/EvaluationResult';
-import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
 
 import { ConditionEventsFixture } from './ConditionEventsFixture';
 

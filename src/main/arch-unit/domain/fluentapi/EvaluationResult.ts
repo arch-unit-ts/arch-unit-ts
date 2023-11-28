@@ -1,4 +1,4 @@
-import { ConditionEvents } from './ConditionEvents';
+import { ConditionEvents } from './conditions/ConditionEvents';
 
 export class EvaluationResult {
   private readonly conditionEvents: ConditionEvents;

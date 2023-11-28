@@ -18,11 +18,11 @@ describe('FluentApi', () => {
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
       'Architecture violation : I want the test to fail.\n' +
-        'Errors : Wrong dependency in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts: src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts: src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts'
+        'Errors : Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts'
     );
   });
 
@@ -36,15 +36,15 @@ describe('FluentApi', () => {
         .dependOnClassesThat()
         .resideInAPackage('fruit')
         .orShould()
-        .dependOnClassesThat()
+        .onlyDependOnClassesThat()
         .resideInAPackage('business-context-two')
         .because('I want the test to fail')
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
       'Architecture violation : I want the test to fail.\n' +
-        'Errors : Wrong dependency in src/test/fake-src/business-context-one/package-info.ts: src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/package-info.ts: src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
-        'Wrong dependency in src/test/fake-src/shared-kernel-one/package-info.ts: src/main/arch-unit/domain/hexagonal/SharedKernel.ts'
+        'Errors : Dependency src/test/fake-src/business-context-one/package-info.ts in src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/package-info.ts in src/main/arch-unit/domain/hexagonal/BusinessContext.ts\n' +
+        'Dependency src/test/fake-src/shared-kernel-one/package-info.ts in src/main/arch-unit/domain/hexagonal/SharedKernel.ts'
     );
   });
 
@@ -58,26 +58,24 @@ describe('FluentApi', () => {
         .dependOnClassesThat()
         .resideInAPackage('fruit')
         .orShould()
-        .dependOnClassesThat()
+        .onlyDependOnClassesThat()
         .resideInAPackage('business-context-two')
         .because('I want the test to fail')
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
       'Architecture violation : I want the test to fail.\n' +
-        'Errors : Wrong dependency in src/test/fake-src/business-context-one/application/FruitApplicationService.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/application/FruitApplicationService.ts: src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/application/FruitApplicationService.ts: src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/domain/Client.ts: src/test/fake-src/business-context-one/domain/ClientName.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/domain/Client.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts: src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts: src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/application/BasketApplicationService.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts\n' +
-        'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
+        'Errors : Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/application/FruitApplicationService.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/domain/Client.ts in src/test/fake-src/business-context-one/domain/ClientName.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/domain/Client.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
+        'Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/application/BasketApplicationService.ts in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts in src/test/fake-src/business-context-two/application/BasketApplicationService.ts\n' +
+        'Dependency src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
     );
   });
 });

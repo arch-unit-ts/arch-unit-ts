@@ -7,11 +7,11 @@ import { ClassesThat } from './ClassesThat';
 import { ClassesThatInternal } from './ClassesThatInternal';
 import { ClassesTransformer } from './ClassesTransformer';
 import { ConditionAggregator } from './ConditionAggregator';
-import { ConditionEvents } from './ConditionEvents';
 import { ArchCondition } from './conditions/ArchCondition';
 import { ArchConditions } from './conditions/ArchConditions';
+import { ConditionEvents } from './conditions/ConditionEvents';
+import { SimpleConditionEvents } from './conditions/SimpleConditionEvents';
 import { EvaluationResult } from './EvaluationResult';
-import { SimpleConditionEvents } from './SimpleConditionEvents';
 
 export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesShouldConjunction {
   private readonly classesTransformer: ClassesTransformer;

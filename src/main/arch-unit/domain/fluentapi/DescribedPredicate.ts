@@ -1,4 +1,5 @@
 import { Assert } from '../../../error/domain/Assert';
+import { ArchFunction } from '../base/ArchFunction';
 
 import { Predicate } from './Predicate';
 
@@ -17,6 +18,10 @@ export abstract class DescribedPredicate<T> implements Predicate<T> {
 
   public or(other: DescribedPredicate<T>): DescribedPredicate<T> {
     return new OrPredicate<T>(this, other);
+  }
+
+  public onResultOf<F>(function_: ArchFunction<F, T>): DescribedPredicate<F> {
+    return new OnResultOfPredicate(this, function_);
   }
 }
 
@@ -51,5 +56,20 @@ class OrPredicate<T> extends DescribedPredicate<T> {
 
   public test(input: T): boolean {
     return this.current.test(input) || this.other.test(input);
+  }
+}
+
+class OnResultOfPredicate<F, T> extends DescribedPredicate<F> {
+  private readonly current: DescribedPredicate<T>;
+  private readonly function_: ArchFunction<F, T>;
+
+  constructor(current: DescribedPredicate<T>, function_: ArchFunction<F, T>) {
+    super(current.description);
+    this.current = current;
+    this.function_ = function_;
+  }
+
+  public test(input: F): boolean {
+    return this.current.test(this.function_.apply(input));
   }
 }

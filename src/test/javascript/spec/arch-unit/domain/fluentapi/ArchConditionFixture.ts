@@ -1,5 +1,5 @@
-import { ConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvents';
 import { ArchCondition } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/ArchCondition';
+import { ConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/ConditionEvents';
 import { TypeScriptClass } from '../../../../../../main/arch-unit/domain/TypeScriptClass';
 
 import { SimpleConditionEventFixture } from './SimpleConditionEventFixture';

@@ -1,6 +1,6 @@
 import { ClassName } from '../../../../../../main/arch-unit/domain/ClassName';
-import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/ConditionEvent';
-import { SimpleConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvent';
+import { ConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/ConditionEvent';
+import { SimpleConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/SimpleConditionEvent';
 
 export class SimpleConditionEventFixture {
   static violation = (): ConditionEvent => {

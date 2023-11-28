@@ -14,6 +14,10 @@ describe('TypeScriptClass', () => {
     ]);
   });
 
+  it.each([null, undefined])('Should not build without file', nullOrUndefined => {
+    expect(() => TypeScriptClass.of(nullOrUndefined)).toThrow('file should not be null');
+  });
+
   describe('hasImport', () => {
     it('Should find import', () => {
       expect(fruitClass.hasImport('FruitColor')).toEqual(true);

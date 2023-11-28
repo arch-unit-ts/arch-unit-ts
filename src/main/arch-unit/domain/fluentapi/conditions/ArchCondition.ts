@@ -1,7 +1,7 @@
 import { Assert } from '../../../../error/domain/Assert';
-import { ConditionEvent } from '../ConditionEvent';
-import { ConditionEvents } from '../ConditionEvents';
 
+import { ConditionEvent } from './ConditionEvent';
+import { ConditionEvents } from './ConditionEvents';
 import { ViolatedAndSatisfiedConditionEvents } from './ViolatedAndSatisfiedConditionEvents';
 
 export abstract class ArchCondition<T> {

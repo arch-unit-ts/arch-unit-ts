@@ -1,5 +1,5 @@
-import { ConditionEvent } from '../ConditionEvent';
-import { ConditionEvents } from '../ConditionEvents';
+import { ConditionEvent } from './ConditionEvent';
+import { ConditionEvents } from './ConditionEvents';
 
 export class ViolatedAndSatisfiedConditionEvents implements ConditionEvents {
   private readonly allowedEvents: ConditionEvent[];

@@ -15,8 +15,6 @@ export abstract class ArchRuleDefinition {
   };
 
   private static negateCondition = function () {
-    return function (condition: ArchCondition<TypeScriptClass>) {
-      return ArchConditions.negate(condition);
-    };
+    return (condition: ArchCondition<TypeScriptClass>) => ArchConditions.negate(condition);
   };
 }

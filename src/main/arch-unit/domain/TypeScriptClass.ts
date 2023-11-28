@@ -2,8 +2,10 @@ import { ImportDeclaration, SourceFile } from 'ts-morph';
 
 import { Assert } from '../../error/domain/Assert';
 
+import { ChainableFunction } from './base/ChainableFunction';
 import { ClassName } from './ClassName';
 import { DescribedPredicate } from './fluentapi/DescribedPredicate';
+import { HasDescription } from './fluentapi/HasDescription';
 import { RelativePath } from './RelativePath';
 
 export class TypeScriptClass {
@@ -11,17 +13,32 @@ export class TypeScriptClass {
   readonly packagePath: RelativePath;
   readonly dependencies: Dependency[];
 
-  // FIXME le constructeur n'est utilisé que pour construire une typescriptclass pour les dépendances
-  constructor(name: string, packagePath: string, imports: ImportDeclaration[]) {
-    this.name = ClassName.of(name);
-    this.packagePath = RelativePath.of(packagePath);
+  private constructor(name: ClassName, packagePath: RelativePath, imports: ImportDeclaration[]) {
+    Assert.notNullOrUndefined('name', name);
+    Assert.notNullOrUndefined('packagePath', packagePath);
+    Assert.notNullOrUndefined('imports', imports);
+    this.name = name;
+    this.packagePath = packagePath;
     this.dependencies = imports.map(importDeclaration =>
-      Dependency.of(RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath()), this)
+      Dependency.of(
+        ClassName.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getBaseName()),
+        RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getFilePath()),
+        this
+      )
     );
   }
 
   static of(file: SourceFile): TypeScriptClass {
-    return new TypeScriptClass(file.getBaseName(), file.getDirectory().getPath(), file.getImportDeclarations());
+    Assert.notNullOrUndefined('file', file);
+    return new TypeScriptClass(
+      ClassName.of(file.getBaseName()),
+      RelativePath.of(file.getDirectory().getPath()),
+      file.getImportDeclarations()
+    );
+  }
+
+  static withoutDependencies(name: ClassName, packagePath: RelativePath): TypeScriptClass {
+    return new TypeScriptClass(name, packagePath, []);
   }
 
   hasImport(importSearched: string) {
@@ -38,6 +55,15 @@ export class TypeScriptClass {
       `reside in any package ${packageIdentifiers.map(packageIdentifier => `'${packageIdentifier}'`).join(', ')}`
     );
   }
+
+  static GET_DIRECT_DEPENDENCIES_FROM_SELF: ChainableFunction<TypeScriptClass, Dependency[]> = new (class extends ChainableFunction<
+    TypeScriptClass,
+    Dependency[]
+  > {
+    public apply(input: TypeScriptClass) {
+      return input.dependencies;
+    }
+  })();
 
   path() {
     return RelativePath.of(`${this.packagePath.get()}/${this.name.get()}`);
@@ -57,18 +83,36 @@ class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
   }
 }
 
-export class Dependency {
+export class Dependency implements HasDescription {
   readonly path: RelativePath;
+  readonly owner: TypeScriptClass;
   readonly typeScriptClass: TypeScriptClass;
 
-  public constructor(path: RelativePath, typeScriptClass: TypeScriptClass) {
+  public constructor(name: ClassName, path: RelativePath, owner: TypeScriptClass) {
+    Assert.notNullOrUndefined('name', name);
     Assert.notNullOrUndefined('path', path);
-    Assert.notNullOrUndefined('typeScriptClass', typeScriptClass);
+    Assert.notNullOrUndefined('owner', owner);
     this.path = path;
-    this.typeScriptClass = typeScriptClass;
+    this.owner = owner;
+    this.typeScriptClass = TypeScriptClass.withoutDependencies(name, path);
   }
 
-  static of(path: RelativePath, typeScriptClass: TypeScriptClass): Dependency {
-    return new Dependency(path, typeScriptClass);
+  static of(name: ClassName, path: RelativePath, typeScriptClass: TypeScriptClass): Dependency {
+    return new Dependency(name, path, typeScriptClass);
   }
+
+  getDescription(): string {
+    return `${this.owner.path().get()} in ${this.path.get()}`;
+  }
+}
+
+export abstract class Functions {
+  public static GET_TARGET_CLASS: ChainableFunction<Dependency, TypeScriptClass> = new (class extends ChainableFunction<
+    Dependency,
+    TypeScriptClass
+  > {
+    public apply(input: Dependency): TypeScriptClass {
+      return input.typeScriptClass;
+    }
+  })();
 }

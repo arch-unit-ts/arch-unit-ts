@@ -1,6 +1,6 @@
-import { InvertingConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/InvertingConditionEvents';
-import { SimpleConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvent';
-import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
+import { InvertingConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/InvertingConditionEvents';
+import { SimpleConditionEvent } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/SimpleConditionEvent';
+import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/SimpleConditionEvents';
 
 import { SimpleConditionEventFixture } from './SimpleConditionEventFixture';
 

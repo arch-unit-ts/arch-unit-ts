@@ -42,13 +42,13 @@ describe('HexagonalArchTest', () => {
             .that()
             .resideInAnyPackage(businessContextTwo)
             .should()
-            .onlyDependOnClassesThat()
+            .dependOnClassesThat()
             .resideInAnyPackage(...otherBusinessContextsDomains(businessContextTwo))
             .because('Contexts can only depend on classes in the same context or shared kernels')
             .check(archProjectBusinessTwo.allClasses())
         ).toThrow(
           'Architecture violation : Contexts can only depend on classes in the same context or shared kernels.\n' +
-            'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-one/domain/fruit/Fruit.ts'
+            'Errors : Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts'
         );
       });
     });
@@ -80,7 +80,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses())
           ).toThrow(
             'Architecture violation : Domain model should only depend on domains and a very limited set of external dependencies.\n' +
-              'Errors : Wrong dependency in src/test/fake-src/business-context-two/domain/Basket.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
+              'Errors : Dependency src/test/fake-src/business-context-two/domain/Basket.ts in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
           );
         });
       });
@@ -99,7 +99,7 @@ describe('HexagonalArchTest', () => {
               .because('Primary should not interact with secondary')
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
-            'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts: src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
+            'Dependency src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts'
           );
         });
         it('should succeed because primary depends on secondary', () => {
@@ -131,7 +131,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             'Architecture violation : Secondary should not depend on application.\n' +
-              'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts'
+              'Errors : Dependency src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts in src/test/fake-src/business-context-two/application/BasketApplicationService.ts'
           );
         });
         it('should not depend on application', () => {
@@ -160,8 +160,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             "Architecture violation : Secondary should not loop to its own context's primary.\n" +
-              'Errors : Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/application/BasketApplicationService.ts\n' +
-              'Wrong dependency in src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
+              'Errors : Dependency src/test/fake-src/business-context-two/infrastructure/secondary/BasketJson.ts in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
           );
         });
         it('should not depend on same context primary', () => {
@@ -204,7 +203,7 @@ describe('HexagonalArchTest', () => {
             .check(archProjectBusinessTwo.allClasses());
         }).toThrow(
           'Architecture violation : Application should not depend on infrastructure.\n' +
-            'Errors : Wrong dependency in src/test/fake-src/business-context-two/application/BasketApplicationService.ts: src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
+            'Errors : Dependency src/test/fake-src/business-context-two/application/BasketApplicationService.ts in src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts'
         );
       });
     });

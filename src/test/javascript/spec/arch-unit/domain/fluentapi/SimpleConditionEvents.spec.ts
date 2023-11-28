@@ -1,4 +1,4 @@
-import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/SimpleConditionEvents';
+import { SimpleConditionEvents } from '../../../../../../main/arch-unit/domain/fluentapi/conditions/SimpleConditionEvents';
 
 import { SimpleConditionEventFixture } from './SimpleConditionEventFixture';
 
