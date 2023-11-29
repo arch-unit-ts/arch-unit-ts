@@ -4,7 +4,7 @@
   "description": "arch-unit-ts",
   "license": "MIT",
   "author": {
-    "name": "T.E."
+    "name": "Tristan Eyma."
   },
   "engines": {
     "node": ">=18.18.2"

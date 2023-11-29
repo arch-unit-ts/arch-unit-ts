@@ -1,6 +1,6 @@
-# Arch-Unit-TS
+# arch-unit-ts
 
-Arch-unit-ts is a free library for checking your typescript architecture. Inspired by [ArchUnit](https://github.com/TNG/ArchUnit) .
+arch-unit-ts is a free library for checking your typescript architecture. Inspired by [ArchUnit](https://github.com/TNG/ArchUnit) .
 
 This library can check dependencies between packages and classes. The main goal of Arch-Unit-ts is to automatically test architecture and coding rules of your project.
 
@@ -10,20 +10,55 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 
 - [How to use](#how-to-use)
   - [Installation](#installation)
-    - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
-- [How to contribute](#how-to-contribute) \* [Get project](#get-project)
-<!-- TOC -->
+  - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
+- [How to contribute](#how-to-contribute)
+  - [Get project](#get-project)
+  <!-- TOC -->
 
 ## How to use
+
+I tried to stay as close as I could to ArchUnit. If something is implemented, it should work the same way.
 
 ### Installation
 
 `npm install arch-unit-ts`
 
-#### Hexagonal Arch Test example
+### Hexagonal Arch Test example
+
+First, you will need to create two files SharedKernel and BusinessContext.
+You can place them at the root of you webapp project.
 
 ```
-const srcProject = new TypeScriptProject(RelativePath.of('src/main'));
+export abstract class SharedKernel {}
+```
+
+```
+export abstract class BusinessContext {}
+```
+
+Then, in each context you have, you will need to add a package_info.ts in the context root folder.
+If it's a business context, make it extends BusinessContext.
+If it's a shared kernel, make it extends SharedKernel.
+
+```
+class PackageInfo extends SharedKernel {}
+
+/// OR
+
+class PackageInfo extends BusinessContext {}
+```
+
+Then, you can create an HexagonalArchTest.spec.ts.
+The path of your source project (folder from which you want to test your architecture) is a relative path starting from your tsconfig.json file.
+
+```
+import { TypeScriptProject } from 'arch-unit-ts/dist/arch-unit/domain/TypeScriptProject';
+import { RelativePath } from 'arch-unit-ts/dist/arch-unit/domain/RelativePath';
+import { classes, noClasses } from 'arch-unit-ts/dist/main';
+import { SharedKernel } from '@/app/SharedKernel';
+import { BusinessContext } from '@/app/BusinessContext';
+
+const srcProject = new TypeScriptProject(RelativePath.of('src/main/app'));
 
 describe('HexagonalArchTest', () => {
   const sharedKernels = packagesWithContext(SharedKernel.name);
@@ -47,7 +82,7 @@ describe('HexagonalArchTest', () => {
           .that()
           .resideInAnyPackage(context)
           .should()
-          .onlyDependOnClassesThat()
+          .dependOnClassesThat()
           .resideInAnyPackage(...otherBusinessContextsDomains(context))
           .because('Contexts can only depend on classes in the same context or shared kernels')
           .check(srcProject.allClasses())
@@ -123,6 +158,9 @@ describe('HexagonalArchTest', () => {
 ```
 
 ## How to contribute
+
+I tried as much as I could to stay close to the original ArchUnit code.
+If something you would like is missing, check ArchUnit implementation and make a merge request.
 
 ### Get project
 
