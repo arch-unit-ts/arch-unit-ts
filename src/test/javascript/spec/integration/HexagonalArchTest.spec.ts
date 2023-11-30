@@ -1,9 +1,9 @@
-import { ArchRuleDefinition } from '../../../../main/arch-unit/domain/fluentapi/ArchRuleDefinition';
-import { BusinessContext } from '../../../../main/arch-unit/domain/hexagonal/BusinessContext';
-import { SharedKernel } from '../../../../main/arch-unit/domain/hexagonal/SharedKernel';
-import { RelativePath } from '../../../../main/arch-unit/domain/RelativePath';
-import { TypeScriptProject } from '../../../../main/arch-unit/domain/TypeScriptProject';
-import { TypeScriptProjectFixture } from '../arch-unit/domain/TypeScriptProjectFixture';
+import { RelativePath } from '../../../../main/arch-unit/core/domain/RelativePath';
+import { TypeScriptProject } from '../../../../main/arch-unit/core/domain/TypeScriptProject';
+import { ArchRuleDefinition } from '../../../../main/arch-unit/lang/synthax/ArchRuleDefinition';
+import { BusinessContext } from '../../../hexagonal/BusinessContext';
+import { SharedKernel } from '../../../hexagonal/SharedKernel';
+import { TypeScriptProjectFixture } from '../arch-unit/core/domain/TypeScriptProjectFixture';
 
 describe('HexagonalArchTest', () => {
   function packagesWithContext(contextName: string): string[] {

@@ -1,5 +1,5 @@
-import { ArchRuleDefinition } from './arch-unit/domain/fluentapi/ArchRuleDefinition';
-import { GivenClassesInternal } from './arch-unit/domain/fluentapi/GivenClassesInternal';
+import { ArchRuleDefinition } from './arch-unit/lang/synthax/ArchRuleDefinition';
+import { GivenClassesInternal } from './arch-unit/lang/synthax/GivenClassesInternal';
 
 export const classes = (): GivenClassesInternal => {
   return ArchRuleDefinition.classes();

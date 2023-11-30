@@ -1,5 +1,5 @@
-import { ArchRuleDefinition } from '../../../../main/arch-unit/domain/fluentapi/ArchRuleDefinition';
-import { TypeScriptProjectFixture } from '../arch-unit/domain/TypeScriptProjectFixture';
+import { ArchRuleDefinition } from '../../../../main/arch-unit/lang/synthax/ArchRuleDefinition';
+import { TypeScriptProjectFixture } from '../arch-unit/core/domain/TypeScriptProjectFixture';
 
 describe('FluentApi', () => {
   it('should test "and" and "or" predicate combination', () => {
@@ -42,9 +42,9 @@ describe('FluentApi', () => {
         .check(TypeScriptProjectFixture.fakeSrc().allClasses())
     ).toThrow(
       "Architecture violation : Rule classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
-        'Errors : Dependency src/main/arch-unit/domain/hexagonal/BusinessContext.ts in src/test/fake-src/business-context-one/package-info.ts\n' +
-        'Dependency src/main/arch-unit/domain/hexagonal/BusinessContext.ts in src/test/fake-src/business-context-two/package-info.ts\n' +
-        'Dependency src/main/arch-unit/domain/hexagonal/SharedKernel.ts in src/test/fake-src/shared-kernel-one/package-info.ts'
+        'Errors : Dependency src/test/hexagonal/BusinessContext.ts in src/test/fake-src/business-context-one/package-info.ts\n' +
+        'Dependency src/test/hexagonal/BusinessContext.ts in src/test/fake-src/business-context-two/package-info.ts\n' +
+        'Dependency src/test/hexagonal/SharedKernel.ts in src/test/fake-src/shared-kernel-one/package-info.ts'
     );
   });
 

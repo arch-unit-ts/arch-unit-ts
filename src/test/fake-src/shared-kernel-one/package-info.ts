@@ -1,4 +1,4 @@
-import { SharedKernel } from '../../../main/arch-unit/domain/hexagonal/SharedKernel';
+import { SharedKernel } from '../../hexagonal/SharedKernel';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class PackageInfo extends SharedKernel {}
