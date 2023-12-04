@@ -17,7 +17,7 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 
 ## How to use
 
-I tried to stay as close as I could to ArchUnit. If something is implemented, it should work the same way.
+I tried to stay as close as I could to ArchUnit. If something is implemented, it should work the same way as the original one.
 
 ### Installation
 
@@ -25,7 +25,7 @@ I tried to stay as close as I could to ArchUnit. If something is implemented, it
 
 ### Hexagonal Arch Test example
 
-First, you will need to create two files SharedKernel and BusinessContext.
+First, you will need to create two files SharedKernel.ts and BusinessContext.ts.
 You can place them at the root of you webapp project.
 
 ```
@@ -36,31 +36,40 @@ export abstract class SharedKernel {}
 export abstract class BusinessContext {}
 ```
 
-Then, in each context you have, you will need to add a package_info.ts in the context root folder.
+Then, in each context you have, you will need to add a package-info.ts in the context root folder.
 If it's a business context, make it extends BusinessContext.
 If it's a shared kernel, make it extends SharedKernel.
+The important part is the imports, make sure you import only one of them.
 
 ```
+import { SharedKernel } from "@/SharedKernel";
+
 class PackageInfo extends SharedKernel {}
 
 /// OR
 
+import {BusinessContext} from "@/BusinessContext";
+
 class PackageInfo extends BusinessContext {}
 ```
+
+Example of packages:
+
+![folder_example.png](src/main/resouces/folder_example.png)
 
 Then, you can create an HexagonalArchTest.spec.ts.
 The path of your source project (folder from which you want to test your architecture) is a relative path starting from your tsconfig.json file.
 
 ```
-import { TypeScriptProject } from 'arch-unit-ts/dist/arch-unit/domain/TypeScriptProject';
-import { RelativePath } from 'arch-unit-ts/dist/arch-unit/domain/RelativePath';
+import { TypeScriptProject } from "arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject";
+import { RelativePath } from "arch-unit-ts/dist/arch-unit/core/domain/RelativePath";
 import { classes, noClasses } from 'arch-unit-ts/dist/main';
 import { SharedKernel } from '@/app/SharedKernel';
 import { BusinessContext } from '@/app/BusinessContext';
 
-const srcProject = new TypeScriptProject(RelativePath.of('src/main/app'));
-
 describe('HexagonalArchTest', () => {
+  const srcProject = new TypeScriptProject(RelativePath.of('src/main/app'));
+
   const sharedKernels = packagesWithContext(SharedKernel.name);
   const businessContexts = packagesWithContext(BusinessContext.name);
 
@@ -76,17 +85,15 @@ describe('HexagonalArchTest', () => {
   }
 
   describe('BoundedContexts', () => {
-    it('Should not depend on other bounded context domains', () => {
-      [...sharedKernels, ...businessContexts].forEach((context) =>
-        noClasses()
-          .that()
-          .resideInAnyPackage(context)
-          .should()
-          .dependOnClassesThat()
-          .resideInAnyPackage(...otherBusinessContextsDomains(context))
-          .because('Contexts can only depend on classes in the same context or shared kernels')
-          .check(srcProject.allClasses())
-      );
+    it.each([...sharedKernels, ...businessContexts])('Should %s not depend on other bounded context domains', (context) => {
+      noClasses()
+        .that()
+        .resideInAnyPackage(context)
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage(...otherBusinessContextsDomains(context))
+        .because('Contexts can only depend on classes in the same context or shared kernels')
+        .check(srcProject.allClasses());
     });
   });
 
@@ -141,17 +148,15 @@ describe('HexagonalArchTest', () => {
         .check(srcProject.allClasses());
     });
 
-    it('should not depend on same context primary', () => {
-      [...sharedKernels, ...businessContexts].forEach((context) =>
-        noClasses()
-          .that()
-          .resideInAPackage(context + '/infrastructure/secondary')
-          .should()
-          .onlyDependOnClassesThat()
-          .resideInAPackage(context + '/infrastructure/primary')
-          .because("Secondary should not loop to its own context's primary")
-          .check(srcProject.allClasses())
-      );
+    it.each([...sharedKernels, ...businessContexts])('should %s not depend on same context primary', (context) => {
+      noClasses()
+        .that()
+        .resideInAPackage(context + '/infrastructure/secondary')
+        .should()
+        .onlyDependOnClassesThat()
+        .resideInAPackage(context + '/infrastructure/primary')
+        .because("Secondary should not loop to its own context's primary")
+        .check(srcProject.allClasses());
     });
   });
 });
