@@ -7,11 +7,11 @@ describe('TypeScriptPackage', () => {
   it('Should build', () => {
     const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
 
-    const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
+    const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory, '**/Client.ts');
 
     expect(typeScriptPackage.name.get()).toBe('domain');
     expect(typeScriptPackage.packages.map(typeScriptPackage => typeScriptPackage.name.get())).toEqual(['fruit']);
-    expect(typeScriptPackage.classes.map(typeScriptClass => typeScriptClass.name.get())).toEqual(['Client.ts', 'ClientName.ts']);
+    expect(typeScriptPackage.classes.map(typeScriptClass => typeScriptClass.name.get())).toEqual(['ClientName.ts']);
     expect(typeScriptPackage.path.get()).toBe('src/test/fake-src/business-context-one/domain');
   });
 
@@ -26,12 +26,12 @@ describe('TypeScriptPackage', () => {
     });
   });
 
-  describe('filterClassesByClassName', () => {
+  describe('filterClasses', () => {
     it('Should filter', () => {
       const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src');
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
-      const classes = typeScriptPackage.filterClassesByClassName('package-info');
+      const classes = typeScriptPackage.filterClasses('**/package-info.ts');
 
       expect(classes[0].name.get()).toEqual('package-info.ts');
       expect(classes[0].packagePath.get()).toEqual('src/test/fake-src/business-context-one');

@@ -68,7 +68,7 @@ import { SharedKernel } from '@/app/SharedKernel';
 import { BusinessContext } from '@/app/BusinessContext';
 
 describe('HexagonalArchTest', () => {
-  const srcProject = new TypeScriptProject(RelativePath.of('src/main/app'));
+  const srcProject = new TypeScriptProject(RelativePath.of('src/main/app'), '**/*FilesToExclude*', '**/*OtherFilesToExclude*');
 
   const sharedKernels = packagesWithContext(SharedKernel.name);
   const businessContexts = packagesWithContext(BusinessContext.name);
@@ -79,7 +79,7 @@ describe('HexagonalArchTest', () => {
 
   function packagesWithContext(contextName: string): string[] {
     return srcProject
-      .filterClassesByClassName('package-info')
+      .filterClasses('package-info')
       .filter((typeScriptClass) => typeScriptClass.hasImport(contextName))
       .map((typeScriptClass) => typeScriptClass.packagePath.get());
   }

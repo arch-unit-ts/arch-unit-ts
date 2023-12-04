@@ -9,7 +9,7 @@ describe('HexagonalArchTest', () => {
   function packagesWithContext(contextName: string): string[] {
     const archProject = TypeScriptProjectFixture.fakeSrc();
     return archProject
-      .filterClassesByClassName('package-info')
+      .filterClasses('**/package-info.ts')
       .filter(typeScriptClass => typeScriptClass.hasImport(contextName))
       .map(typeScriptClass => typeScriptClass.packagePath.get());
   }

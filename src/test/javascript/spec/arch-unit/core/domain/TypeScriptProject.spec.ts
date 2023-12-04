@@ -10,11 +10,11 @@ describe('TypeScriptProject', () => {
     );
   });
 
-  describe('filterClassesByClassName', () => {
+  describe('filterClasses', () => {
     it('Should filter', () => {
       const typeScriptProject = TypeScriptProjectFixture.fakeSrc();
 
-      const classes = typeScriptProject.filterClassesByClassName('package-info');
+      const classes = typeScriptProject.filterClasses('**/package-info.ts');
 
       expect(classes[0].name.get()).toEqual('package-info.ts');
       expect(classes[0].packagePath.get()).toEqual('src/test/fake-src/business-context-one');

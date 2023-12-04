@@ -51,6 +51,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "file-path-filter": "^3.0.2",
     "ts-morph": "20.0.0"
   }
 }

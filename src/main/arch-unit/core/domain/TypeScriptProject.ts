@@ -7,7 +7,7 @@ import { TypeScriptPackage } from './TypeScriptPackage';
 export class TypeScriptProject {
   private readonly rootPackage: TypeScriptPackage;
 
-  constructor(rootPackagePath: RelativePath) {
+  constructor(rootPackagePath: RelativePath, ...classesFilter: string[]) {
     const tsMorphProject = new Project({
       tsConfigFilePath: 'tsconfig.json',
     });
@@ -17,11 +17,11 @@ export class TypeScriptProject {
     if (!tsMorphRootDirectory) {
       throw new Error(`The package ${rootPackagePath.get()} was not found`);
     }
-    this.rootPackage = new TypeScriptPackage(tsMorphRootDirectory);
+    this.rootPackage = new TypeScriptPackage(tsMorphRootDirectory, ...classesFilter);
   }
 
-  filterClassesByClassName(className: string): TypeScriptClass[] {
-    return this.rootPackage.filterClassesByClassName(className);
+  filterClasses(classNameFilter: string): TypeScriptClass[] {
+    return this.rootPackage.filterClasses(classNameFilter);
   }
 
   allClasses() {
