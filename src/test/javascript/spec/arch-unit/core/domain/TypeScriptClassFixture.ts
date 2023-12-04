@@ -12,6 +12,10 @@ export class TypeScriptClassFixture {
     return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile('Client.ts'));
   };
 
+  static fileWithUnknownImport = (): TypeScriptClass => {
+    return TypeScriptClass.of(MorphProjectFixture.otherSrc().getSourceFile('FileWithUnknownImport.ts'));
+  };
+
   static fakeSrcClasses = (): TypeScriptClass[] => {
     return TypeScriptProjectFixture.fakeSrc().allClasses();
   };

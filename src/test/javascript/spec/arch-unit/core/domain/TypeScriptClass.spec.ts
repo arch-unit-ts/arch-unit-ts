@@ -3,6 +3,7 @@ import { TypeScriptClass } from '../../../../../../main/arch-unit/core/domain/Ty
 import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
 describe('TypeScriptClass', () => {
+  console.warn = jest.fn();
   const fruitClass = TypeScriptClassFixture.fruit();
 
   it('Should build', () => {
@@ -12,6 +13,20 @@ describe('TypeScriptClass', () => {
       'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
       'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
     ]);
+
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('Should build with warnings', () => {
+    const fileWithUnknownImport = TypeScriptClassFixture.fileWithUnknownImport();
+
+    expect(fileWithUnknownImport.name.get()).toEqual('FileWithUnknownImport.ts');
+    expect(fileWithUnknownImport.packagePath.get()).toEqual('src/test/other-src');
+    expect(fileWithUnknownImport.dependencies).toEqual([]);
+
+    expect(console.warn).toHaveBeenCalledWith(
+      'arch-unit-ts (Ignored import) : could not find the source file for the import : ./Sheep in file FileWithUnknownImport.ts'
+    );
   });
 
   it.each([null, undefined])('Should not build without file', nullOrUndefined => {

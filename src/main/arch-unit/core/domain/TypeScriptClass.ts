@@ -20,13 +20,15 @@ export class TypeScriptClass {
     Assert.notNullOrUndefined('imports', imports);
     this.name = name;
     this.packagePath = packagePath;
-    this.dependencies = imports.map(importDeclaration =>
-      Dependency.of(
-        ClassName.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getBaseName()),
-        RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getSourceFile().getDirectory().getPath()),
-        this
-      )
-    );
+    this.dependencies = imports
+      .filter(importDeclaration => this.isImportValid(importDeclaration))
+      .map(importDeclaration =>
+        Dependency.of(
+          ClassName.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getBaseName()),
+          RelativePath.of(importDeclaration.getModuleSpecifierSourceFileOrThrow().getSourceFile().getDirectory().getPath()),
+          this
+        )
+      );
     this.fullPath = RelativePath.of(`${this.packagePath.get()}/${this.name.get()}`);
   }
 
@@ -69,6 +71,18 @@ export class TypeScriptClass {
 
   getPath() {
     return this.fullPath;
+  }
+
+  private isImportValid(importDeclaration: ImportDeclaration) {
+    if (importDeclaration.getModuleSpecifierSourceFile() === undefined) {
+      console.warn(
+        `arch-unit-ts (Ignored import) : could not find the source file for the import : ${importDeclaration.getModuleSpecifierValue()} in file ${importDeclaration
+          .getSourceFile()
+          .getBaseName()}`
+      );
+      return false;
+    }
+    return true;
   }
 }
 
