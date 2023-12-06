@@ -10,7 +10,8 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 
 - [How to use](#how-to-use)
   - [Installation](#installation)
-  - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
+  - [Hexagonal Arch Test example](#hexagonal-arch-test-example))
+  - [Troubleshooting](#troubleshooting))
 - [How to contribute](#how-to-contribute)
   - [Get project](#get-project)
   <!-- TOC -->
@@ -161,6 +162,12 @@ describe('HexagonalArchTest', () => {
   });
 });
 ```
+
+### Troubleshooting
+
+TsMorph might have difficulties to read some dependencies.
+When it happens, a warn will be printed in the console.
+With jest, this warn might be quite big because it's console also print the place where the warn has happened. (Switch to vitest ? :p)
 
 ## How to contribute
 
