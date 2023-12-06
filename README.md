@@ -79,7 +79,7 @@ describe('HexagonalArchTest', () => {
 
   function packagesWithContext(contextName: string): string[] {
     return srcProject
-      .filterClasses('package-info')
+      .filterClasses('**/package-info.ts')
       .filter((typeScriptClass) => typeScriptClass.hasImport(contextName))
       .map((typeScriptClass) => typeScriptClass.packagePath.get());
   }
