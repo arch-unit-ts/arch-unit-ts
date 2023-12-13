@@ -1,4 +1,5 @@
 import { RelativePath } from '../../../../../../main/arch-unit/core/domain/RelativePath';
+import { TypeScriptClasses } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
 import { TypeScriptProject } from '../../../../../../main/arch-unit/core/domain/TypeScriptProject';
 
 import { TypeScriptProjectFixture } from './TypeScriptProjectFixture';
@@ -29,11 +30,8 @@ describe('TypeScriptProject', () => {
 
   describe('allClasses', () => {
     it('Should get all', () => {
-      expect(
-        TypeScriptProjectFixture.fakeSrc()
-          .allClasses()
-          .map(typeScriptClass => typeScriptClass.getPath().get())
-      ).toEqual([
+      const allClasses: TypeScriptClasses = TypeScriptProjectFixture.fakeSrc().allClasses();
+      expect(allClasses.get().map(typeScriptClass => typeScriptClass.getPath().get())).toEqual([
         'src/test/fake-src/business-context-one/package-info.ts',
         'src/test/fake-src/business-context-one/application/FruitApplicationService.ts',
         'src/test/fake-src/business-context-one/domain/Client.ts',
@@ -51,6 +49,14 @@ describe('TypeScriptProject', () => {
         'src/test/fake-src/shared-kernel-one/package-info.ts',
         'src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts',
       ]);
+
+      expect(
+        allClasses
+          .get()
+          .find(typeScriptClass => typeScriptClass.name.get() === 'Fruit.ts')
+          .getDirectDependenciesToSelf()
+          .map(reverseDependency => reverseDependency.typeScriptClass.name.get())
+      ).toEqual(['FruitApplicationService.ts', 'Client.ts', 'Basket.ts']);
     });
   });
 });

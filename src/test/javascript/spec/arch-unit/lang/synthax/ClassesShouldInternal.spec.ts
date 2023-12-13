@@ -1,5 +1,5 @@
 import { ClassesShouldInternal } from '../../../../../../main/arch-unit/lang/synthax/ClassesShouldInternal';
-import { TypeScriptClassFixture } from '../../core/domain/TypeScriptClassFixture';
+import { TypeScriptClassesFixture } from '../../core/domain/TypeScriptClassesFixture';
 
 import { ClassesShouldInternalFixture } from './ClassesShouldInternalFixture';
 
@@ -16,14 +16,14 @@ describe('ClassesShouldInternal', () => {
   describe('check', () => {
     it('should return not throw', () => {
       const classesShouldInternal: ClassesShouldInternal = ClassesShouldInternalFixture.classesShouldInternalOk();
-      expect(() => classesShouldInternal.check(TypeScriptClassFixture.fakeSrcClasses())).not.toThrow();
+      expect(() => classesShouldInternal.check(TypeScriptClassesFixture.fakeSrcClasses())).not.toThrow();
     });
 
     it('should throw with evaluation report', () => {
       const classesShouldInternal: ClassesShouldInternal = ClassesShouldInternalFixture.classesShouldInternalKo();
       classesShouldInternal.because('Everything went wrong');
 
-      expect(() => classesShouldInternal.check(TypeScriptClassFixture.fakeSrcClasses())).toThrow(
+      expect(() => classesShouldInternal.check(TypeScriptClassesFixture.fakeSrcClasses())).toThrow(
         "Architecture violation : Rule classes context-two should I'm ko because Everything went wrong.\n" +
           'Errors : Error in package-info.ts\n' +
           'Error in BasketApplicationService.ts\n' +

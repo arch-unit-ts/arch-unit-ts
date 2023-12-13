@@ -1,5 +1,5 @@
 import { Optional } from '../../../common/domain/Optional';
-import { TypeScriptClass } from '../../core/domain/TypeScriptClass';
+import { TypeScriptClass, TypeScriptClasses } from '../../core/domain/TypeScriptClass';
 import { ArchCondition } from '../ArchCondition';
 import { ArchRule } from '../ArchRule';
 import { ClassesTransformer } from '../ClassesTransformer';
@@ -35,7 +35,7 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
     return this;
   }
 
-  check(classes: TypeScriptClass[]): void {
+  check(classes: TypeScriptClasses): void {
     const evaluationResult = this.evaluate(classes);
     if (evaluationResult.hasErrors()) {
       throw new Error(
@@ -68,8 +68,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
     return this.overriddenDescription.orElse('');
   }
 
-  evaluate(classes: TypeScriptClass[]): EvaluationResult {
-    const classesFiltered = this.classesTransformer.transform(classes);
+  evaluate(classes: TypeScriptClasses): EvaluationResult {
+    const classesFiltered = this.classesTransformer.transform(classes.get());
 
     const conditionEvents: ConditionEvents = new SimpleConditionEvents();
 

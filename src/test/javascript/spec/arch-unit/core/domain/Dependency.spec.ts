@@ -14,7 +14,7 @@ describe('Dependency', () => {
   });
 
   it.each([undefined, null])('should not build without owner [%s]', nullOrUndefined => {
-    expect(() => new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitPackage(), nullOrUndefined)).toThrow(
+    expect(() => new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackage(), nullOrUndefined)).toThrow(
       'owner should not be null'
     );
   });
@@ -22,8 +22,8 @@ describe('Dependency', () => {
   describe('getDescription', () => {
     it('should get description', () => {
       expect(
-        new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitPackage(), TypeScriptClassFixture.client()).getDescription()
-      ).toEqual('/src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/Client.ts');
+        new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackage(), TypeScriptClassFixture.client()).getDescription()
+      ).toEqual('src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/Client.ts');
     });
   });
 });

@@ -1,5 +1,6 @@
 import { ClassesTransformer } from '../../../../../main/arch-unit/lang/ClassesTransformer';
 import { PredicateAggregator } from '../../../../../main/arch-unit/lang/synthax/PredicateAggregator';
+import { TypeScriptClassesFixture } from '../core/domain/TypeScriptClassesFixture';
 import { TypeScriptClassFixture } from '../core/domain/TypeScriptClassFixture';
 
 import { ClassesTransformerFixture } from './ClassesTransformerFixture';
@@ -53,7 +54,7 @@ describe('ClassesTransformer', () => {
     it('should filter class based on predicates', () => {
       const classesTransformer = ClassesTransformerFixture.contextOneFruitTransformer();
 
-      const classesAfterTransform = classesTransformer.transform(TypeScriptClassFixture.fakeSrcClasses());
+      const classesAfterTransform = classesTransformer.transform(TypeScriptClassesFixture.fakeSrcClasses().get());
 
       expect(classesAfterTransform.map(typeScriptClass => typeScriptClass.getPath().get())).toEqual([
         'src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',

@@ -13,6 +13,7 @@ export class TypeScriptClass {
   readonly packagePath: RelativePath;
   readonly dependencies: Dependency[];
   private readonly fullPath: RelativePath;
+  reverseDependencies: ReverseDependencies = new ReverseDependencies();
 
   private constructor(name: ClassName, packagePath: RelativePath, imports: ImportDeclaration[]) {
     Assert.notNullOrUndefined('name', name);
@@ -84,6 +85,10 @@ export class TypeScriptClass {
     }
     return true;
   }
+
+  getDirectDependenciesToSelf(): Dependency[] {
+    return this.reverseDependencies.get(this);
+  }
 }
 
 class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
@@ -117,6 +122,50 @@ export class Dependency implements HasDescription {
 
   getDescription(): string {
     return `${this.typeScriptClass.getPath().get()} in ${this.owner.getPath().get()}`;
+  }
+}
+
+export class TypeScriptClasses {
+  private readonly classes: TypeScriptClass[];
+
+  constructor(classes: TypeScriptClass[]) {
+    this.classes = classes;
+
+    const reverseDependencies: ReverseDependencies = new ReverseDependencies();
+
+    classes.forEach(typeScriptClass =>
+      typeScriptClass.dependencies.forEach(dependency => {
+        reverseDependencies.put(typeScriptClass, dependency);
+      })
+    );
+
+    classes.forEach(typeScriptClass => (typeScriptClass.reverseDependencies = reverseDependencies));
+  }
+
+  public get(): TypeScriptClass[] {
+    return this.classes;
+  }
+}
+
+export class ReverseDependencies {
+  readonly reverseDependencies: Map<string, Dependency[]> = new Map<string, Dependency[]>();
+
+  constructor() {}
+
+  get(typeScriptClass: TypeScriptClass): Dependency[] {
+    const dependencies = this.reverseDependencies.get(typeScriptClass.name.get());
+    return dependencies !== undefined ? dependencies : [];
+  }
+
+  put(typeScriptClass: TypeScriptClass, dependency: Dependency): void {
+    const mapKey = dependency.typeScriptClass.name.get();
+    const reverseDependency = Dependency.of(typeScriptClass.name, typeScriptClass.packagePath, dependency.typeScriptClass);
+
+    if (!this.reverseDependencies.has(mapKey)) {
+      this.reverseDependencies.set(mapKey, [reverseDependency]);
+    } else {
+      this.reverseDependencies.get(mapKey).push(reverseDependency);
+    }
   }
 }
 

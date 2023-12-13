@@ -1,26 +1,44 @@
 import { TypeScriptClass } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
 import { MorphProjectFixture } from '../../morph/MorphProjectFixture';
 
-import { TypeScriptProjectFixture } from './TypeScriptProjectFixture';
+import { TypeScriptClassesFixture } from './TypeScriptClassesFixture';
 
 export class TypeScriptClassFixture {
   static fruit = (): TypeScriptClass => {
-    return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile('Fruit.ts'));
+    return this.getTypeScriptClass('Fruit.ts');
   };
 
   static client = (): TypeScriptClass => {
-    return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile('Client.ts'));
+    return this.getTypeScriptClass('Client.ts');
+  };
+
+  static fruitJson = (): TypeScriptClass => {
+    return this.getTypeScriptClass('FruitJson.ts');
   };
 
   static fileWithUnknownImport = (): TypeScriptClass => {
     return TypeScriptClass.of(MorphProjectFixture.otherSrc().getSourceFile('FileWithUnknownImport.ts'));
   };
 
-  static fakeSrcClasses = (): TypeScriptClass[] => {
-    return TypeScriptProjectFixture.fakeSrc().allClasses();
+  static businessContextOneClasses = (): TypeScriptClass[] => {
+    return TypeScriptClassesFixture.fakeSrcClasses()
+      .get()
+      .filter(typeScriptClass => typeScriptClass.getPath().contains('business-context-one'));
   };
 
-  static businessContextOneClasses = (): TypeScriptClass[] => {
-    return this.fakeSrcClasses().filter(typeScriptClass => typeScriptClass.getPath().contains('business-context-one'));
-  };
+  static basket(): TypeScriptClass {
+    return this.getTypeScriptClass('Basket.ts');
+  }
+
+  private static getTypeScriptClass(className: string): TypeScriptClass {
+    return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile(className));
+  }
+
+  static fruitApplicationService(): TypeScriptClass {
+    return this.getTypeScriptClass('FruitApplicationService.ts');
+  }
+
+  static clientName(): TypeScriptClass {
+    return this.getTypeScriptClass('ClientName.ts');
+  }
 }
