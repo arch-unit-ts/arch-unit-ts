@@ -12,8 +12,8 @@ describe('ArchConditions', () => {
         const conditionEvents = new SimpleConditionEvents();
         allDependencyCondition.check(TypeScriptClassFixture.fruit(), conditionEvents);
         expect(conditionEvents.getViolating()[0].getDescriptionLines()).toEqual([
-          'Dependency src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
-          'Dependency src/test/fake-src/business-context-one/domain/fruit/FruitType.ts in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts',
+          'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitColor.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts',
+          'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitType.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts',
         ]);
       });
       it('should not add violation', () => {
@@ -32,8 +32,8 @@ describe('ArchConditions', () => {
         const conditionEvents = new SimpleConditionEvents();
         anyDependencyCondition.check(TypeScriptClassFixture.client(), conditionEvents);
         expect(conditionEvents.getViolating()[0].getDescriptionLines()).toEqual([
-          'Dependency src/test/fake-src/business-context-one/domain/ClientName.ts in src/test/fake-src/business-context-one/domain/Client.ts\n' +
-            'Dependency src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/Client.ts',
+          'Dependency src.test.fake-src.business-context-one.domain.ClientName.ts in src.test.fake-src.business-context-one.domain.Client.ts\n' +
+            'Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-one.domain.Client.ts',
         ]);
       });
       it('should not add violation', () => {

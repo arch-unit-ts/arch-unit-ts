@@ -36,24 +36,20 @@ export class PackageMatcher {
   }
 
   convertToRegex(packageIdentifier: string): string {
-    return (
-      '^' +
-      packageIdentifier
-        .replaceAll(new RegExp('\\[(.*?)]', 'g'), '(?:$1)')
-        .replaceAll(PackageMatcher.TWO_STAR_CAPTURE_LITERAL, PackageMatcher.TWO_STAR_REGEX_MARKER)
-        .replaceAll('*', '\\w+')
-        .replaceAll('.', '\\.')
-        .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, PackageMatcher.TWO_STAR_CAPTURE_REGEX)
-        .replaceAll('\\.\\.', PackageMatcher.TWO_DOTS_REGEX) +
-      '$'
-    );
+    return packageIdentifier
+      .replace(new RegExp('\\[(.*?)]', 'g'), '(?:$1)')
+      .replaceAll(PackageMatcher.TWO_STAR_CAPTURE_LITERAL, PackageMatcher.TWO_STAR_REGEX_MARKER)
+      .replaceAll('*', '\\w+')
+      .replaceAll('.', '\\.')
+      .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, PackageMatcher.TWO_STAR_CAPTURE_REGEX)
+      .replaceAll('\\.\\.', PackageMatcher.TWO_DOTS_REGEX);
   }
 
   private validate(packageIdentifier: string): void {
     if (packageIdentifier.includes('...')) {
       throw new Error("Package Identifier may not contain more than two '.' in a row");
     }
-    if (packageIdentifier.replaceAll('(**)', '').includes('**')) {
+    if (packageIdentifier.replace('(**)', '').includes('**')) {
       throw new Error("Package Identifier may not contain more than one '*' in a row");
     }
     if (packageIdentifier.includes('(..)')) {
@@ -92,7 +88,7 @@ export class PackageMatcher {
   private validateCharacters(packageIdentifier: string) {
     for (let i = 0; i < packageIdentifier.length; i++) {
       const char: string = packageIdentifier.charAt(i);
-      if (!/[a-zA-Z0-9_$]/.test(char) && !PackageMatcher.PACKAGE_CONTROL_SYMBOLS.includes(char)) {
+      if (!/[a-zA-Z0-9-_$]/.test(char) && !PackageMatcher.PACKAGE_CONTROL_SYMBOLS.includes(char)) {
         throw new Error(
           `Package Identifier ${packageIdentifier} may only consist of valid typescript identifier parts or the symbols '.)(*'`
         );
@@ -100,7 +96,11 @@ export class PackageMatcher {
     }
   }
 
-  public matches(aPackage: string): boolean {
+  public exactMatches(aPackage: string): boolean {
+    return new RegExp('^' + this.packagePattern.source + '$').test(aPackage);
+  }
+
+  public partialMatches(aPackage: string): boolean {
     return this.packagePattern.test(aPackage);
   }
 

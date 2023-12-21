@@ -16,6 +16,10 @@ export class RelativePath {
     return this.path;
   }
 
+  getDotsPath(): string {
+    return this.path.replaceAll('/', '.');
+  }
+
   static of(path: string): RelativePath {
     return new RelativePath(path);
   }

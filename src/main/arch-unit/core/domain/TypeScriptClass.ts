@@ -6,6 +6,7 @@ import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { HasDescription } from '../../base/HasDescription';
 
 import { ClassName } from './ClassName';
+import { PackageMatcher } from './PackageMatcher';
 import { RelativePath } from './RelativePath';
 
 export class TypeScriptClass {
@@ -51,12 +52,16 @@ export class TypeScriptClass {
   }
 
   static resideInAPackage(packageIdentifier: string): DescribedPredicate<TypeScriptClass> {
-    return new PackageMatchesPredicate([packageIdentifier], `reside in a package '${packageIdentifier}'`);
+    const packageMatcher: Set<PackageMatcher> = new Set();
+    packageMatcher.add(PackageMatcher.of(packageIdentifier));
+    return new PackageMatchesPredicate(packageMatcher, `reside in a package '${packageIdentifier}'`);
   }
 
   static resideInAnyPackage(packageIdentifiers: string[]) {
+    const packageMatchers: Set<PackageMatcher> = new Set();
+    packageIdentifiers.map(packageIdentifier => packageMatchers.add(PackageMatcher.of(packageIdentifier)));
     return new PackageMatchesPredicate(
-      packageIdentifiers,
+      packageMatchers,
       `reside in any package ${packageIdentifiers.map(packageIdentifier => `'${packageIdentifier}'`).join(', ')}`
     );
   }
@@ -92,15 +97,15 @@ export class TypeScriptClass {
 }
 
 class PackageMatchesPredicate extends DescribedPredicate<TypeScriptClass> {
-  packageIdentifiers: string[];
+  packageMatchers: Set<PackageMatcher>;
 
-  constructor(packageIdentifiers: string[], description: string) {
+  constructor(packageMatchers: Set<PackageMatcher>, description: string) {
     super(description);
-    this.packageIdentifiers = packageIdentifiers;
+    this.packageMatchers = packageMatchers;
   }
 
   test(typeScriptClass: TypeScriptClass): boolean {
-    return this.packageIdentifiers.some(packageIdentifier => typeScriptClass.packagePath.contains(packageIdentifier));
+    return Array.from(this.packageMatchers).some(matcher => matcher.partialMatches(typeScriptClass.packagePath.getDotsPath()));
   }
 }
 
@@ -121,7 +126,7 @@ export class Dependency implements HasDescription {
   }
 
   getDescription(): string {
-    return `${this.typeScriptClass.getPath().get()} in ${this.owner.getPath().get()}`;
+    return `${this.typeScriptClass.getPath().getDotsPath()} in ${this.owner.getPath().getDotsPath()}`;
   }
 }
 

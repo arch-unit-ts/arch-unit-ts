@@ -49,30 +49,36 @@ describe('TypeScriptClass', () => {
     });
   });
 
+  describe('path with dots', () => {
+    it('Should get path with dots', () => {
+      expect(fruitClass.getPath().getDotsPath()).toEqual('src.test.fake-src.business-context-one.domain.fruit.Fruit.ts');
+    });
+  });
+
   describe('resideInAPackage', () => {
     it('Should be true when in the package', () => {
-      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAPackage('domain');
-      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in a package 'domain'");
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAPackage('..domain..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in a package '..domain..'");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(true);
     });
 
     it('Should be false when not in the package', () => {
-      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAPackage('north/carolina');
-      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in a package 'north/carolina'");
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAPackage('..north.carolina..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in a package '..north.carolina..'");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
     });
   });
 
   describe('resideInAnyPackage', () => {
     it('Should be true when in a package', () => {
-      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAnyPackage(['domain', 'north/carolina']);
-      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in any package 'domain', 'north/carolina'");
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAnyPackage(['..domain..', '..north.carolina..']);
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in any package '..domain..', '..north.carolina..'");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(true);
     });
 
     it('Should be false when not in a package', () => {
-      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAnyPackage(['do main', 'north/carolina']);
-      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in any package 'do main', 'north/carolina'");
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAnyPackage(['..do*main..', '..north.carolina..']);
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside in any package '..do*main..', '..north.carolina..'");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
     });
   });

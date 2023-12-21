@@ -6,7 +6,7 @@ describe('packageMatchers', () => {
     ['foo.other.bar', true],
     ['foo.match.other.bar', true],
     ['foo.bar', false],
-    ['matc.hother', false],
+    ['matc.ho.ther', false],
   ];
   it.each(listOfPackages)('should packageMatcher %s match on matcher be %s', (packageMatcher: string, packageCheck: boolean) => {
     expect(PackageMatchers.of('..match..', '..other..').test(packageMatcher)).toEqual(packageCheck);

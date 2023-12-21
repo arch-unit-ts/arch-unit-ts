@@ -23,7 +23,7 @@ describe('Dependency', () => {
     it('should get description', () => {
       expect(
         new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackage(), TypeScriptClassFixture.client()).getDescription()
-      ).toEqual('src/test/fake-src/business-context-one/domain/fruit/Fruit.ts in src/test/fake-src/business-context-one/domain/Client.ts');
+      ).toEqual('src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-one.domain.Client.ts');
     });
   });
 });

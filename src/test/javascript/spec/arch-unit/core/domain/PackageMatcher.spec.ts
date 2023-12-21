@@ -40,7 +40,7 @@ describe('PackageMatcher', () => {
   ];
 
   it.each(listOfPackageName)('should matcher %s on target %s be %s', (matcher: string, target: string, matches: boolean) => {
-    expect(PackageMatcher.of(matcher).matches(target)).toEqual(matches);
+    expect(PackageMatcher.of(matcher).exactMatches(target)).toEqual(matches);
   });
 
   const listOfCaptureGroup = [

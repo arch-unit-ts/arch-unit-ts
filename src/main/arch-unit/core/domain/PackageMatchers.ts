@@ -25,7 +25,7 @@ export class PackageMatchers extends DescribedPredicate<string> {
   test(aPackage: string): boolean {
     let matches: boolean = false;
     this.packageMatchers.forEach(matcher => {
-      matches = matches || matcher.matches(aPackage);
+      matches = matches || matcher.exactMatches(aPackage);
     });
     return matches;
   }
