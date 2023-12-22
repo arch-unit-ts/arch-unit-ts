@@ -30,7 +30,7 @@ describe('TypeScriptClass', () => {
   });
 
   it.each([null, undefined])('Should not build without file', nullOrUndefined => {
-    expect(() => TypeScriptClass.of(nullOrUndefined)).toThrow('file should not be null');
+    expect(() => TypeScriptClass.of(nullOrUndefined)).toThrow('file should not be null or undefined');
   });
 
   describe('hasImport', () => {
@@ -79,6 +79,34 @@ describe('TypeScriptClass', () => {
     it('Should be false when not in a package', () => {
       const typeScriptClassDescribedPredicate = TypeScriptClass.resideInAnyPackage(['..do*main..', '..north.carolina..']);
       expect(typeScriptClassDescribedPredicate.description).toEqual("reside in any package '..do*main..', '..north.carolina..'");
+      expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
+    });
+  });
+
+  describe('resideOutsideOfPackage', () => {
+    it('Should be false when inside the package', () => {
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideOutsideOfPackage('..domain..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside outside of package '..domain..'");
+      expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
+    });
+
+    it('Should be true when outside the package', () => {
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideOutsideOfPackage('..north.carolina..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside outside of package '..north.carolina..'");
+      expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(true);
+    });
+  });
+
+  describe('resideOutsideOfPackages', () => {
+    it('Should be true when outside', () => {
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideOutsideOfPackages('..do*main..', '..north.carolina..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside outside of packages ['..do*main..', '..north.carolina..']");
+      expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(true);
+    });
+
+    it('Should be false when inside', () => {
+      const typeScriptClassDescribedPredicate = TypeScriptClass.resideOutsideOfPackages('..domain..', '..north.carolina..');
+      expect(typeScriptClassDescribedPredicate.description).toEqual("reside outside of packages ['..domain..', '..north.carolina..']");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
     });
   });

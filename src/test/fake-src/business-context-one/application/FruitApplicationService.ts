@@ -3,7 +3,7 @@ import { FruitColor } from '../domain/fruit/FruitColor';
 import { FruitType } from '../domain/fruit/FruitType';
 
 export class FruitApplicationService {
-  getBlueStrawberry() {
+  getBlueStrawberry(): Fruit {
     return new Fruit(FruitType.STRAWBERRY, FruitColor.BLUE);
   }
 }

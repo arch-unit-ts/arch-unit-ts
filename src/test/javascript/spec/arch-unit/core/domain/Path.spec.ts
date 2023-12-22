@@ -10,7 +10,7 @@ function getSourceFile(fileName: string): SourceFile {
 
 describe('Path', () => {
   it.each([undefined, null])('should not build for %s', blank => {
-    expect(() => RelativePath.of(blank)).toThrow('path should not be null');
+    expect(() => RelativePath.of(blank)).toThrow('path should not be null or undefined');
   });
 
   it.each(EMPTY_STRINGS)('should not build for "%s"', blank => {

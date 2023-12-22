@@ -36,5 +36,5 @@ function getReverseDependencies(typeScriptClasses: TypeScriptClasses, className:
     .get()
     .find(typeScriptClass => typeScriptClass.name.get() === className)
     .getDirectDependenciesToSelf()
-    .map(reverseDependency => reverseDependency.typeScriptClass.name.get());
+    .map(reverseDependency => reverseDependency.owner.name.get());
 }

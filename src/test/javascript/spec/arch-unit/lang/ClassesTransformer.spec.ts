@@ -7,11 +7,11 @@ import { ClassesTransformerFixture } from './ClassesTransformerFixture';
 
 describe('ClassesTransformer', () => {
   it.each([undefined, null])('should not build without description [%s]', nullOrUndefined => {
-    expect(() => new ClassesTransformer(nullOrUndefined, null)).toThrow('description should not be null');
+    expect(() => new ClassesTransformer(nullOrUndefined, null)).toThrow('description should not be null or undefined');
   });
 
   it.each([undefined, null])('should not build without predicateAggregator [%s]', nullOrUndefined => {
-    expect(() => new ClassesTransformer('description', nullOrUndefined)).toThrow('predicateAggregator should not be null');
+    expect(() => new ClassesTransformer('description', nullOrUndefined)).toThrow('predicateAggregator should not be null or undefined');
   });
 
   describe('getDescription', () => {

@@ -26,6 +26,11 @@ export abstract class ArchConditions {
     );
   };
 
+  public static onlyHaveDependentsWhere(predicate: DescribedPredicate<Dependency>): ArchCondition<TypeScriptClass> {
+    const description: string = 'only have dependents where ' + predicate.description;
+    return new AllDependenciesCondition(description, predicate, TypeScriptClass.GET_DIRECT_DEPENDENCIES_TO_SELF);
+  }
+
   static negate<T>(condition: ArchCondition<T>): ArchCondition<T> {
     return new NeverCondition(condition);
   }

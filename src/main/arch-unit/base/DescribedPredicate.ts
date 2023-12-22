@@ -12,6 +12,10 @@ export abstract class DescribedPredicate<T> implements Predicate<T> {
 
   abstract test(t: T): boolean;
 
+  public as(description: string): DescribedPredicate<T> {
+    return new AsPredicate<T>(this, description);
+  }
+
   public and(other: DescribedPredicate<T>): DescribedPredicate<T> {
     return new AndPredicate<T>(this, other);
   }
@@ -20,8 +24,40 @@ export abstract class DescribedPredicate<T> implements Predicate<T> {
     return new OrPredicate<T>(this, other);
   }
 
+  public static not<T>(predicate: DescribedPredicate<T>): DescribedPredicate<T> {
+    return new NotPredicate<T>(predicate);
+  }
+
   public onResultOf<F>(function_: ArchFunction<F, T>): DescribedPredicate<F> {
     return new OnResultOfPredicate(this, function_);
+  }
+
+  public static alwaysFalse<T>(): DescribedPredicate<T> {
+    return new AlwaysFalsePredicate();
+  }
+}
+
+class AlwaysFalsePredicate<T> extends DescribedPredicate<T> {
+  constructor() {
+    super('always false');
+  }
+  public test(): boolean {
+    return false;
+  }
+}
+
+class AsPredicate<T> extends DescribedPredicate<T> {
+  private readonly current: DescribedPredicate<T>;
+
+  constructor(current: DescribedPredicate<T>, description: string) {
+    Assert.notNullOrUndefined('current', current);
+
+    super(description);
+    this.current = current;
+  }
+
+  public test(input: T): boolean {
+    return this.current.test(input);
   }
 }
 
@@ -56,6 +92,21 @@ class OrPredicate<T> extends DescribedPredicate<T> {
 
   public test(input: T): boolean {
     return this.current.test(input) || this.other.test(input);
+  }
+}
+
+class NotPredicate<T> extends DescribedPredicate<T> {
+  private readonly predicate: DescribedPredicate<T>;
+
+  constructor(predicate: DescribedPredicate<T>) {
+    Assert.notNullOrUndefined('predicate', predicate);
+
+    super('not ' + predicate.description);
+    this.predicate = predicate;
+  }
+
+  public test(input: T): boolean {
+    return !this.predicate.test(input);
   }
 }
 

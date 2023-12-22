@@ -75,21 +75,21 @@ describe('HexagonalArchTest', () => {
   const businessContexts = packagesWithContext(BusinessContext.name);
 
   function otherBusinessContextsDomains(context: string): string[] {
-    return businessContexts.filter((other) => context !== other).map((name) => name + '/domain');
+      return businessContexts.filter(other => context !== other).map(name => name + '.domain..');
   }
 
   function packagesWithContext(contextName: string): string[] {
     return srcProject
       .filterClasses('**/package-info.ts')
-      .filter((typeScriptClass) => typeScriptClass.hasImport(contextName))
-      .map((typeScriptClass) => typeScriptClass.packagePath.get());
+      .filter(typeScriptClass => typeScriptClass.hasImport(contextName))
+      .map(typeScriptClass => typeScriptClass.packagePath.getDotsPath());
   }
 
   describe('BoundedContexts', () => {
     it.each([...sharedKernels, ...businessContexts])('Should %s not depend on other bounded context domains', (context) => {
       noClasses()
         .that()
-        .resideInAnyPackage(context)
+        .resideInAnyPackage(context + '..')
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(...otherBusinessContextsDomains(context))
@@ -102,11 +102,30 @@ describe('HexagonalArchTest', () => {
     it('Should not depend on outside', () => {
       classes()
         .that()
-        .resideInAPackage('/domain')
+        .resideInAPackage('..domain..')
         .should()
         .onlyDependOnClassesThat()
-        .resideInAnyPackage('/domain', ...sharedKernels)
+        .resideInAnyPackage('..domain..', ...sharedKernels)
         .because('Domain model should only depend on domains and a very limited set of external dependencies')
+        .check(srcProject.allClasses());
+    });
+
+    it.each([...sharedKernels, ...businessContexts])('should be an hexagonal architecture in context %s', context => {
+      Architectures.layeredArchitecture()
+        .consideringOnlyDependenciesInAnyPackage(context + '..')
+        .withOptionalLayers(true)
+        .layer('domain models', context + '.domain..')
+        .layer('domain services', context + '.domain..')
+        .layer('application services', context + '.application..')
+        .layer('primary adapters', context + '.infrastructure.primary..')
+        .layer('secondary adapters', context + '.infrastructure.secondary..')
+        .whereLayer('application services')
+        .mayOnlyBeAccessedByLayers('primary adapters')
+        .whereLayer('primary adapters')
+        .mayNotBeAccessedByAnyLayer()
+        .whereLayer('secondary adapters')
+        .mayNotBeAccessedByAnyLayer()
+        .because('Each bounded context should implement an hexagonal architecture')
         .check(srcProject.allClasses());
     });
   });
@@ -115,10 +134,10 @@ describe('HexagonalArchTest', () => {
     it('Should not depend on infrastructure', () => {
       noClasses()
         .that()
-        .resideInAPackage('/application')
+        .resideInAPackage('..application..')
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage('/infrastructure')
+        .resideInAnyPackage('..infrastructure..')
         .because('Application should only depend on domain, not on infrastructure')
         .check(srcProject.allClasses());
     });
@@ -128,10 +147,10 @@ describe('HexagonalArchTest', () => {
     it('Should not depend on secondary', () => {
       noClasses()
         .that()
-        .resideInAPackage('/primary')
+        .resideInAPackage('..primary..')
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage('/secondary')
+        .resideInAnyPackage('..secondary..')
         .because('Primary should not interact with secondary')
         .check(srcProject.allClasses());
     });
@@ -141,10 +160,10 @@ describe('HexagonalArchTest', () => {
     it('should not depend on application', () => {
       noClasses()
         .that()
-        .resideInAPackage('infrastructure/secondary')
+        .resideInAPackage('..infrastructure.secondary..')
         .should()
         .dependOnClassesThat()
-        .resideInAPackage('application')
+        .resideInAPackage('..application..')
         .because('Secondary should not depend on application')
         .check(srcProject.allClasses());
     });
@@ -152,10 +171,10 @@ describe('HexagonalArchTest', () => {
     it.each([...sharedKernels, ...businessContexts])('should %s not depend on same context primary', (context) => {
       noClasses()
         .that()
-        .resideInAPackage(context + '/infrastructure/secondary')
+        .resideInAPackage(context + '.infrastructure.secondary..')
         .should()
         .onlyDependOnClassesThat()
-        .resideInAPackage(context + '/infrastructure/primary')
+        .resideInAPackage(context + '.infrastructure.primary..')
         .because("Secondary should not loop to its own context's primary")
         .check(srcProject.allClasses());
     });

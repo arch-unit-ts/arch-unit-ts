@@ -3,11 +3,11 @@ import { BasketApplicationService } from '../../application/BasketApplicationSer
 import { Supplier } from '@fake-src/business-context-two/infrastructure/primary/Supplier';
 
 export class BasketJson {
-  getBasketShape() {
-    new BasketApplicationService();
+  getBasketShape(): BasketApplicationService {
+    return new BasketApplicationService();
   }
 
-  getSupplier() {
-    new Supplier();
+  getSupplier(): Supplier {
+    return new Supplier();
   }
 }

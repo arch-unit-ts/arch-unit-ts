@@ -6,16 +6,16 @@ import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
 describe('Dependency', () => {
   it.each([undefined, null])('should not build without name [%s]', nullOrUndefined => {
-    expect(() => new Dependency(nullOrUndefined, null, null)).toThrow('name should not be null');
+    expect(() => new Dependency(nullOrUndefined, null, null)).toThrow('name should not be null or undefined');
   });
 
   it.each([undefined, null])('should not build without path [%s]', nullOrUndefined => {
-    expect(() => new Dependency(ClassNameFixture.fruit(), nullOrUndefined, null)).toThrow('path should not be null');
+    expect(() => new Dependency(ClassNameFixture.fruit(), nullOrUndefined, null)).toThrow('path should not be null or undefined');
   });
 
   it.each([undefined, null])('should not build without owner [%s]', nullOrUndefined => {
     expect(() => new Dependency(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackage(), nullOrUndefined)).toThrow(
-      'owner should not be null'
+      'owner should not be null or undefined'
     );
   });
 

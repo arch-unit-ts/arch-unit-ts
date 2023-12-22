@@ -21,4 +21,8 @@ export class SimpleConditionEvent implements ConditionEvent {
   getDescriptionLines(): string[] {
     return [this.description];
   }
+
+  public static violated(message: string): ConditionEvent {
+    return new SimpleConditionEvent(message, true);
+  }
 }

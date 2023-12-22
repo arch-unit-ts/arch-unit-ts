@@ -1,3 +1,4 @@
+import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { TypeScriptClass } from '../../core/domain/TypeScriptClass';
 import { ArchCondition } from '../ArchCondition';
 import { ClassesTransformer } from '../ClassesTransformer';
@@ -5,7 +6,7 @@ import { ClassesTransformer } from '../ClassesTransformer';
 import { ClassesShouldInternal } from './ClassesShouldInternal';
 import { ClassesThatInternal } from './ClassesThatInternal';
 import { ConditionAggregator } from './ConditionAggregator';
-import { ClassesShould } from './elements/ClassesShould';
+import { ClassesShould, ClassesShouldConjunction } from './elements/ClassesShould';
 import { ClassesThat } from './elements/ClassesThat';
 import { GivenClasses } from './elements/GivenClasses';
 import { GivenClassesConjunction } from './elements/GivenClassesConjunction';
@@ -36,8 +37,16 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
     });
   }
 
+  thatWithPredicate(predicate: DescribedPredicate<TypeScriptClass>): GivenClassesConjunction {
+    return new GivenClassesInternal(this.classesTransformer.addPredicate(predicate), this.prepareCondition);
+  }
+
   should(): ClassesShould {
     return new ClassesShouldInternal(this.classesTransformer, ConditionAggregator.default(), this.prepareCondition);
+  }
+
+  shouldWithConjunction(condition: ArchCondition<TypeScriptClass>): ClassesShouldConjunction {
+    return new ClassesShouldInternal(this.classesTransformer, ConditionAggregator.default().add(condition), this.prepareCondition);
   }
 
   and(): ClassesThat<GivenClassesConjunction> {

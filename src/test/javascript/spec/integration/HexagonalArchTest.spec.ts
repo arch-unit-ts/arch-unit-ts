@@ -1,6 +1,7 @@
 import { RelativePath } from '../../../../main/arch-unit/core/domain/RelativePath';
 import { TypeScriptProject } from '../../../../main/arch-unit/core/domain/TypeScriptProject';
 import { ArchRuleDefinition } from '../../../../main/arch-unit/lang/synthax/ArchRuleDefinition';
+import { Architectures } from '../../../../main/arch-unit/library/Architectures';
 import { BusinessContext } from '../../../hexagonal/BusinessContext';
 import { SharedKernel } from '../../../hexagonal/SharedKernel';
 import { TypeScriptProjectFixture } from '../arch-unit/core/domain/TypeScriptProjectFixture';
@@ -22,7 +23,7 @@ describe('HexagonalArchTest', () => {
   const archProjectBusinessTwo = new TypeScriptProject(businessContextTwo);
 
   describe('BoundedContexts', () => {
-    describe('shouldNotDependOnOtherBoundedContextDomains', () => {
+    describe('shouldNotDependOnOtherBoundedContextDomainsChargement', () => {
       it('Should not depend on other bounded context domains', () => {
         expect(() =>
           ArchRuleDefinition.noClasses()
@@ -50,6 +51,45 @@ describe('HexagonalArchTest', () => {
           "Architecture violation : Rule no classes reside in any package 'src.test.fake-src.business-context-two..' should depend on classes that reside in any package 'src.test.fake-src.business-context-one.domain..' because Contexts can only depend on classes in the same context or shared kernels.\n" +
             'Errors : Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-two.domain.Basket.ts'
         );
+      });
+
+      describe('shouldBeAnHexagonalArchitecture', () => {
+        it('Should fail when not an hexagonal architecture', () => {
+          const businessContextTwoDotsPath = 'src.test.fake-src.business-context-two';
+          expect(() =>
+            Architectures.layeredArchitecture()
+              .consideringOnlyDependenciesInAnyPackage(businessContextTwoDotsPath)
+              .withOptionalLayers(true)
+              .layer('domain models', `${businessContextTwoDotsPath}.domain..`)
+              .layer('domain services', `${businessContextTwoDotsPath}.domain..`)
+              .layer('application services', `${businessContextTwoDotsPath}.application..`)
+              .layer('primary adapters', `${businessContextTwoDotsPath}.infrastructure.primary..`)
+              .layer('secondary adapters', `${businessContextTwoDotsPath}.infrastructure.secondary..`)
+              .whereLayer('application services')
+              .mayOnlyBeAccessedByLayers('primary adapters')
+              .whereLayer('primary adapters')
+              .mayNotBeAccessedByAnyLayer()
+              .whereLayer('secondary adapters')
+              .mayNotBeAccessedByAnyLayer()
+              .because('Each bounded context should implement an hexagonal architecture')
+              .check(archProjectBusinessTwo.allClasses())
+          ).toThrow(
+            "Architecture violation : Rule Layered architecture considering only dependencies in any package ['src.test.fake-src.business-context-two'], consisting of (optional)\n" +
+              "layer 'domain models' (reside in any package 'src.test.fake-src.business-context-two.domain..')\n" +
+              "layer 'domain services' (reside in any package 'src.test.fake-src.business-context-two.domain..')\n" +
+              "layer 'application services' (reside in any package 'src.test.fake-src.business-context-two.application..')\n" +
+              "layer 'primary adapters' (reside in any package 'src.test.fake-src.business-context-two.infrastructure.primary..')\n" +
+              "layer 'secondary adapters' (reside in any package 'src.test.fake-src.business-context-two.infrastructure.secondary..')\n" +
+              "where layer 'application services' may only be accessed by layers ['primary adapters']\n" +
+              "where layer 'primary adapters' may not be accessed by any layer\n" +
+              "where layer 'secondary adapters' may not be accessed by any layer because Each bounded context should implement an hexagonal architecture.\n" +
+              'Errors : Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
+          );
+        });
       });
     });
 

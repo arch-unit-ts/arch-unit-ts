@@ -18,14 +18,12 @@ describe('ReverseDependencies', () => {
     reverseDependencies.put(basketClass, fruitDependency);
     reverseDependencies.put(fruitApplicationServiceClass, fruitDependency);
     reverseDependencies.put(clientNameClass, clientDependency);
-    expect(reverseDependencies.get(fruitClass).map(reverseDependency => reverseDependency.typeScriptClass.name.get())).toEqual([
+    expect(reverseDependencies.get(fruitClass).map(reverseDependency => reverseDependency.owner.name.get())).toEqual([
       'Client.ts',
       'Basket.ts',
       'FruitApplicationService.ts',
     ]);
-    expect(reverseDependencies.get(clientClass).map(reverseDependency => reverseDependency.typeScriptClass.name.get())).toEqual([
-      'ClientName.ts',
-    ]);
+    expect(reverseDependencies.get(clientClass).map(reverseDependency => reverseDependency.owner.name.get())).toEqual(['ClientName.ts']);
     expect(reverseDependencies.get(TypeScriptClassFixture.fruitJson())).toEqual([]);
   });
 });

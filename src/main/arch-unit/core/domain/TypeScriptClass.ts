@@ -6,6 +6,7 @@ import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { HasDescription } from '../../base/HasDescription';
 
 import { ClassName } from './ClassName';
+import { Formatters } from './Formatters';
 import { PackageMatcher } from './PackageMatcher';
 import { RelativePath } from './RelativePath';
 
@@ -66,12 +67,31 @@ export class TypeScriptClass {
     );
   }
 
+  static resideOutsideOfPackage(packageIdentifier: string): DescribedPredicate<TypeScriptClass> {
+    return DescribedPredicate.not(this.resideInAPackage(packageIdentifier)).as(`reside outside of package '${packageIdentifier}'`);
+  }
+
+  static resideOutsideOfPackages(...packageIdentifiers: string[]): DescribedPredicate<TypeScriptClass> {
+    return DescribedPredicate.not(TypeScriptClass.resideInAnyPackage(packageIdentifiers)).as(
+      `reside outside of packages [${Formatters.joinSingleQuoted(...packageIdentifiers)}]`
+    );
+  }
+
   static GET_DIRECT_DEPENDENCIES_FROM_SELF: ChainableFunction<TypeScriptClass, Dependency[]> = new (class extends ChainableFunction<
     TypeScriptClass,
     Dependency[]
   > {
     public apply(input: TypeScriptClass) {
       return input.dependencies;
+    }
+  })();
+
+  static GET_DIRECT_DEPENDENCIES_TO_SELF: ChainableFunction<TypeScriptClass, Dependency[]> = new (class extends ChainableFunction<
+    TypeScriptClass,
+    Dependency[]
+  > {
+    public apply(input: TypeScriptClass) {
+      return input.getDirectDependenciesToSelf();
     }
   })();
 
@@ -130,6 +150,12 @@ export class Dependency implements HasDescription {
   }
 }
 
+export abstract class Predicates {
+  public static dependencyOrigin(predicate: DescribedPredicate<TypeScriptClass>): DescribedPredicate<Dependency> {
+    return Functions.GET_ORIGIN_CLASS.is(predicate).as('origin ' + predicate.description);
+  }
+}
+
 export class TypeScriptClasses {
   private readonly classes: TypeScriptClass[];
 
@@ -164,7 +190,7 @@ export class ReverseDependencies {
 
   put(typeScriptClass: TypeScriptClass, dependency: Dependency): void {
     const mapKey = dependency.typeScriptClass.name.get();
-    const reverseDependency = Dependency.of(typeScriptClass.name, typeScriptClass.packagePath, dependency.typeScriptClass);
+    const reverseDependency = Dependency.of(dependency.typeScriptClass.name, dependency.typeScriptClass.packagePath, typeScriptClass);
 
     if (!this.reverseDependencies.has(mapKey)) {
       this.reverseDependencies.set(mapKey, [reverseDependency]);
@@ -175,6 +201,15 @@ export class ReverseDependencies {
 }
 
 export abstract class Functions {
+  public static GET_ORIGIN_CLASS: ChainableFunction<Dependency, TypeScriptClass> = new (class extends ChainableFunction<
+    Dependency,
+    TypeScriptClass
+  > {
+    public apply(input: Dependency): TypeScriptClass {
+      return input.owner;
+    }
+  })();
+
   public static GET_TARGET_CLASS: ChainableFunction<Dependency, TypeScriptClass> = new (class extends ChainableFunction<
     Dependency,
     TypeScriptClass

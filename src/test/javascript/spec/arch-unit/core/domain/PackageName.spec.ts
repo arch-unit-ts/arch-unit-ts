@@ -5,7 +5,7 @@ import { PackageNameFixture } from './PackageNameFixture';
 
 describe('PackageName', () => {
   it.each([undefined, null])('should not build for %s', blank => {
-    expect(() => PackageName.of(blank)).toThrow('packageName should not be null');
+    expect(() => PackageName.of(blank)).toThrow('packageName should not be null or undefined');
   });
 
   it.each(EMPTY_STRINGS)('should not build for "%s"', blank => {

@@ -17,4 +17,8 @@ export class EvaluationResult {
   hasErrors(): boolean {
     return this.conditionEvents.getViolating().length > 0;
   }
+
+  add(part: EvaluationResult): void {
+    part.conditionEvents.getViolating().forEach(violation => this.conditionEvents.add(violation));
+  }
 }

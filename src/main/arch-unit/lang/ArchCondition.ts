@@ -13,6 +13,9 @@ export abstract class ArchCondition<T> {
 
   abstract check(item: T, events: ConditionEvents): void;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  finish(events: ConditionEvents): void {}
+
   and(condition: ArchCondition<T>): ArchCondition<T> {
     return new AndCondition(this, condition);
   }

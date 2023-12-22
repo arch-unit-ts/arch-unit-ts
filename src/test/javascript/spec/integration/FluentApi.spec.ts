@@ -1,7 +1,9 @@
 import { ArchRuleDefinition } from '../../../../main/arch-unit/lang/synthax/ArchRuleDefinition';
+import { Architectures } from '../../../../main/arch-unit/library/Architectures';
 import { TypeScriptProjectFixture } from '../arch-unit/core/domain/TypeScriptProjectFixture';
 
 describe('FluentApi', () => {
+  const archProjectFakeSrc = TypeScriptProjectFixture.fakeSrc();
   it('should test "and" and "or" predicate combination', () => {
     expect(() =>
       ArchRuleDefinition.classes()
@@ -15,7 +17,7 @@ describe('FluentApi', () => {
         .onlyDependOnClassesThat()
         .resideInAPackage('not_existing_package')
         .because('I want the test to fail')
-        .check(TypeScriptProjectFixture.fakeSrc().allClasses())
+        .check(archProjectFakeSrc.allClasses())
     ).toThrow(
       "Architecture violation : Rule classes reside in a package 'business-context-two' and reside in a package 'domain' or reside in a package 'fruit' should only depend on classes that reside in a package 'not_existing_package' because I want the test to fail.\n" +
         'Errors : Dependency src.test.fake-src.business-context-one.domain.fruit.FruitColor.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
@@ -39,7 +41,7 @@ describe('FluentApi', () => {
         .onlyDependOnClassesThat()
         .resideInAPackage('business-context-two')
         .because('I want the test to fail')
-        .check(TypeScriptProjectFixture.fakeSrc().allClasses())
+        .check(archProjectFakeSrc.allClasses())
     ).toThrow(
       "Architecture violation : Rule classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
         'Errors : Dependency src.test.hexagonal.BusinessContext.ts in src.test.fake-src.business-context-one.package-info.ts\n' +
@@ -61,7 +63,7 @@ describe('FluentApi', () => {
         .onlyDependOnClassesThat()
         .resideInAPackage('business-context-two')
         .because('I want the test to fail')
-        .check(TypeScriptProjectFixture.fakeSrc().allClasses())
+        .check(archProjectFakeSrc.allClasses())
     ).toThrow(
       "Architecture violation : Rule no classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
         'Errors : Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-one.application.FruitApplicationService.ts\n' +
@@ -77,5 +79,44 @@ describe('FluentApi', () => {
         'Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
         'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts'
     );
+  });
+
+  it('Should throw error when mandatory layer is absent', () => {
+    expect(() =>
+      Architectures.layeredArchitecture()
+        .consideringOnlyDependenciesInAnyPackage('src.test.fake-src.shared-kernel-one')
+        .withOptionalLayers(false)
+        .layer('domain models', 'src.test.fake-src.shared-kernel-one.domain..')
+        .layer('domain services', 'src.test.fake-src.shared-kernel-one.domain..')
+        .layer('application services', 'src.test.fake-src.shared-kernel-one.application..')
+        .layer('primary adapters', 'src.test.fake-src.shared-kernel-one.infrastructure.primary..')
+        .layer('secondary adapters', 'src.test.fake-src.shared-kernel-one.infrastructure.secondary..')
+        .optionalLayer('optional', 'src.test.fake-src.shared-kernel-one.optional..')
+        .check(archProjectFakeSrc.allClasses())
+    ).toThrow(
+      "Architecture violation : Rule Layered architecture considering only dependencies in any package ['src.test.fake-src.shared-kernel-one'], consisting of\n" +
+        "layer 'domain models' (reside in any package 'src.test.fake-src.shared-kernel-one.domain..')\n" +
+        "layer 'domain services' (reside in any package 'src.test.fake-src.shared-kernel-one.domain..')\n" +
+        "layer 'application services' (reside in any package 'src.test.fake-src.shared-kernel-one.application..')\n" +
+        "layer 'primary adapters' (reside in any package 'src.test.fake-src.shared-kernel-one.infrastructure.primary..')\n" +
+        "layer 'secondary adapters' (reside in any package 'src.test.fake-src.shared-kernel-one.infrastructure.secondary..')\n" +
+        "optional layer 'optional' (reside in any package 'src.test.fake-src.shared-kernel-one.optional..').\n" +
+        "Errors : Layer 'domain models' is empty\n" +
+        "Layer 'domain services' is empty\n" +
+        "Layer 'application services' is empty\n" +
+        "Layer 'secondary adapters' is empty"
+    );
+  });
+
+  it('Should throw error when adding condition on layer that does not exist', () => {
+    expect(() =>
+      Architectures.layeredArchitecture()
+        .consideringOnlyDependenciesInAnyPackage('src.test.fake-src.shared-kernel-one')
+        .withOptionalLayers(true)
+        .layer('domain models', 'src.test.fake-src.shared-kernel-one.domain..')
+        .whereLayer('application services')
+        .mayOnlyBeAccessedByLayers('primary adapters')
+        .check(archProjectFakeSrc.allClasses())
+    ).toThrow('There is no layer named application services');
   });
 });

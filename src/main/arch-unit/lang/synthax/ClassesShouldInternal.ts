@@ -79,6 +79,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
         .ifPresent(condition => this.prepareCondition(condition).check(typeScriptClass, conditionEvents))
     );
 
+    this.conditionAggregator.getCondition().ifPresent(condition => condition.finish(conditionEvents));
+
     return new EvaluationResult(conditionEvents);
   }
 
