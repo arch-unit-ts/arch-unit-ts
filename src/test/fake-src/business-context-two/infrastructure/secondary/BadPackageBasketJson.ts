@@ -2,7 +2,9 @@ import { BasketApplicationService } from '../../application/BasketApplicationSer
 
 import { Supplier } from '@fake-src/business-context-two/infrastructure/primary/Supplier';
 
-export class BasketJson {
+export class BadPackageBasketJson {
+  readonly amount: number;
+
   getBasketShape(): BasketApplicationService {
     return new BasketApplicationService();
   }

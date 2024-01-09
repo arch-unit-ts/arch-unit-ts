@@ -22,8 +22,8 @@ describe('FluentApi', () => {
       "Architecture violation : Rule classes reside in a package 'business-context-two' and reside in a package 'domain' or reside in a package 'fruit' should only depend on classes that reside in a package 'not_existing_package' because I want the test to fail.\n" +
         'Errors : Dependency src.test.fake-src.business-context-one.domain.fruit.FruitColor.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitType.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
-        'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
         'Dependency src.test.fake-src.shared-kernel-one.infrastructure.primary.MoneyJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts'
     );
   });
@@ -45,7 +45,9 @@ describe('FluentApi', () => {
     ).toThrow(
       "Architecture violation : Rule classes should depend on classes that reside in a package 'business-context-one' and depend on classes that reside in a package 'fruit' or only depend on classes that reside in a package 'business-context-two' because I want the test to fail.\n" +
         'Errors : Dependency src.test.hexagonal.BusinessContext.ts in src.test.fake-src.business-context-one.package-info.ts\n' +
+        'Dependency src.test.fake-src.business-context-one.infrastructure.primary.FruitJson.ts in src.test.fake-src.business-context-one.infrastructure.primary.TypeScriptFruitsAdapter.ts\n' +
         'Dependency src.test.hexagonal.BusinessContext.ts in src.test.fake-src.business-context-two.package-info.ts\n' +
+        'Dependency src.test.fake-src.business-context-one.infrastructure.primary.TypeScriptFruitsAdapter.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketRepository.ts\n' +
         'Dependency src.test.hexagonal.SharedKernel.ts in src.test.fake-src.shared-kernel-one.package-info.ts'
     );
   });
@@ -73,11 +75,13 @@ describe('FluentApi', () => {
         'Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-one.domain.Client.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitColor.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitType.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
-        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
-        'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts\n' +
-        'Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
-        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts'
+        'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts'
     );
   });
 
@@ -118,5 +122,32 @@ describe('FluentApi', () => {
         .mayOnlyBeAccessedByLayers('primary adapters')
         .check(archProjectFakeSrc.allClasses())
     ).toThrow('There is no layer named application services');
+  });
+
+  it('Should throw on have simple name starting with prefix', () => {
+    expect(() => {
+      ArchRuleDefinition.classes()
+        .that()
+        .resideInAPackage('..fruit..')
+        .should()
+        .haveSimpleNameStartingWith('Vegetable')
+        .check(archProjectFakeSrc.allClasses());
+    }).toThrow(
+      "Architecture violation : Rule classes reside in a package '..fruit..' should have simple name starting with Vegetable because .\n" +
+        'Errors : Fruit.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
+        'FruitColor.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
+        'FruitType.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts'
+    );
+  });
+
+  it('Should have simple name starting with prefix', () => {
+    expect(() => {
+      ArchRuleDefinition.classes()
+        .that()
+        .resideInAPackage('..fruit..')
+        .should()
+        .haveSimpleNameStartingWith('Fruit')
+        .check(archProjectFakeSrc.allClasses());
+    }).not.toThrow();
   });
 });

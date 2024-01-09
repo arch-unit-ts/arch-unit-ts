@@ -1,8 +1,11 @@
 import { Assert } from '../../error/domain/Assert';
+import { DescribedPredicate } from '../base/DescribedPredicate';
+import { TypeScriptClass } from '../core/domain/TypeScriptClass';
 
 import { ConditionEvent } from './ConditionEvent';
 import { ConditionEvents } from './ConditionEvents';
 import { ViolatedAndSatisfiedConditionEvents } from './conditions/ViolatedAndSatisfiedConditionEvents';
+import { SimpleConditionEvent } from './SimpleConditionEvent';
 
 export abstract class ArchCondition<T> {
   readonly description: string;
@@ -22,6 +25,28 @@ export abstract class ArchCondition<T> {
 
   or(condition: ArchCondition<T>): ArchCondition<T> {
     return new OrCondition(this, condition);
+  }
+
+  static from(predicate: DescribedPredicate<TypeScriptClass>): ConditionByPredicate {
+    return ConditionByPredicate.of(predicate);
+  }
+
+  as(description: string): ArchCondition<T> {
+    return new AsCondition(this, description);
+  }
+}
+
+class AsCondition<T> extends ArchCondition<T> {
+  private readonly condition: ArchCondition<T>;
+
+  constructor(condition: ArchCondition<T>, description: string) {
+    Assert.notNullOrUndefined('condition', condition);
+    super(description);
+    this.condition = condition;
+  }
+
+  check(item: T, events: ConditionEvents): void {
+    this.condition.check(item, events);
   }
 }
 
@@ -168,5 +193,43 @@ class ConditionWithEvents<T> {
     const events: ViolatedAndSatisfiedConditionEvents = new ViolatedAndSatisfiedConditionEvents();
     condition.check(item, events);
     return events;
+  }
+}
+
+export class ConditionByPredicate extends ArchCondition<TypeScriptClass> {
+  private readonly predicate: DescribedPredicate<TypeScriptClass>;
+  private readonly eventDescriber: (predicateDescription: string, satisfied: boolean) => string;
+
+  public static of(predicate: DescribedPredicate<TypeScriptClass>) {
+    return new ConditionByPredicate(
+      predicate,
+      predicate.description,
+      (predicateDescription, satisfied) => (satisfied ? 'has ' : 'does not have ') + predicateDescription
+    );
+  }
+
+  private constructor(
+    predicate: DescribedPredicate<TypeScriptClass>,
+    description: string,
+    eventDescriber: (predicateDescription: string, satisfied: boolean) => string
+  ) {
+    super(description);
+    this.predicate = predicate;
+    this.eventDescriber = eventDescriber;
+  }
+
+  public as(description: string): ConditionByPredicate {
+    return new ConditionByPredicate(this.predicate, description, this.eventDescriber);
+  }
+
+  public check(typeScriptClass: TypeScriptClass, events: ConditionEvents): void {
+    const satisfied: boolean = this.predicate.test(typeScriptClass);
+    const message: string =
+      typeScriptClass.name.get() +
+      ' ' +
+      this.eventDescriber.apply(this, [this.predicate.description, satisfied]) +
+      ' in ' +
+      typeScriptClass.getPath().get();
+    events.add(new SimpleConditionEvent(message, !satisfied));
   }
 }

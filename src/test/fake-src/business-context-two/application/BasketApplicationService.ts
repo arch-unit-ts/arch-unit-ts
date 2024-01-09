@@ -1,7 +1,7 @@
-import { Supplier } from '../infrastructure/primary/Supplier';
+import { TypeScriptBasketsAdapter } from '../infrastructure/primary/TypeScriptBasketsAdapter';
 
 export class BasketApplicationService {
-  getSupplier() {
-    return new Supplier();
+  getTypeScriptBasketsAdapter() {
+    return new TypeScriptBasketsAdapter();
   }
 }

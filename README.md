@@ -63,6 +63,7 @@ The path of your source project (folder from which you want to test your archite
 
 ```
 import { TypeScriptProject } from "arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject";
+import { ArchRuleDefinition } from '../../../../main/arch-unit/lang/synthax/ArchRuleDefinition';
 import { RelativePath } from "arch-unit-ts/dist/arch-unit/core/domain/RelativePath";
 import { classes, noClasses } from 'arch-unit-ts/dist/main';
 import { SharedKernel } from '@/app/SharedKernel';
@@ -87,7 +88,7 @@ describe('HexagonalArchTest', () => {
 
   describe('BoundedContexts', () => {
     it.each([...sharedKernels, ...businessContexts])('Should %s not depend on other bounded context domains', (context) => {
-      noClasses()
+      ArchRuleDefinition.noClasses()
         .that()
         .resideInAnyPackage(context + '..')
         .should()
@@ -96,11 +97,26 @@ describe('HexagonalArchTest', () => {
         .because('Contexts can only depend on classes in the same context or shared kernels')
         .check(srcProject.allClasses());
     });
+
+    it('primary TypeScript Adapters should only be called from secondaries', () => {
+      ArchRuleDefinition.classes()
+        .that()
+        .resideInAPackage('..primary..')
+        .and()
+        .haveSimpleNameStartingWith('TypeScript')
+        .should()
+        .onlyHaveDependentClassesThat()
+        .resideInAPackage('..secondary..')
+        .because(
+          "To interact between two contexts, secondary from context 'A' should call a primary Java adapter (naming convention starting with 'Java') from context 'B'"
+        )
+        .check(srcProject.allClasses());
+    });
   });
 
   describe('Domain', () => {
     it('Should not depend on outside', () => {
-      classes()
+      ArchRuleDefinition.classes()
         .that()
         .resideInAPackage('..domain..')
         .should()
@@ -132,7 +148,7 @@ describe('HexagonalArchTest', () => {
 
   describe('Application', () => {
     it('Should not depend on infrastructure', () => {
-      noClasses()
+      ArchRuleDefinition.noClasses()
         .that()
         .resideInAPackage('..application..')
         .should()
@@ -145,7 +161,7 @@ describe('HexagonalArchTest', () => {
 
   describe('Primary', () => {
     it('Should not depend on secondary', () => {
-      noClasses()
+      ArchRuleDefinition.noClasses()
         .that()
         .resideInAPackage('..primary..')
         .should()
@@ -158,7 +174,7 @@ describe('HexagonalArchTest', () => {
 
   describe('Secondary', () => {
     it('should not depend on application', () => {
-      noClasses()
+      ArchRuleDefinition.noClasses()
         .that()
         .resideInAPackage('..infrastructure.secondary..')
         .should()
@@ -169,7 +185,7 @@ describe('HexagonalArchTest', () => {
     });
 
     it.each([...sharedKernels, ...businessContexts])('should %s not depend on same context primary', (context) => {
-      noClasses()
+      ArchRuleDefinition.noClasses()
         .that()
         .resideInAPackage(context + '.infrastructure.secondary..')
         .should()

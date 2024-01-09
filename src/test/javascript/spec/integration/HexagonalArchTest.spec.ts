@@ -83,11 +83,50 @@ describe('HexagonalArchTest', () => {
               "where layer 'application services' may only be accessed by layers ['primary adapters']\n" +
               "where layer 'primary adapters' may not be accessed by any layer\n" +
               "where layer 'secondary adapters' may not be accessed by any layer because Each bounded context should implement an hexagonal architecture.\n" +
-              'Errors : Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
-              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
-              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts\n' +
-              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
-              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
+              'Errors : Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
+          );
+        });
+      });
+
+      describe('primaryTypescriptAdaptersShouldOnlyBeCalledFromSecondaries', () => {
+        it('should have primary TypescriptAdapters only be called from secondaries', () => {
+          expect(() =>
+            ArchRuleDefinition.classes()
+              .that()
+              .resideInAPackage('..primary..')
+              .and()
+              .haveSimpleNameStartingWith('TypeScript')
+              .should()
+              .onlyHaveDependentClassesThat()
+              .resideInAPackage('..secondary..')
+              .because(
+                "To interact between two contexts, secondary from context 'A' should call a primary adapter (naming convention starting with 'TypeScript') from context 'B'"
+              )
+              .check(archProjectBusinessOne.allClasses())
+          ).not.toThrow();
+        });
+        it('should fail when primary TypescriptAdapters called outside secondaries', () => {
+          expect(() =>
+            ArchRuleDefinition.classes()
+              .that()
+              .resideInAPackage('..primary..')
+              .and()
+              .haveSimpleNameStartingWith('TypeScript')
+              .should()
+              .onlyHaveDependentClassesThat()
+              .resideInAPackage('..secondary..')
+              .because(
+                "To interact between two contexts, secondary from context 'A' should call a primary adapter (naming convention starting with 'TypeScript') from context 'B'"
+              )
+              .check(archProjectBusinessTwo.allClasses())
+          ).toThrow(
+            "Architecture violation : Rule classes reside in a package '..primary..' and simple name starting with TypeScript should only have dependent classes that reside in a package '..secondary..' because To interact between two contexts, secondary from context 'A' should call a primary adapter (naming convention starting with 'TypeScript') from context 'B'.\n" +
+              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
+              'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
           );
         });
       });
@@ -120,7 +159,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses())
           ).toThrow(
             "Architecture violation : Rule classes reside in a package 'domain' should only depend on classes that reside in any package 'domain', 'src.test.fake-src.shared-kernel-one' because Domain model should only depend on domains and a very limited set of external dependencies.\n" +
-              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts'
+              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.domain.Basket.ts'
           );
         });
       });
@@ -140,7 +179,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             "Architecture violation : Rule no classes reside in a package 'infrastructure.primary' should depend on classes that reside in a package 'infrastructure.secondary' because Primary should not interact with secondary.\n" +
-              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
+              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts'
           );
         });
         it('should succeed because primary depends on secondary', () => {
@@ -172,7 +211,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             "Architecture violation : Rule no classes reside in a package 'infrastructure.secondary' should depend on classes that reside in a package 'application' because Secondary should not depend on application.\n" +
-              'Errors : Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts'
+              'Errors : Dependency src.test.fake-src.business-context-two.application.BasketApplicationService.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts'
           );
         });
         it('should not depend on application', () => {
@@ -201,7 +240,7 @@ describe('HexagonalArchTest', () => {
               .check(archProjectBusinessTwo.allClasses());
           }).toThrow(
             "Architecture violation : Rule no classes reside in a package 'src.test.fake-src.business-context-two.infrastructure.secondary' should depend on classes that reside in a package 'src.test.fake-src.business-context-two.infrastructure.primary' because Secondary should not loop to its own context's primary.\n" +
-              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketJson.ts'
+              'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts'
           );
         });
         it('should not depend on same context primary', () => {
@@ -244,7 +283,7 @@ describe('HexagonalArchTest', () => {
             .check(archProjectBusinessTwo.allClasses());
         }).toThrow(
           "Architecture violation : Rule no classes reside in a package 'src.test.fake-src.business-context-two.application' should depend on classes that reside in any package 'src.test.fake-src.business-context-two.infrastructure' because Application should not depend on infrastructure.\n" +
-            'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts'
+            'Errors : Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts'
         );
       });
     });

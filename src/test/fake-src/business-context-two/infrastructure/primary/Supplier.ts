@@ -1,7 +1,13 @@
-import { BasketJson } from '@fake-src/business-context-two/infrastructure/secondary/BasketJson';
+import { BadPackageBasketJson } from '../secondary/BadPackageBasketJson';
+
+import { TypeScriptBasketsAdapter } from './TypeScriptBasketsAdapter';
 
 export class Supplier {
-  getBasket(): BasketJson {
-    return new BasketJson();
+  getBadPackageBasketJson(): BadPackageBasketJson {
+    return new BadPackageBasketJson();
+  }
+
+  getBasketAmount(): number {
+    return new TypeScriptBasketsAdapter().getBasket().amount;
   }
 }

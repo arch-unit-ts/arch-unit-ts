@@ -64,6 +64,16 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
     });
   }
 
+  onlyHaveDependentClassesThat(): ClassesThat<ClassesShouldConjunction> {
+    return new ClassesThatInternal(describedPredicate => {
+      return new ClassesShouldInternal(
+        this.classesTransformer,
+        this.conditionAggregator.add(ArchConditions.onlyHaveDependentClassesThat(describedPredicate)),
+        this.prepareCondition
+      );
+    });
+  }
+
   getDescription(): string {
     return this.overriddenDescription.orElse('');
   }
@@ -90,5 +100,21 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
 
   orShould(): ClassesShould {
     return new ClassesShouldInternal(this.classesTransformer, this.conditionAggregator.thatORs(), this.prepareCondition);
+  }
+
+  haveSimpleNameStartingWith(prefix: string): ClassesShouldConjunction {
+    return this.addCondition(ArchConditions.haveSimpleNameStartingWith(prefix));
+  }
+
+  addCondition(condition: ArchCondition<TypeScriptClass>): ClassesShouldInternal {
+    return this.copyWithNewCondition(this.conditionAggregator.add(condition));
+  }
+
+  copyWithNewCondition(newCondition: ConditionAggregator<TypeScriptClass>): ClassesShouldInternal {
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      this.conditionAggregator.add(newCondition.getCondition().orElseThrow()),
+      this.prepareCondition
+    );
   }
 }

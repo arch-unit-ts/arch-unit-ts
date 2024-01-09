@@ -21,6 +21,8 @@ describe('TypeScriptClasses', () => {
       'FruitType.ts',
       'Field.ts',
       'FruitJson.ts',
+      'TypeScriptFruitsAdapter.ts',
+      'BadPackageFruitJson.ts',
     ]);
 
     expect(getReverseDependencies(typeScriptClasses, 'Client.ts')).toEqual([]);

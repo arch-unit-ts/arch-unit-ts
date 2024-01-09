@@ -1,11 +1,12 @@
 import { ArchFunction } from '../../base/ArchFunction';
 import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { Dependency, Functions, TypeScriptClass } from '../../core/domain/TypeScriptClass';
-import { ArchCondition } from '../ArchCondition';
+import { ArchCondition, ConditionByPredicate } from '../ArchCondition';
 import { ConditionEvent } from '../ConditionEvent';
 import { ConditionEvents } from '../ConditionEvents';
 import { SimpleConditionEvent } from '../SimpleConditionEvent';
 
+import { ArchPredicates } from './ArchPredicates';
 import { InvertingConditionEvents } from './InvertingConditionEvents';
 import { ViolatedAndSatisfiedConditionEvents } from './ViolatedAndSatisfiedConditionEvents';
 
@@ -26,6 +27,12 @@ export abstract class ArchConditions {
     );
   };
 
+  static onlyHaveDependentClassesThat = (predicate: DescribedPredicate<TypeScriptClass>): ArchCondition<TypeScriptClass> => {
+    return this.onlyHaveDependentsWhere(Functions.GET_ORIGIN_CLASS.is(predicate)).as(
+      'only have dependent classes that ' + predicate.description
+    );
+  };
+
   public static onlyHaveDependentsWhere(predicate: DescribedPredicate<Dependency>): ArchCondition<TypeScriptClass> {
     const description: string = 'only have dependents where ' + predicate.description;
     return new AllDependenciesCondition(description, predicate, TypeScriptClass.GET_DIRECT_DEPENDENCIES_TO_SELF);
@@ -33,6 +40,14 @@ export abstract class ArchConditions {
 
   static negate<T>(condition: ArchCondition<T>): ArchCondition<T> {
     return new NeverCondition(condition);
+  }
+
+  public static haveSimpleNameStartingWith(prefix: string): ArchCondition<TypeScriptClass> {
+    return this.have(TypeScriptClass.simpleNameStartingWith(prefix));
+  }
+
+  public static have(predicate: DescribedPredicate<TypeScriptClass>): ConditionByPredicate {
+    return ArchCondition.from(predicate).as(ArchPredicates.have(predicate).description);
   }
 }
 

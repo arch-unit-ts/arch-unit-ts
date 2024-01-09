@@ -47,7 +47,9 @@ describe('ClassesTransformer', () => {
         'src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts',
         'src/test/fake-src/business-context-one/domain/fruit/FruitType.ts',
         'src/test/fake-src/business-context-one/infrastructure/primary/Field.ts',
-        'src/test/fake-src/business-context-one/infrastructure/secondary/FruitJson.ts',
+        'src/test/fake-src/business-context-one/infrastructure/primary/FruitJson.ts',
+        'src/test/fake-src/business-context-one/infrastructure/primary/TypeScriptFruitsAdapter.ts',
+        'src/test/fake-src/business-context-one/infrastructure/secondary/BadPackageFruitJson.ts',
       ]);
     });
 

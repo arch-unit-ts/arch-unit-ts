@@ -13,7 +13,7 @@ export class TypeScriptClassFixture {
   };
 
   static fruitJson = (): TypeScriptClass => {
-    return this.getTypeScriptClass('FruitJson.ts');
+    return this.getTypeScriptClass('BadPackageFruitJson.ts');
   };
 
   static fileWithUnknownImport = (): TypeScriptClass => {

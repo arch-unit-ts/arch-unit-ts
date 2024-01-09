@@ -17,4 +17,12 @@ export class ClassesThatInternal<CONJUNCTION> implements ClassesThat<CONJUNCTION
   resideInAnyPackage(...packageIdentifiers: string[]): CONJUNCTION {
     return this.addPredicate(TypeScriptClass.resideInAnyPackage(packageIdentifiers));
   }
+
+  haveSimpleNameStartingWith(prefix: string): CONJUNCTION {
+    return this.givenWith(TypeScriptClass.simpleNameStartingWith(prefix));
+  }
+
+  private givenWith(predicate: DescribedPredicate<TypeScriptClass>): CONJUNCTION {
+    return this.addPredicate(predicate);
+  }
 }
