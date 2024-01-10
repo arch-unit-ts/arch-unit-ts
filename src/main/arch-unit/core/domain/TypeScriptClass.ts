@@ -192,12 +192,12 @@ export class ReverseDependencies {
   constructor() {}
 
   get(typeScriptClass: TypeScriptClass): Dependency[] {
-    const dependencies = this.reverseDependencies.get(typeScriptClass.name.get());
+    const dependencies = this.reverseDependencies.get(typeScriptClass.getPath().get());
     return dependencies !== undefined ? dependencies : [];
   }
 
   put(typeScriptClass: TypeScriptClass, dependency: Dependency): void {
-    const mapKey = dependency.typeScriptClass.name.get();
+    const mapKey = dependency.typeScriptClass.getPath().get();
     const reverseDependency = Dependency.of(dependency.typeScriptClass.name, dependency.typeScriptClass.packagePath, typeScriptClass);
 
     if (!this.reverseDependencies.has(mapKey)) {

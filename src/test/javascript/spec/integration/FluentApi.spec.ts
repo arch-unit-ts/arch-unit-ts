@@ -77,6 +77,7 @@ describe('FluentApi', () => {
         'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitType.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts\n' +
         'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.application.BasketApplicationService.ts\n' +
         'Dependency src.test.fake-src.business-context-one.domain.fruit.Fruit.ts in src.test.fake-src.business-context-two.domain.Basket.ts\n' +
+        'Dependency src.test.fake-src.business-context-two.domain.Basket.ts in src.test.fake-src.business-context-two.domain.Fruit.ts\n' +
         'Dependency src.test.fake-src.business-context-two.infrastructure.secondary.BadPackageBasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts\n' +
         'Dependency src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts in src.test.fake-src.business-context-two.infrastructure.primary.Supplier.ts\n' +
         'Dependency src.test.fake-src.business-context-two.infrastructure.primary.BasketJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.TypeScriptBasketsAdapter.ts\n' +

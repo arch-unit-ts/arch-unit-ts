@@ -46,6 +46,7 @@ describe('TypeScriptProject', () => {
         'src/test/fake-src/business-context-two/package-info.ts',
         'src/test/fake-src/business-context-two/application/BasketApplicationService.ts',
         'src/test/fake-src/business-context-two/domain/Basket.ts',
+        'src/test/fake-src/business-context-two/domain/Fruit.ts',
         'src/test/fake-src/business-context-two/infrastructure/primary/BasketJson.ts',
         'src/test/fake-src/business-context-two/infrastructure/primary/Supplier.ts',
         'src/test/fake-src/business-context-two/infrastructure/primary/TypeScriptBasketsAdapter.ts',

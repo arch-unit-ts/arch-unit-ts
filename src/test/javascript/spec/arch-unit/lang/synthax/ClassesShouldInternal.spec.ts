@@ -28,6 +28,7 @@ describe('ClassesShouldInternal', () => {
           'Errors : Error in package-info.ts\n' +
           'Error in BasketApplicationService.ts\n' +
           'Error in Basket.ts\n' +
+          'Error in Fruit.ts\n' +
           'Error in BasketJson.ts\n' +
           'Error in Supplier.ts\n' +
           'Error in TypeScriptBasketsAdapter.ts\n' +

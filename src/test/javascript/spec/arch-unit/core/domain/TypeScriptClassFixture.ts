@@ -4,8 +4,12 @@ import { MorphProjectFixture } from '../../morph/MorphProjectFixture';
 import { TypeScriptClassesFixture } from './TypeScriptClassesFixture';
 
 export class TypeScriptClassFixture {
-  static fruit = (): TypeScriptClass => {
-    return this.getTypeScriptClass('Fruit.ts');
+  static fruitContextOne = (): TypeScriptClass => {
+    return this.getTypeScriptClass('src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
+  };
+
+  static fruitContextTwo = (): TypeScriptClass => {
+    return this.getTypeScriptClass('src/test/fake-src/business-context-two/domain/Fruit.ts');
   };
 
   static client = (): TypeScriptClass => {

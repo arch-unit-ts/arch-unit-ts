@@ -6,7 +6,11 @@ import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
 export class DependencyFixture {
   static client = (): Dependency => {
-    return Dependency.of(ClassNameFixture.client(), RelativePathFixture.businessContextOneDomainPackage(), TypeScriptClassFixture.fruit());
+    return Dependency.of(
+      ClassNameFixture.client(),
+      RelativePathFixture.businessContextOneDomainPackage(),
+      TypeScriptClassFixture.fruitContextOne()
+    );
   };
 
   static clientName(): Dependency {
@@ -18,18 +22,22 @@ export class DependencyFixture {
   }
 
   static basket(): Dependency {
-    return Dependency.of(ClassNameFixture.basket(), RelativePathFixture.businessContextTwoDomainPackage(), TypeScriptClassFixture.fruit());
+    return Dependency.of(
+      ClassNameFixture.basket(),
+      RelativePathFixture.businessContextTwoDomainPackage(),
+      TypeScriptClassFixture.fruitContextOne()
+    );
   }
 
   static fruitApplicationService() {
     return Dependency.of(
       ClassNameFixture.fruitApplicationService(),
       RelativePathFixture.businessContextOneApplicationPackage(),
-      TypeScriptClassFixture.fruit()
+      TypeScriptClassFixture.fruitContextOne()
     );
   }
 
-  static fruit() {
-    return Dependency.of(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackage(), TypeScriptClassFixture.client());
+  static fruitContextOne() {
+    return Dependency.of(ClassNameFixture.fruit(), RelativePathFixture.fruitDomainPackageContextOne(), TypeScriptClassFixture.client());
   }
 }

@@ -10,7 +10,7 @@ describe('ArchConditions', () => {
       it('should add violation', () => {
         const allDependencyCondition = ArchConditions.onlyDependOnClassesThat(DescribedPredicateFixture.koPredicate());
         const conditionEvents = new SimpleConditionEvents();
-        allDependencyCondition.check(TypeScriptClassFixture.fruit(), conditionEvents);
+        allDependencyCondition.check(TypeScriptClassFixture.fruitContextOne(), conditionEvents);
         expect(conditionEvents.getViolating()[0].getDescriptionLines()).toEqual([
           'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitColor.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts',
           'Dependency src.test.fake-src.business-context-one.domain.fruit.FruitType.ts in src.test.fake-src.business-context-one.domain.fruit.Fruit.ts',
@@ -19,7 +19,7 @@ describe('ArchConditions', () => {
       it('should not add violation', () => {
         const allDependencyCondition = ArchConditions.onlyDependOnClassesThat(DescribedPredicateFixture.okPredicate());
         const conditionEvents = new SimpleConditionEvents();
-        allDependencyCondition.check(TypeScriptClassFixture.fruit(), conditionEvents);
+        allDependencyCondition.check(TypeScriptClassFixture.fruitContextOne(), conditionEvents);
         expect(conditionEvents.getViolating()).toEqual([]);
       });
     });
@@ -53,7 +53,7 @@ describe('ArchConditions', () => {
 
         const neverCondition = ArchConditions.negate(koCondition);
 
-        neverCondition.check(TypeScriptClassFixture.fruit(), conditionEvents);
+        neverCondition.check(TypeScriptClassFixture.fruitContextOne(), conditionEvents);
         expect(conditionEvents.getViolating()).toEqual([]);
       });
     });

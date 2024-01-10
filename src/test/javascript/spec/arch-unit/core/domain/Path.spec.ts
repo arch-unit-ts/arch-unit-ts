@@ -35,7 +35,7 @@ describe('Path', () => {
   });
 
   it('should remove source folder path', () => {
-    const sourceFile = getSourceFile('Fruit.ts');
+    const sourceFile = getSourceFile('src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
 
     expect(RelativePath.of(sourceFile.getFilePath()).get()).toEqual('src/test/fake-src/business-context-one/domain/fruit/Fruit.ts');
   });

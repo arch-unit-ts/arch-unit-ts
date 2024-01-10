@@ -4,7 +4,7 @@ import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
 describe('TypeScriptClass', () => {
   console.warn = jest.fn();
-  const fruitClass = TypeScriptClassFixture.fruit();
+  const fruitClass = TypeScriptClassFixture.fruitContextOne();
 
   it('Should build', () => {
     expect(fruitClass.name.get()).toEqual('Fruit.ts');
