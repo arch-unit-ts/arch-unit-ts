@@ -47,6 +47,7 @@ describe('FluentApi', () => {
         'Errors : Dependency src.test.hexagonal.BusinessContext.ts in src.test.fake-src.business-context-one.package-info.ts\n' +
         'Dependency src.test.fake-src.business-context-one.infrastructure.primary.FruitJson.ts in src.test.fake-src.business-context-one.infrastructure.primary.TypeScriptFruitsAdapter.ts\n' +
         'Dependency src.test.hexagonal.BusinessContext.ts in src.test.fake-src.business-context-two.package-info.ts\n' +
+        'Dependency src.test.fake-src.shared-kernel-one.infrastructure.primary.MoneyJson.ts in src.test.fake-src.business-context-two.infrastructure.primary.BasketJson.ts\n' +
         'Dependency src.test.fake-src.business-context-one.infrastructure.primary.TypeScriptFruitsAdapter.ts in src.test.fake-src.business-context-two.infrastructure.secondary.BasketRepository.ts\n' +
         'Dependency src.test.hexagonal.SharedKernel.ts in src.test.fake-src.shared-kernel-one.package-info.ts'
     );
