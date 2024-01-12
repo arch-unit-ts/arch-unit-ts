@@ -88,7 +88,7 @@ export class PackageMatcher {
   private validateCharacters(packageIdentifier: string) {
     for (let i = 0; i < packageIdentifier.length; i++) {
       const char: string = packageIdentifier.charAt(i);
-      if (!/[a-zA-Z0-9-_$]/.test(char) && !PackageMatcher.PACKAGE_CONTROL_SYMBOLS.includes(char)) {
+      if (!/[a-zA-Z0-9-@_$]/.test(char) && !PackageMatcher.PACKAGE_CONTROL_SYMBOLS.includes(char)) {
         throw new Error(
           `Package Identifier ${packageIdentifier} may only consist of valid typescript identifier parts or the symbols '.)(*'`
         );

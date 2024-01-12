@@ -3,7 +3,7 @@ import { Optional } from '../../../../../../main/common/domain/Optional';
 
 describe('PackageMatcher', () => {
   const listOfPackageName = [
-    ['some.arbitrary.pkg', 'some.arbitrary.pkg', true],
+    ['some.@arbitrary.pkg', 'some.@arbitrary.pkg', true],
     ['some.arbitrary.pkg', 'some.thing.different', false],
     ['some..pkg', 'some.arbitrary.pkg', true],
     ['some..middle..pkg', 'some.arbitrary.middle.more.pkg', true],
