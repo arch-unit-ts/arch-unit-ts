@@ -3,7 +3,7 @@ import { Assert } from '../../error/domain/Assert';
 import { classes } from '../../main';
 import { DescribedPredicate } from '../base/DescribedPredicate';
 import { Formatters } from '../core/domain/Formatters';
-import { Dependency, Predicates, TypeScriptClass, TypeScriptClasses } from '../core/domain/TypeScriptClass';
+import { Dependency, Functions, Predicates, TypeScriptClass, TypeScriptClasses } from '../core/domain/TypeScriptClass';
 import { ArchCondition } from '../lang/ArchCondition';
 import { ArchRule } from '../lang/ArchRule';
 import { ConditionEvents } from '../lang/ConditionEvents';
@@ -20,13 +20,18 @@ export abstract class Architectures {
 
 class DependencySettings {
   private readonly description: Optional<string>;
+  readonly ignoreExcludedDependencies: (predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>;
 
-  private constructor(description: string) {
+  private constructor(
+    description: string,
+    ignoreExludedDependencies: (predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>
+  ) {
     this.description = Optional.ofUndefinable(description);
+    this.ignoreExcludedDependencies = ignoreExludedDependencies;
   }
 
   static default(): DependencySettings {
-    return new DependencySettings(undefined);
+    return new DependencySettings(undefined, undefined);
   }
 
   public consideringOnlyDependenciesInAnyPackage(...packageIdentifiers: string[]): LayeredArchitecture {
@@ -38,7 +43,16 @@ class DependencySettings {
   }
 
   private setToConsideringOnlyDependenciesInAnyPackage(...packageIdentifiers: string[]): DependencySettings {
-    return new DependencySettings(`considering only dependencies in any package [${Formatters.joinSingleQuoted(...packageIdentifiers)}]`);
+    const outsideOfRelevantPackage: DescribedPredicate<TypeScriptClass> = TypeScriptClass.resideOutsideOfPackages(...packageIdentifiers);
+
+    return new DependencySettings(
+      `considering only dependencies in any package [${Formatters.joinSingleQuoted(...packageIdentifiers)}]`,
+      (predicate: DescribedPredicate<Dependency>) => predicate.or(this.originOrTargetIs(outsideOfRelevantPackage))
+    );
+  }
+
+  private originOrTargetIs(predicate: DescribedPredicate<TypeScriptClass>): DescribedPredicate<Dependency> {
+    return Functions.GET_ORIGIN_CLASS.is(predicate).or(Functions.GET_TARGET_CLASS.is(predicate));
   }
 }
 
@@ -141,9 +155,10 @@ class LayeredArchitecture implements ArchRule {
   }
 
   private originMatchesIfDependencyIsRelevant(ownLayer: string, allowedAccessors: Set<string>): DescribedPredicate<Dependency> {
-    return Predicates.dependencyOrigin(this.layerDefinitions.containsPredicateForLayers(Array.from(allowedAccessors))).or(
-      Predicates.dependencyOrigin(this.layerDefinitions.containsPredicateFor(ownLayer))
-    );
+    const originPackageMatches = Predicates.dependencyOrigin(
+      this.layerDefinitions.containsPredicateForLayers(Array.from(allowedAccessors))
+    ).or(Predicates.dependencyOrigin(this.layerDefinitions.containsPredicateFor(ownLayer)));
+    return this.dependencySettings.ignoreExcludedDependencies.apply(this, [originPackageMatches]);
   }
 
   getDescription(): string {
