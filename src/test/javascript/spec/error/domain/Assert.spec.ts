@@ -43,12 +43,17 @@ describe('Assert', () => {
       expect(() => Assert.path('path', 'path/to/package/')).toThrow("path 'path/to/package/' should be a path");
     });
 
-    it.each(['path/to/package', '/path/to/package', 'path', '/path/Bananas.ts', 'path_to-package', '/@angular/common/http'])(
-      'Should not throw for %s',
-      path => {
-        expect(() => Assert.path('path', path)).not.toThrow();
-      }
-    );
+    it.each([
+      'path/to/package',
+      'path/to.my/package',
+      '/path/to/package',
+      'path',
+      '/path/Bananas.ts',
+      'path_to-package',
+      '/@angular/common/http',
+    ])('Should not throw for %s', path => {
+      expect(() => Assert.path('path', path)).not.toThrow();
+    });
   });
 
   describe('min', () => {
