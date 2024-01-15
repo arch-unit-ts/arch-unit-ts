@@ -53,5 +53,24 @@
   "dependencies": {
     "file-path-filter": "^3.0.2",
     "ts-morph": "20.0.0"
+  },
+  "keywords": [
+    "arch",
+    "arch-unit",
+    "architecture",
+    "architecturehexagonale",
+    "automation",
+    "hexagonale",
+    "hexagonalearchitecture",
+    "tdd",
+    "test",
+    "testing",
+    "ts",
+    "typescript",
+    "unit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teyma/arch-unit-ts"
   }
 }
