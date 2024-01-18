@@ -16,4 +16,6 @@ export interface ClassesShouldConjunction extends ArchRule {
   andShould(): ClassesShould;
 
   orShould(): ClassesShould;
+
+  allowEmptyShould(allowEmptyShould: boolean): ClassesShouldConjunction;
 }

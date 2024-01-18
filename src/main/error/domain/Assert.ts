@@ -6,7 +6,7 @@ export class Assert {
   }
 
   static notBlank(field: string, input: string): void {
-    Assert.notNullOrUndefined(field, input);
+    this.notNullOrUndefined(field, input);
     if (input.trim().length === 0) {
       throw new Error(`${field} should not be blank`);
     }
@@ -28,7 +28,7 @@ export class Assert {
   }
 
   static notEmpty(field: string, collection: unknown[]) {
-    Assert.notNullOrUndefined(field, collection);
-    Assert.min(`${field} size`, collection.length, 1);
+    this.notNullOrUndefined(field, collection);
+    this.min(`${field} size`, collection.length, 1);
   }
 }

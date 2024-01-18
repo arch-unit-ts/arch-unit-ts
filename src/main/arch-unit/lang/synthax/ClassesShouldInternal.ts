@@ -1,5 +1,6 @@
 import { Optional } from '../../../common/domain/Optional';
 import { TypeScriptClass, TypeScriptClasses } from '../../core/domain/TypeScriptClass';
+import { AllowEmptyShould } from '../AllowEmptyShould';
 import { ArchCondition } from '../ArchCondition';
 import { ArchRule } from '../ArchRule';
 import { ClassesTransformer } from '../ClassesTransformer';
@@ -19,15 +20,18 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
 
   private readonly prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>;
   private overriddenDescription: Optional<string> = Optional.empty();
+  private readonly allowEmptyShouldValue: AllowEmptyShould;
 
   constructor(
     classesTransformer: ClassesTransformer,
     conditionAggregator: ConditionAggregator<TypeScriptClass>,
-    prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>
+    prepareCondition: (archCondition: ArchCondition<TypeScriptClass>) => ArchCondition<TypeScriptClass>,
+    allowEmptyShould: AllowEmptyShould
   ) {
     this.classesTransformer = classesTransformer;
     this.conditionAggregator = conditionAggregator;
     this.prepareCondition = prepareCondition;
+    this.allowEmptyShouldValue = allowEmptyShould;
   }
 
   because(reason: string): ArchRule {
@@ -49,7 +53,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
       return new ClassesShouldInternal(
         this.classesTransformer,
         this.conditionAggregator.add(ArchConditions.onlyDependOnClassesThat(describedPredicate)),
-        this.prepareCondition
+        this.prepareCondition,
+        this.allowEmptyShouldValue
       );
     });
   }
@@ -59,7 +64,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
       return new ClassesShouldInternal(
         this.classesTransformer,
         this.conditionAggregator.add(ArchConditions.dependOnClassesThat(describedPredicate)),
-        this.prepareCondition
+        this.prepareCondition,
+        this.allowEmptyShouldValue
       );
     });
   }
@@ -69,7 +75,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
       return new ClassesShouldInternal(
         this.classesTransformer,
         this.conditionAggregator.add(ArchConditions.onlyHaveDependentClassesThat(describedPredicate)),
-        this.prepareCondition
+        this.prepareCondition,
+        this.allowEmptyShouldValue
       );
     });
   }
@@ -80,6 +87,8 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
 
   evaluate(classes: TypeScriptClasses): EvaluationResult {
     const classesFiltered = this.classesTransformer.transform(classes.get());
+
+    this.verifyNoEmptyShouldIfEnabled(classesFiltered);
 
     const conditionEvents: ConditionEvents = new SimpleConditionEvents();
 
@@ -95,11 +104,30 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
   }
 
   andShould(): ClassesShould {
-    return new ClassesShouldInternal(this.classesTransformer, this.conditionAggregator.thatANDs(), this.prepareCondition);
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      this.conditionAggregator.thatANDs(),
+      this.prepareCondition,
+      this.allowEmptyShouldValue
+    );
   }
 
   orShould(): ClassesShould {
-    return new ClassesShouldInternal(this.classesTransformer, this.conditionAggregator.thatORs(), this.prepareCondition);
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      this.conditionAggregator.thatORs(),
+      this.prepareCondition,
+      this.allowEmptyShouldValue
+    );
+  }
+
+  allowEmptyShould(allowEmptyShould: boolean): ClassesShouldConjunction {
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      this.conditionAggregator.thatORs(),
+      this.prepareCondition,
+      AllowEmptyShould.of(allowEmptyShould)
+    );
   }
 
   haveSimpleNameStartingWith(prefix: string): ClassesShouldConjunction {
@@ -114,7 +142,20 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
     return new ClassesShouldInternal(
       this.classesTransformer,
       this.conditionAggregator.add(newCondition.getCondition().orElseThrow()),
-      this.prepareCondition
+      this.prepareCondition,
+      this.allowEmptyShouldValue
     );
+  }
+
+  private verifyNoEmptyShouldIfEnabled(classesFiltered: TypeScriptClass[]) {
+    if (classesFiltered.length === 0 && !this.allowEmptyShouldValue.isAllowed()) {
+      throw new Error(
+        `Rule '${this.getDescription()}' failed to check any classes. ` +
+          'This means either that no classes have been passed to the rule at all, ' +
+          'or that no classes passed to the rule matched the `that()` clause. ' +
+          'To allow rules being evaluated without checking any classes you can ' +
+          "use '.allowEmptyShould(true)' on a single rule or use the default configuration."
+      );
+    }
   }
 }

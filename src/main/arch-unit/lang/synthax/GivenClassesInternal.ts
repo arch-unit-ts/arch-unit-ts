@@ -1,5 +1,6 @@
 import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { TypeScriptClass } from '../../core/domain/TypeScriptClass';
+import { AllowEmptyShould } from '../AllowEmptyShould';
 import { ArchCondition } from '../ArchCondition';
 import { ClassesTransformer } from '../ClassesTransformer';
 
@@ -42,11 +43,21 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
   }
 
   should(): ClassesShould {
-    return new ClassesShouldInternal(this.classesTransformer, ConditionAggregator.default(), this.prepareCondition);
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      ConditionAggregator.default(),
+      this.prepareCondition,
+      AllowEmptyShould.default()
+    );
   }
 
   shouldWithConjunction(condition: ArchCondition<TypeScriptClass>): ClassesShouldConjunction {
-    return new ClassesShouldInternal(this.classesTransformer, ConditionAggregator.default().add(condition), this.prepareCondition);
+    return new ClassesShouldInternal(
+      this.classesTransformer,
+      ConditionAggregator.default().add(condition),
+      this.prepareCondition,
+      AllowEmptyShould.default()
+    );
   }
 
   and(): ClassesThat<GivenClassesConjunction> {

@@ -152,4 +152,31 @@ describe('FluentApi', () => {
         .check(archProjectFakeSrc.allClasses());
     }).not.toThrow();
   });
+
+  describe('allowEmptyShould', () => {
+    it('Should not fail when no classes found (default configuration allowEmptyShould = true)', () => {
+      expect(() => {
+        ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage('..unexistingFolder..')
+          .should()
+          .haveSimpleNameStartingWith('Fruit')
+          .check(archProjectFakeSrc.allClasses());
+      }).not.toThrow();
+    });
+    it('Should fail when allow empty should is false', () => {
+      expect(() => {
+        ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage('..unexistingFolder..')
+          .should()
+          .haveSimpleNameStartingWith('Fruit')
+          .allowEmptyShould(false)
+          .because('allowEmptyShould is false')
+          .check(archProjectFakeSrc.allClasses());
+      }).toThrow(
+        "Rule 'allowEmptyShould is false' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can use '.allowEmptyShould(true)' on a single rule or use the default configuration."
+      );
+    });
+  });
 });
