@@ -54,7 +54,7 @@ class PackageInfo extends BusinessContext {}
 
 Example of packages:
 
-![folder_example.png](https://github.com/teyma/arch-unit-ts/blob/main/src/main/resouces/folder_example.png?raw=true)
+![folder_example.png](https://github.com/arch-unit-ts/arch-unit-ts/blob/main/src/main/resouces/folder_example.png?raw=true)
 
 Then, you can create an HexagonalArchTest.spec.ts.
 The path of your source project (folder from which you want to test your architecture) is a relative path starting from your tsconfig.json file.
