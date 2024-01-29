@@ -10,6 +10,8 @@ export interface ClassesShould {
   onlyHaveDependentClassesThat(): ClassesThat<ClassesShouldConjunction>;
 
   haveSimpleNameStartingWith(prefix: string): ClassesShouldConjunction;
+
+  haveSimpleNameEndingWith(suffix: string): ClassesShouldConjunction;
 }
 
 export interface ClassesShouldConjunction extends ArchRule {

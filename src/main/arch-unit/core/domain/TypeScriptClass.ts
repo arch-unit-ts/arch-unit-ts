@@ -81,6 +81,10 @@ export class TypeScriptClass {
     return new SimpleNameStartingWithPredicate(prefix);
   }
 
+  static simpleNameEndingWith(prefix: string): DescribedPredicate<TypeScriptClass> {
+    return new SimpleNameEndingWithPredicate(prefix);
+  }
+
   static GET_DIRECT_DEPENDENCIES_FROM_SELF: ChainableFunction<TypeScriptClass, Dependency[]> = new (class extends ChainableFunction<
     TypeScriptClass,
     Dependency[]
@@ -238,5 +242,18 @@ class SimpleNameStartingWithPredicate extends DescribedPredicate<TypeScriptClass
 
   public test(input: TypeScriptClass): boolean {
     return input.getSimpleName().startsWith(this.prefix);
+  }
+}
+
+class SimpleNameEndingWithPredicate extends DescribedPredicate<TypeScriptClass> {
+  private readonly suffix: string;
+
+  constructor(suffix: string) {
+    super(`simple name ending with ${suffix}`);
+    this.suffix = suffix;
+  }
+
+  public test(input: TypeScriptClass): boolean {
+    return input.getSimpleName().endsWith(this.suffix);
   }
 }

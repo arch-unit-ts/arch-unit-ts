@@ -135,7 +135,7 @@ describe('FluentApi', () => {
         .haveSimpleNameStartingWith('Vegetable')
         .check(archProjectFakeSrc.allClasses());
     }).toThrow(
-      "Architecture violation : Rule classes reside in a package '..fruit..' should have simple name starting with Vegetable because .\n" +
+      "Architecture violation : Rule classes reside in a package '..fruit..' should have simple name starting with Vegetable.\n" +
         'Errors : Fruit.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/Fruit.ts\n' +
         'FruitColor.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
         'FruitType.ts does not have simple name starting with Vegetable in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts'
@@ -176,6 +176,33 @@ describe('FluentApi', () => {
           .check(archProjectFakeSrc.allClasses());
       }).toThrow(
         "Rule 'allowEmptyShould is false' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can use '.allowEmptyShould(true)' on a single rule or use the default configuration."
+      );
+    });
+  });
+
+  describe('haveSimpleNameEndingWith', () => {
+    it('Should pass when files have name ending with .ts', () => {
+      expect(() => {
+        ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage('..domain..fruit..')
+          .should()
+          .haveSimpleNameEndingWith('.ts')
+          .check(archProjectFakeSrc.allClasses());
+      }).not.toThrow();
+    });
+    it('Should fail when when files have name not ending with Fruit.ts', () => {
+      expect(() => {
+        ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage('..domain..fruit..')
+          .should()
+          .haveSimpleNameEndingWith('Fruit.ts')
+          .check(archProjectFakeSrc.allClasses());
+      }).toThrow(
+        "Architecture violation : Rule classes reside in a package '..domain..fruit..' should have simple name ending with Fruit.ts.\n" +
+          'Errors : FruitColor.ts does not have simple name ending with Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
+          'FruitType.ts does not have simple name ending with Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts'
       );
     });
   });

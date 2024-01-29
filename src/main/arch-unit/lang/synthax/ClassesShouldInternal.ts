@@ -43,9 +43,16 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
     const evaluationResult = this.evaluate(classes);
     if (evaluationResult.hasErrors()) {
       throw new Error(
-        `Architecture violation : Rule ${this.classesTransformer.getFullDescription()} should ${this.conditionAggregator.getDescription()} because ${this.getDescription()}.\nErrors : ${evaluationResult.violationReport()}`
+        `Architecture violation : Rule ${this.classesTransformer.getFullDescription()} should ${this.conditionAggregator.getDescription()}${this.reason()}.\nErrors : ${evaluationResult.violationReport()}`
       );
     }
+  }
+
+  private reason(): string {
+    if (this.getDescription().length === 0) {
+      return '';
+    }
+    return ` because ${this.getDescription()}`;
   }
 
   onlyDependOnClassesThat(): ClassesThat<ClassesShouldConjunction> {
@@ -132,6 +139,10 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
 
   haveSimpleNameStartingWith(prefix: string): ClassesShouldConjunction {
     return this.addCondition(ArchConditions.haveSimpleNameStartingWith(prefix));
+  }
+
+  haveSimpleNameEndingWith(suffix: string): ClassesShouldConjunction {
+    return this.addCondition(ArchConditions.haveSimpleNameEndingWith(suffix));
   }
 
   addCondition(condition: ArchCondition<TypeScriptClass>): ClassesShouldInternal {

@@ -46,6 +46,10 @@ export abstract class ArchConditions {
     return this.have(TypeScriptClass.simpleNameStartingWith(prefix));
   }
 
+  public static haveSimpleNameEndingWith(suffix: string): ArchCondition<TypeScriptClass> {
+    return this.have(TypeScriptClass.simpleNameEndingWith(suffix));
+  }
+
   public static have(predicate: DescribedPredicate<TypeScriptClass>): ConditionByPredicate {
     return ArchCondition.from(predicate).as(ArchPredicates.have(predicate).description);
   }
