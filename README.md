@@ -60,8 +60,8 @@ Then, you can create an HexagonalArchTest.spec.ts.
 The path of your source project (folder from which you want to test your architecture) is a relative path starting from your tsconfig.json file.
 
 ```
-import { TypeScriptProject } from "arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject";
-import { RelativePath } from "arch-unit-ts/dist/arch-unit/core/domain/RelativePath";
+import { TypeScriptProject } from 'arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject';
+import { RelativePath } from 'arch-unit-ts/dist/arch-unit/core/domain/RelativePath';
 import { classes, noClasses } from 'arch-unit-ts/dist/main';
 import { SharedKernel } from '@/app/SharedKernel';
 import { BusinessContext } from '@/app/BusinessContext';
@@ -106,7 +106,7 @@ describe('HexagonalArchTest', () => {
         .onlyHaveDependentClassesThat()
         .resideInAPackage('..secondary..')
         .because(
-          "To interact between two contexts, secondary from context 'A' should call a primary Java adapter (naming convention starting with 'Java') from context 'B'"
+          "To interact between two contexts, secondary from context 'A' should call a primary TypeScript adapter (naming convention starting with 'TypeScript') from context 'B'"
         )
         .check(srcProject.allClasses());
     });
