@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "paths": {
       "@fake-src/*": ["src/test/fake-src/*"]
-    }
+    },
+    "experimentalDecorators": true
   },
   "include": ["src/main/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/fixture.config.ts"]

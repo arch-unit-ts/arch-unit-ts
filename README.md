@@ -11,6 +11,7 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 - [How to use](#how-to-use)
   - [Installation](#installation)
   - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
+  - [Configuration](#configuration)
   - [Troubleshooting](#troubleshooting)
   <!-- TOC -->
 
@@ -194,6 +195,16 @@ describe('HexagonalArchTest', () => {
     });
   });
 });
+```
+
+### Configuration
+
+You can add a configuration file at your project root called arch-unit-ts.json with the following properties.
+
+```
+{
+  "showImportsWarning": true
+}
 ```
 
 ### Troubleshooting

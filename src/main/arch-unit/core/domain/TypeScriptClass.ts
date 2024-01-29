@@ -1,6 +1,7 @@
 import { ImportDeclaration, SourceFile } from 'ts-morph';
 
 import { Assert } from '../../../error/domain/Assert';
+import { ArchConfiguration } from '../../ArchConfiguration';
 import { ChainableFunction } from '../../base/ChainableFunction';
 import { DescribedPredicate } from '../../base/DescribedPredicate';
 import { HasDescription } from '../../base/HasDescription';
@@ -109,11 +110,14 @@ export class TypeScriptClass {
 
   private isImportValid(importDeclaration: ImportDeclaration) {
     if (importDeclaration.getModuleSpecifierSourceFile() === undefined) {
-      console.warn(
-        `arch-unit-ts (Ignored import) : could not find the source file for the import : ${importDeclaration.getModuleSpecifierValue()} in file ${importDeclaration
-          .getSourceFile()
-          .getBaseName()}`
-      );
+      if (ArchConfiguration.get().showImportsWarning) {
+        console.warn(
+          `arch-unit-ts (Ignored import) : could not find the source file for the import : ${importDeclaration.getModuleSpecifierValue()} in file ${importDeclaration
+            .getSourceFile()
+            .getBaseName()}`
+        );
+      }
+
       return false;
     }
     return true;
