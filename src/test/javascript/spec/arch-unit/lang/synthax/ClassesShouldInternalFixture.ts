@@ -12,7 +12,7 @@ export class ClassesShouldInternalFixture {
       ClassesTransformerFixture.contextOneFruitTransformer(),
       ConditionAggregator.default().add(ArchConditionFixture.okCondition()),
       (archCondition: ArchCondition<TypeScriptClass>) => archCondition,
-      AllowEmptyShould.default()
+      AllowEmptyShould.asConfigured()
     );
   };
 
@@ -21,7 +21,7 @@ export class ClassesShouldInternalFixture {
       ClassesTransformerFixture.contextTwoTransformer(),
       ConditionAggregator.default().add(ArchConditionFixture.koCondition()),
       (archCondition: ArchCondition<TypeScriptClass>) => archCondition,
-      AllowEmptyShould.of(false)
+      AllowEmptyShould.fromBoolean(false)
     );
   };
 }

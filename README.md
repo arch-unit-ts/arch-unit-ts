@@ -199,11 +199,12 @@ describe('HexagonalArchTest', () => {
 
 ### Configuration
 
-You can add a configuration file at your project root called arch-unit-ts.json with the following properties.
+You can add a configuration file at your project root called arch-unit-ts.json with the following properties (default values bellow).
 
 ```
 {
-  "showImportsWarning": true
+  "showImportsWarning": true,
+  "failOnEmptyShould": false
 }
 ```
 

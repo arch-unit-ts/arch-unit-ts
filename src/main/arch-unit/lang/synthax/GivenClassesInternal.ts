@@ -47,7 +47,7 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
       this.classesTransformer,
       ConditionAggregator.default(),
       this.prepareCondition,
-      AllowEmptyShould.default()
+      AllowEmptyShould.asConfigured()
     );
   }
 
@@ -56,7 +56,7 @@ export class GivenClassesInternal implements GivenClasses, GivenClassesConjuncti
       this.classesTransformer,
       ConditionAggregator.default().add(condition),
       this.prepareCondition,
-      AllowEmptyShould.default()
+      AllowEmptyShould.asConfigured()
     );
   }
 

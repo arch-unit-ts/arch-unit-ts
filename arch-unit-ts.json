@@ -1,3 +1,4 @@
 {
-  "showImportsWarning": true
+  "showImportsWarning": true,
+  "failOnEmptyShould": false
 }

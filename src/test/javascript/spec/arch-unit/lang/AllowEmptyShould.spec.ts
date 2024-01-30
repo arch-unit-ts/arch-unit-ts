@@ -1,11 +1,19 @@
 import { AllowEmptyShould } from '../../../../../main/arch-unit/lang/AllowEmptyShould';
 
 describe('AllowEmptyShould', () => {
-  it.each([null, undefined])('should not build for %s', className => {
-    expect(() => AllowEmptyShould.of(className)).toThrow('allow should not be null or undefined');
+  it.each([null, undefined])('should not build for %s', type => {
+    expect(() => new AllowEmptyShould(type)).toThrow('type should not be null or undefined');
   });
 
-  it('should build', () => {
-    expect(AllowEmptyShould.of(true).isAllowed()).toEqual(true);
+  describe('isAllowed', () => {
+    it('should return true for TRUE type', () => {
+      expect(AllowEmptyShould.fromBoolean(true).isAllowed()).toEqual(true);
+    });
+    it('should return false for FALSE type', () => {
+      expect(AllowEmptyShould.fromBoolean(false).isAllowed()).toEqual(false);
+    });
+    it('should return true for AS_CONFIGURED type', () => {
+      expect(AllowEmptyShould.asConfigured().isAllowed()).toEqual(true);
+    });
   });
 });

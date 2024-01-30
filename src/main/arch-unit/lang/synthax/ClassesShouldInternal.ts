@@ -133,7 +133,7 @@ export class ClassesShouldInternal implements ArchRule, ClassesShould, ClassesSh
       this.classesTransformer,
       this.conditionAggregator.thatORs(),
       this.prepareCondition,
-      AllowEmptyShould.of(allowEmptyShould)
+      AllowEmptyShould.fromBoolean(allowEmptyShould)
     );
   }
 

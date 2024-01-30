@@ -4,12 +4,17 @@ describe('ArchConfiguration', () => {
   console.warn = jest.fn();
 
   it('should load configuration', () => {
-    expect(ArchConfiguration.get().showImportsWarning).toEqual(true);
+    const archConfiguration = ArchConfiguration.get();
+    expect(archConfiguration.showImportsWarning).toEqual(true);
+    expect(archConfiguration.failOnEmptyShould).toEqual(false);
+
     expect(console.warn).not.toHaveBeenCalled();
   });
 
   it('should load default configuration when file not found', () => {
-    expect(ArchConfiguration.getFromPath('notAValidPath.json'));
+    const archConfiguration = ArchConfiguration.getFromPath('notAValidPath.json');
+    expect(archConfiguration.showImportsWarning).toEqual(true);
+    expect(archConfiguration.failOnEmptyShould).toEqual(false);
 
     expect(console.warn).toHaveBeenCalledWith('No configuration found in classpath at notAValidPath.json => Using default configuration');
   });
