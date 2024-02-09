@@ -4,4 +4,6 @@ export interface ClassesThat<CONJUNCTION> {
   resideInAnyPackage(...packageIdentifiers: string[]): CONJUNCTION;
 
   haveSimpleNameStartingWith(prefix: string): CONJUNCTION;
+
+  haveSimpleNameEndingWith(prefix: string): CONJUNCTION;
 }

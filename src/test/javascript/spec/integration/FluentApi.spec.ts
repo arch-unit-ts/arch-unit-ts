@@ -196,13 +196,14 @@ describe('FluentApi', () => {
         ArchRuleDefinition.classes()
           .that()
           .resideInAPackage('..domain..fruit..')
+          .and()
+          .haveSimpleNameEndingWith('Color.ts')
           .should()
           .haveSimpleNameEndingWith('Fruit.ts')
           .check(archProjectFakeSrc.allClasses());
       }).toThrow(
-        "Architecture violation : Rule classes reside in a package '..domain..fruit..' should have simple name ending with Fruit.ts.\n" +
-          'Errors : FruitColor.ts does not have simple name ending with Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts\n' +
-          'FruitType.ts does not have simple name ending with Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitType.ts'
+        "Architecture violation : Rule classes reside in a package '..domain..fruit..' and simple name ending with Color.ts should have simple name ending with Fruit.ts.\n" +
+          'Errors : FruitColor.ts does not have simple name ending with Fruit.ts in src/test/fake-src/business-context-one/domain/fruit/FruitColor.ts'
       );
     });
   });

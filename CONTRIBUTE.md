@@ -12,7 +12,7 @@ If something you would like is missing, check ArchUnit implementation and make a
 
 ## Get project
 
-Go to the [arch-unit-ts](https://github.com/teyma/arch-unit-ts) project and click on the "fork" button.
+Go to the [arch-unit-ts](https://github.com/arch-unit-ts/arch-unit-ts) project and click on the "fork" button.
 You can then clone your own fork of the project, and start working on it.
 
 [Please read the GitHub forking documentation for more information](https://help.github.com/articles/fork-a-repo)
@@ -34,13 +34,13 @@ Then, go inside your fork and add upstream:
 Using SSH:
 
 ```
-git remote add upstream git@github.com:teyma/arch-unit-ts.git
+git remote add upstream git@github.com:arch-unit-ts/arch-unit-ts.git
 ```
 
 Using HTTPS:
 
 ```
-git remote add upstream https://github.com/teyma/arch-unit-ts.git
+git remote add upstream https://github.com/arch-unit-ts/arch-unit-ts.git
 ```
 
 The result of remote should be:
@@ -49,15 +49,15 @@ The result of remote should be:
 $ git remote -v
 origin	git@github.com:<YOUR_USERNAME>/arch-unit-ts.git (fetch)
 origin	git@github.com:<YOUR_USERNAME>/arch-unit-ts.git (push)
-upstream	git@github.com:jhipster/arch-unit-ts.git (fetch)
-upstream	git@github.com:jhipster/arch-unit-ts.git (push)
+upstream	git@github.com:arch-unit-ts/arch-unit-ts.git (fetch)
+upstream	git@github.com:arch-unit-ts/arch-unit-ts.git (push)
 ```
 
 You can edit your `.git/config`, and update this section:
 
 ```
 [remote "upstream"]
-	url = git@github.com:teyma/arch-unit-ts.git
+	url = git@github.com:arch-unit-ts/arch-unit-ts.git
 	fetch = +refs/heads/*:refs/remotes/upstream/*
 	fetch = +refs/pull/*/head:refs/remotes/upstream/pr/*
 ```
@@ -78,7 +78,7 @@ npm test
 
 Before you submit your pull request consider the following guidelines:
 
-- Search [GitHub](https://github.com/teyma/arch-unit-ts) for an open or closed Pull Request that relates to your submission
+- Search [GitHub](https://github.com/arch-unit-ts/arch-unit-ts) for an open or closed Pull Request that relates to your submission
 - Refresh your project
 
   ```shell
@@ -114,7 +114,7 @@ Before you submit your pull request consider the following guidelines:
   git push -u origin my-fix-branch
   ```
 
-- In GitHub, send a pull request to `teyma/arch-unit-ts:main`.
+- In GitHub, send a pull request to `arch-unit-ts/arch-unit-ts:main`.
 - If we suggest changes then
 
   - Make the required updates.
