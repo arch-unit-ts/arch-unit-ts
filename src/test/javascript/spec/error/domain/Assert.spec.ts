@@ -51,6 +51,7 @@ describe('Assert', () => {
       '/path/Bananas.ts',
       'path_to-package',
       '/@angular/common/http',
+      '/path/with+in/package',
     ])('Should not throw for %s', path => {
       expect(() => Assert.path('path', path)).not.toThrow();
     });
