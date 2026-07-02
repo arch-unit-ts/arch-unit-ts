@@ -21,7 +21,7 @@ export class TypeScriptClassFixture {
   };
 
   static fileWithUnknownImport = (): TypeScriptClass => {
-    return TypeScriptClass.of(MorphProjectFixture.otherSrc().getSourceFile('FileWithUnknownImport.ts'));
+    return TypeScriptClass.of(MorphProjectFixture.otherSrc().getSourceFile('FileWithUnknownImport.ts')!);
   };
 
   static businessContextOneClasses = (): TypeScriptClass[] => {
@@ -35,7 +35,7 @@ export class TypeScriptClassFixture {
   }
 
   private static getTypeScriptClass(className: string): TypeScriptClass {
-    return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile(className));
+    return TypeScriptClass.of(MorphProjectFixture.fakeSrc().getSourceFile(className)!);
   }
 
   static fruitApplicationService(): TypeScriptClass {

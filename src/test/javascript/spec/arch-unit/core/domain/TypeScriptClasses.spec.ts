@@ -5,7 +5,7 @@ import { MorphProjectFixture } from '../../morph/MorphProjectFixture';
 describe('TypeScriptClasses', () => {
   it('Should build and populate reverse dependencies', () => {
     const fakeSrcMorphProject = MorphProjectFixture.fakeSrc();
-    const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one');
+    const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one')!;
     const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 
     const typeScriptClasses = new TypeScriptClasses(typeScriptPackage.allClasses());
@@ -36,7 +36,7 @@ describe('TypeScriptClasses', () => {
 function getReverseDependencies(typeScriptClasses: TypeScriptClasses, className: string): string[] {
   return typeScriptClasses
     .get()
-    .find(typeScriptClass => typeScriptClass.name.get() === className)
+    .find(typeScriptClass => typeScriptClass.name.get() === className)!
     .getDirectDependenciesToSelf()
     .map(reverseDependency => reverseDependency.owner.name.get());
 }

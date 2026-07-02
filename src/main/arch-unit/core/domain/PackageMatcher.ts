@@ -105,7 +105,7 @@ export class PackageMatcher {
   }
 
   public match(aPackage: string): Optional<ResultMatcher> {
-    const matcher: RegExpExecArray = this.packagePattern.exec(aPackage);
+    const matcher: RegExpExecArray | null = this.packagePattern.exec(aPackage);
     return matcher !== null ? Optional.of(new ResultMatcher(matcher)) : Optional.empty();
   }
 

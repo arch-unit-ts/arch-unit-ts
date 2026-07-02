@@ -59,7 +59,7 @@ describe('TypeScriptProject', () => {
       expect(
         allClasses
           .get()
-          .find(typeScriptClass => typeScriptClass.name.get() === 'Fruit.ts')
+          .find(typeScriptClass => typeScriptClass.name.get() === 'Fruit.ts')!
           .getDirectDependenciesToSelf()
           .map(reverseDependency => reverseDependency.owner.name.get())
       ).toEqual(['FruitApplicationService.ts', 'Client.ts', 'Basket.ts']);

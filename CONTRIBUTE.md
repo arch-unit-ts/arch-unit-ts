@@ -5,6 +5,7 @@
 - [Get project](#get-project)
 - [Run it](#run-it)
 - [Submitting a pull request](#submitting-a-pull-request)
+
 <!--- TOC --->
 
 I tried as much as I could to stay close to the original ArchUnit code.

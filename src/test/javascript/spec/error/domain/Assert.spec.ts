@@ -28,7 +28,7 @@ describe('Assert', () => {
 
   describe('path', () => {
     it.each([null, undefined])('Should throw for %s', path => {
-      expect(() => Assert.path('path', path)).toThrow('path should not be null or undefined');
+      expect(() => Assert.path('path', path as unknown as string)).toThrow('path should not be null or undefined');
     });
 
     it.each(EMPTY_STRINGS)('Should throw for "%s"', path => {
@@ -73,7 +73,9 @@ describe('Assert', () => {
 
   describe('notEmpty', () => {
     it.each([null, undefined])('should throw when collection is null or undefined', nullOrUndefined => {
-      expect(() => Assert.notEmpty('collection', nullOrUndefined)).toThrow('collection should not be null or undefined');
+      expect(() => Assert.notEmpty('collection', nullOrUndefined as unknown as unknown[])).toThrow(
+        'collection should not be null or undefined'
+      );
     });
 
     it('should throw when collection is empty', () => {

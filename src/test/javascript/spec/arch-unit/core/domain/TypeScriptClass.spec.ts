@@ -1,3 +1,4 @@
+import { ArchConfiguration } from '../../../../../../main/arch-unit/ArchConfiguration';
 import { TypeScriptClass } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
 
 import { TypeScriptClassFixture } from './TypeScriptClassFixture';
@@ -29,8 +30,20 @@ describe('TypeScriptClass', () => {
     );
   });
 
+  it('Should build with unknown import but without warning when disabled', () => {
+    (console.warn as jest.Mock).mockClear();
+    jest.spyOn(ArchConfiguration, 'get').mockReturnValue(new ArchConfiguration(false, false));
+
+    const fileWithUnknownImport = TypeScriptClassFixture.fileWithUnknownImport();
+
+    expect(fileWithUnknownImport.dependencies).toEqual([]);
+    expect(console.warn).not.toHaveBeenCalled();
+
+    jest.restoreAllMocks();
+  });
+
   it.each([null, undefined])('Should not build without file', nullOrUndefined => {
-    expect(() => TypeScriptClass.of(nullOrUndefined)).toThrow('file should not be null or undefined');
+    expect(() => TypeScriptClass.of(nullOrUndefined as unknown as never)).toThrow('file should not be null or undefined');
   });
 
   describe('hasImport', () => {

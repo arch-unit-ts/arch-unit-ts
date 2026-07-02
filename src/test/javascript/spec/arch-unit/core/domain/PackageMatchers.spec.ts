@@ -1,14 +1,14 @@
 import { PackageMatchers } from '../../../../../../main/arch-unit/core/domain/PackageMatchers';
 
 describe('packageMatchers', () => {
-  const listOfPackages = [
+  const listOfPackages: [string, boolean][] = [
     ['foo.match.bar', true],
     ['foo.other.bar', true],
     ['foo.match.other.bar', true],
     ['foo.bar', false],
     ['matc.ho.ther', false],
   ];
-  it.each(listOfPackages)('should packageMatcher %s match on matcher be %s', (packageMatcher: string, packageCheck: boolean) => {
+  it.each(listOfPackages)('should packageMatcher %s match on matcher be %s', (packageMatcher, packageCheck) => {
     expect(PackageMatchers.of('..match..', '..other..').test(packageMatcher)).toEqual(packageCheck);
   });
 

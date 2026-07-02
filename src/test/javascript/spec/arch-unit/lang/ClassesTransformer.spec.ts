@@ -1,3 +1,4 @@
+import { TypeScriptClass } from '../../../../../main/arch-unit/core/domain/TypeScriptClass';
 import { ClassesTransformer } from '../../../../../main/arch-unit/lang/ClassesTransformer';
 import { PredicateAggregator } from '../../../../../main/arch-unit/lang/synthax/PredicateAggregator';
 import { TypeScriptClassesFixture } from '../core/domain/TypeScriptClassesFixture';
@@ -7,11 +8,15 @@ import { ClassesTransformerFixture } from './ClassesTransformerFixture';
 
 describe('ClassesTransformer', () => {
   it.each([undefined, null])('should not build without description [%s]', nullOrUndefined => {
-    expect(() => new ClassesTransformer(nullOrUndefined, null)).toThrow('description should not be null or undefined');
+    expect(
+      () => new ClassesTransformer(nullOrUndefined as unknown as string, null as unknown as PredicateAggregator<TypeScriptClass>)
+    ).toThrow('description should not be null or undefined');
   });
 
   it.each([undefined, null])('should not build without predicateAggregator [%s]', nullOrUndefined => {
-    expect(() => new ClassesTransformer('description', nullOrUndefined)).toThrow('predicateAggregator should not be null or undefined');
+    expect(() => new ClassesTransformer('description', nullOrUndefined as unknown as PredicateAggregator<TypeScriptClass>)).toThrow(
+      'predicateAggregator should not be null or undefined'
+    );
   });
 
   describe('getDescription', () => {

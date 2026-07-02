@@ -5,7 +5,7 @@ describe('TypeScriptPackage', () => {
   const fakeSrcMorphProject = MorphProjectFixture.fakeSrc();
 
   it('Should build', () => {
-    const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+    const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain')!;
 
     const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory, '**/Client.ts');
 
@@ -16,7 +16,7 @@ describe('TypeScriptPackage', () => {
   });
 
   describe('containsExactly', () => {
-    const typeScriptPackage = new TypeScriptPackage(fakeSrcMorphProject.getDirectory('src/test/fake-src'));
+    const typeScriptPackage = new TypeScriptPackage(fakeSrcMorphProject.getDirectory('src/test/fake-src')!);
     it('Should contain exactly', () => {
       expect(typeScriptPackage.containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one'])).toBe(true);
     });
@@ -28,7 +28,7 @@ describe('TypeScriptPackage', () => {
 
   describe('filterClasses', () => {
     it('Should filter', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src')!;
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
       const classes = typeScriptPackage.filterClasses('**/package-info.ts');
@@ -46,7 +46,7 @@ describe('TypeScriptPackage', () => {
 
   describe('allClasses', () => {
     it('Should get all', () => {
-      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain');
+      const tsMorphRootDirectory = fakeSrcMorphProject.getDirectory('src/test/fake-src/business-context-one/domain')!;
 
       const typeScriptPackage = new TypeScriptPackage(tsMorphRootDirectory);
 

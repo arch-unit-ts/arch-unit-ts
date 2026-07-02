@@ -18,7 +18,7 @@ export class TypeScriptPackage {
       .getSourceFiles()
       .filter(
         createFilter(
-          { map: (sourceFile: SourceFile): string => sourceFile.getFilePath() },
+          { map: (sourceFile: unknown): string => (sourceFile as SourceFile).getFilePath() },
           classesFilter.map(filter => `!${filter}`)
         )
       )
@@ -33,7 +33,7 @@ export class TypeScriptPackage {
   filterClasses(classesFilter: string): TypeScriptClass[] {
     return this.packages.flatMap(typesScriptPackage =>
       typesScriptPackage.classes.filter(
-        createFilter({ map: (typeScriptClass: TypeScriptClass): string => typeScriptClass.getPath().get() }, classesFilter)
+        createFilter({ map: (typeScriptClass: unknown): string => (typeScriptClass as TypeScriptClass).getPath().get() }, classesFilter)
       )
     );
   }

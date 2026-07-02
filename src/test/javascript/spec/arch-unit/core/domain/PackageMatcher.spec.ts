@@ -2,7 +2,7 @@ import { PackageMatcher, ResultMatcher } from '../../../../../../main/arch-unit/
 import { Optional } from '../../../../../../main/common/domain/Optional';
 
 describe('PackageMatcher', () => {
-  const listOfPackageName = [
+  const listOfPackageName: [string, string, boolean][] = [
     ['some.@arbitrary.pkg', 'some.@arbitrary.pkg', true],
     ['some.arbitrary.pkg', 'some.thing.different', false],
     ['some..pkg', 'some.arbitrary.pkg', true],
@@ -39,11 +39,11 @@ describe('PackageMatcher', () => {
     ['..[*c*|*d*].pk*..', 'some.nofit.pkg.whatever', false],
   ];
 
-  it.each(listOfPackageName)('should matcher %s on target %s be %s', (matcher: string, target: string, matches: boolean) => {
+  it.each(listOfPackageName)('should matcher %s on target %s be %s', (matcher, target, matches) => {
     expect(PackageMatcher.of(matcher).exactMatches(target)).toEqual(matches);
   });
 
-  const listOfCaptureGroup = [
+  const listOfCaptureGroup: [string, string, string | null][] = [
     ['some.(*).pkg', 'some.arbitrary.pkg', 'arbitrary'],
     ['some.arb(*)ry.pkg', 'some.arbitrary.pkg', 'itra'],
     ['some.arb(*)ry.pkg', 'some.arbit.rary.pkg', null],
@@ -74,22 +74,19 @@ describe('PackageMatcher', () => {
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.infrastructure.a.file', 'a'],
   ];
 
-  it.each(listOfCaptureGroup)(
-    'should matcher %s on target %s get capture groups %s',
-    (matcher: string, target: string, groupString: string) => {
-      expect(PackageMatcher.of(matcher).match(target).isPresent()).toEqual(groupString != null);
+  it.each(listOfCaptureGroup)('should matcher %s on target %s get capture groups %s', (matcher, target, groupString) => {
+    expect(PackageMatcher.of(matcher).match(target).isPresent()).toEqual(groupString != null);
 
-      const groupsToCompare: string[] = groupString != null ? groupString.split(':') : [];
-      for (let i = 0; i < groupsToCompare.length; i++) {
-        expect(
-          PackageMatcher.of(matcher)
-            .match(target)
-            .orElseThrow()
-            .getGroup(i + 1)
-        ).toEqual(groupsToCompare[i]);
-      }
+    const groupsToCompare: string[] = groupString != null ? groupString.split(':') : [];
+    for (let i = 0; i < groupsToCompare.length; i++) {
+      expect(
+        PackageMatcher.of(matcher)
+          .match(target)
+          .orElseThrow()
+          .getGroup(i + 1)
+      ).toEqual(groupsToCompare[i]);
     }
-  );
+  });
 
   it.each(['...', '....', '.....'])('should not build with more than two dots : %s', dots => {
     expect(() => PackageMatcher.of(dots + 'packageName..')).toThrow("Package Identifier may not contain more than two '.' in a row");

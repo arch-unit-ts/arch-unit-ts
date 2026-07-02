@@ -211,7 +211,7 @@ export class ReverseDependencies {
     if (!this.reverseDependencies.has(mapKey)) {
       this.reverseDependencies.set(mapKey, [reverseDependency]);
     } else {
-      this.reverseDependencies.get(mapKey).push(reverseDependency);
+      this.reverseDependencies.get(mapKey)!.push(reverseDependency);
     }
   }
 }

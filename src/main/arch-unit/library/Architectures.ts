@@ -20,11 +20,11 @@ export abstract class Architectures {
 
 class DependencySettings {
   private readonly description: Optional<string>;
-  readonly ignoreExcludedDependencies: (predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>;
+  readonly ignoreExcludedDependencies: ((predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>) | undefined;
 
   private constructor(
-    description: string,
-    ignoreExludedDependencies: (predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>
+    description: string | undefined,
+    ignoreExludedDependencies: ((predicate: DescribedPredicate<Dependency>) => DescribedPredicate<Dependency>) | undefined
   ) {
     this.description = Optional.ofUndefinable(description);
     this.ignoreExcludedDependencies = ignoreExludedDependencies;
@@ -158,7 +158,9 @@ class LayeredArchitecture implements ArchRule {
     const originPackageMatches = Predicates.dependencyOrigin(
       this.layerDefinitions.containsPredicateForLayers(Array.from(allowedAccessors))
     ).or(Predicates.dependencyOrigin(this.layerDefinitions.containsPredicateFor(ownLayer)));
-    return this.dependencySettings.ignoreExcludedDependencies.apply(this, [originPackageMatches]);
+    return this.dependencySettings.ignoreExcludedDependencies
+      ? this.dependencySettings.ignoreExcludedDependencies(originPackageMatches)
+      : /* istanbul ignore next */ originPackageMatches;
   }
 
   getDescription(): string {
@@ -279,7 +281,7 @@ class LayerDefinitions implements Iterable<LayerDefinition> {
   }
 
   private get(layerNames: string[]): LayerDefinition[] {
-    return layerNames.map(layerName => this.layerDefinitions.get(layerName));
+    return layerNames.map(layerName => this.layerDefinitions.get(layerName)!);
   }
 }
 
@@ -290,7 +292,7 @@ class LayerDependencySpecification {
 
   private readonly layeredArchitecture: LayeredArchitecture;
 
-  private descriptionSuffix: string;
+  private descriptionSuffix!: string;
 
   constructor(layerName: string, layeredArchitecture: LayeredArchitecture) {
     this.layerName = layerName;

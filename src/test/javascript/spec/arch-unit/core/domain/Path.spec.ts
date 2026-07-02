@@ -5,12 +5,12 @@ import { EMPTY_STRINGS } from '../../../fixture.config';
 import { MorphProjectFixture } from '../../morph/MorphProjectFixture';
 
 function getSourceFile(fileName: string): SourceFile {
-  return MorphProjectFixture.fakeSrc().getSourceFile(fileName);
+  return MorphProjectFixture.fakeSrc().getSourceFile(fileName)!;
 }
 
 describe('Path', () => {
   it.each([undefined, null])('should not build for %s', blank => {
-    expect(() => RelativePath.of(blank)).toThrow('path should not be null or undefined');
+    expect(() => RelativePath.of(blank as unknown as string)).toThrow('path should not be null or undefined');
   });
 
   it.each(EMPTY_STRINGS)('should not build for "%s"', blank => {

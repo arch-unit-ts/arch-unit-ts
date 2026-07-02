@@ -2,7 +2,7 @@ import { AllowEmptyShould } from '../../../../../main/arch-unit/lang/AllowEmptyS
 
 describe('AllowEmptyShould', () => {
   it.each([null, undefined])('should not build for %s', type => {
-    expect(() => new AllowEmptyShould(type)).toThrow('type should not be null or undefined');
+    expect(() => new AllowEmptyShould(type as unknown as never)).toThrow('type should not be null or undefined');
   });
 
   describe('isAllowed', () => {

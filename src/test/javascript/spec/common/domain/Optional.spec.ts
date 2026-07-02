@@ -93,7 +93,7 @@ describe('Optional', () => {
 
   describe('Or else throw', () => {
     it('Should throw error for empty optional', () => {
-      expect(() => Optional.empty().orElseThrow()).toThrowError();
+      expect(() => Optional.empty().orElseThrow()).toThrow();
     });
 
     it('Should get value for valuated optional', () => {

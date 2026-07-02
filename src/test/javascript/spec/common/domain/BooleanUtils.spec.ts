@@ -3,7 +3,7 @@ import { BooleanUtils } from '../../../../../main/common/domain/BooleanUtils';
 describe('BooleanUtils', () => {
   describe('falseIfUndefined', () => {
     it('Should be false if undefined', () => {
-      expect(BooleanUtils.falseIfUndefined(undefined)).toEqual(false);
+      expect(BooleanUtils.falseIfUndefined(undefined as unknown as boolean)).toEqual(false);
     });
     it('Should be false if false', () => {
       expect(BooleanUtils.falseIfUndefined(false)).toEqual(false);
