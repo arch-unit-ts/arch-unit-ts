@@ -26,6 +26,10 @@ export class ClassesThatInternal<CONJUNCTION> implements ClassesThat<CONJUNCTION
     return this.givenWith(TypeScriptClass.simpleNameEndingWith(prefix));
   }
 
+  areDecoratedWith(decorator: string): CONJUNCTION {
+    return this.givenWith(TypeScriptClass.areDecoratedWith(decorator));
+  }
+
   private givenWith(predicate: DescribedPredicate<TypeScriptClass>): CONJUNCTION {
     return this.addPredicate(predicate);
   }

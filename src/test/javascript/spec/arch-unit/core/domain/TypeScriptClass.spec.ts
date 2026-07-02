@@ -1,5 +1,6 @@
 import { ArchConfiguration } from '../../../../../../main/arch-unit/ArchConfiguration';
 import { TypeScriptClass } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
+import { MorphProjectFixture } from '../../morph/MorphProjectFixture';
 
 import { TypeScriptClassFixture } from './TypeScriptClassFixture';
 
@@ -121,6 +122,61 @@ describe('TypeScriptClass', () => {
       const typeScriptClassDescribedPredicate = TypeScriptClass.resideOutsideOfPackages('..domain..', '..north.carolina..');
       expect(typeScriptClassDescribedPredicate.description).toEqual("reside outside of packages ['..domain..', '..north.carolina..']");
       expect(typeScriptClassDescribedPredicate.test(fruitClass)).toEqual(false);
+    });
+  });
+
+  describe('areDecoratedWith', () => {
+    it('should have correct description', () => {
+      const predicate = TypeScriptClass.areDecoratedWith('Transactional');
+      expect(predicate.description).toEqual('are decorated with @Transactional');
+    });
+
+    it('should return true when class has the decorator', () => {
+      const classTransactionalFile = MorphProjectFixture.fakeSrc().getSourceFile('ClassTransactionalApplicationService.ts')!;
+      const classTransactional = TypeScriptClass.of(classTransactionalFile);
+
+      const predicate = TypeScriptClass.areDecoratedWith('Transactional');
+      expect(predicate.test(classTransactional)).toEqual(true);
+    });
+
+    it('should return false when class does not have the decorator', () => {
+      const predicate = TypeScriptClass.areDecoratedWith('Transactional');
+      expect(predicate.test(fruitClass)).toEqual(false);
+    });
+
+    it('should return false for class without source file', () => {
+      const classWithoutSourceFile = TypeScriptClass.withoutDependencies(fruitClass.name, fruitClass.packagePath);
+      const predicate = TypeScriptClass.areDecoratedWith('Transactional');
+      expect(predicate.test(classWithoutSourceFile)).toEqual(false);
+    });
+  });
+
+  describe('getDecorators', () => {
+    it('should return decorator names for decorated class', () => {
+      const classTransactionalFile = MorphProjectFixture.fakeSrc().getSourceFile('ClassTransactionalApplicationService.ts')!;
+      const classTransactional = TypeScriptClass.of(classTransactionalFile);
+
+      expect(classTransactional.getDecorators()).toEqual(['Transactional']);
+    });
+
+    it('should return empty array for non-decorated class', () => {
+      expect(fruitClass.getDecorators()).toEqual([]);
+    });
+
+    it('should return empty array for class without source file', () => {
+      const classWithoutSourceFile = TypeScriptClass.withoutDependencies(fruitClass.name, fruitClass.packagePath);
+      expect(classWithoutSourceFile.getDecorators()).toEqual([]);
+    });
+  });
+
+  describe('getSourceFile', () => {
+    it('should return the source file when created with of()', () => {
+      expect(fruitClass.getSourceFile()).toBeDefined();
+    });
+
+    it('should return undefined when created with withoutDependencies()', () => {
+      const classWithoutSourceFile = TypeScriptClass.withoutDependencies(fruitClass.name, fruitClass.packagePath);
+      expect(classWithoutSourceFile.getSourceFile()).toBeUndefined();
     });
   });
 });

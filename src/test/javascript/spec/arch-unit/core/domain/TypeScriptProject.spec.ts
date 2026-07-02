@@ -54,6 +54,12 @@ describe('TypeScriptProject', () => {
         'src/test/fake-src/business-context-two/infrastructure/secondary/BasketRepository.ts',
         'src/test/fake-src/shared-kernel-one/package-info.ts',
         'src/test/fake-src/shared-kernel-one/infrastructure/primary/MoneyJson.ts',
+        'src/test/fake-src/transactional/application/ClassTransactionalApplicationService.ts',
+        'src/test/fake-src/transactional/application/MethodTransactionalApplicationService.ts',
+        'src/test/fake-src/transactional/application/NonCompliantApplicationService.ts',
+        'src/test/fake-src/transactional/application/NotTransactionalApplicationService.ts',
+        'src/test/fake-src/transactional/decorator/NotTransactional.ts',
+        'src/test/fake-src/transactional/decorator/Transactional.ts',
       ]);
 
       expect(

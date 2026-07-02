@@ -6,4 +6,6 @@ export interface ClassesThat<CONJUNCTION> {
   haveSimpleNameStartingWith(prefix: string): CONJUNCTION;
 
   haveSimpleNameEndingWith(prefix: string): CONJUNCTION;
+
+  areDecoratedWith(decorator: string): CONJUNCTION;
 }

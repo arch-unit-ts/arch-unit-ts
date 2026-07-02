@@ -1,4 +1,4 @@
-import { ImportDeclaration, SourceFile } from 'ts-morph';
+import { ClassDeclaration, ImportDeclaration, SourceFile } from 'ts-morph';
 
 import { Assert } from '../../../error/domain/Assert';
 import { ArchConfiguration } from '../../ArchConfiguration';
@@ -16,14 +16,16 @@ export class TypeScriptClass {
   readonly packagePath: RelativePath;
   readonly dependencies: Dependency[];
   private readonly fullPath: RelativePath;
+  private readonly sourceFile: SourceFile | undefined;
   reverseDependencies: ReverseDependencies = new ReverseDependencies();
 
-  private constructor(name: ClassName, packagePath: RelativePath, imports: ImportDeclaration[]) {
+  private constructor(name: ClassName, packagePath: RelativePath, imports: ImportDeclaration[], sourceFile?: SourceFile) {
     Assert.notNullOrUndefined('name', name);
     Assert.notNullOrUndefined('packagePath', packagePath);
     Assert.notNullOrUndefined('imports', imports);
     this.name = name;
     this.packagePath = packagePath;
+    this.sourceFile = sourceFile;
     this.dependencies = imports
       .filter(importDeclaration => this.isImportValid(importDeclaration))
       .map(importDeclaration =>
@@ -41,7 +43,8 @@ export class TypeScriptClass {
     return new TypeScriptClass(
       ClassName.of(file.getBaseName()),
       RelativePath.of(file.getDirectory().getPath()),
-      file.getImportDeclarations()
+      file.getImportDeclarations(),
+      file
     );
   }
 
@@ -84,6 +87,10 @@ export class TypeScriptClass {
 
   static simpleNameEndingWith(prefix: string): DescribedPredicate<TypeScriptClass> {
     return new SimpleNameEndingWithPredicate(prefix);
+  }
+
+  static areDecoratedWith(decorator: string): DescribedPredicate<TypeScriptClass> {
+    return new ClassDecoratedWithPredicate(decorator);
   }
 
   static GET_DIRECT_DEPENDENCIES_FROM_SELF: ChainableFunction<TypeScriptClass, Dependency[]> = new (class extends ChainableFunction<
@@ -129,6 +136,17 @@ export class TypeScriptClass {
 
   getSimpleName() {
     return this.name.get();
+  }
+
+  getSourceFile(): SourceFile | undefined {
+    return this.sourceFile;
+  }
+
+  getDecorators(): string[] {
+    if (!this.sourceFile) {
+      return [];
+    }
+    return this.sourceFile.getClasses().flatMap((classDecl: ClassDeclaration) => classDecl.getDecorators().map(d => d.getName()));
   }
 }
 
@@ -259,5 +277,18 @@ class SimpleNameEndingWithPredicate extends DescribedPredicate<TypeScriptClass> 
 
   public test(input: TypeScriptClass): boolean {
     return input.getSimpleName().endsWith(this.suffix);
+  }
+}
+
+class ClassDecoratedWithPredicate extends DescribedPredicate<TypeScriptClass> {
+  private readonly decorator: string;
+
+  constructor(decorator: string) {
+    super(`are decorated with @${decorator}`);
+    this.decorator = decorator;
+  }
+
+  public test(typeScriptClass: TypeScriptClass): boolean {
+    return typeScriptClass.getDecorators().includes(this.decorator);
   }
 }

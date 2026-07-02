@@ -18,7 +18,9 @@ describe('TypeScriptPackage', () => {
   describe('containsExactly', () => {
     const typeScriptPackage = new TypeScriptPackage(fakeSrcMorphProject.getDirectory('src/test/fake-src')!);
     it('Should contain exactly', () => {
-      expect(typeScriptPackage.containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one'])).toBe(true);
+      expect(
+        typeScriptPackage.containsExactly(['business-context-one', 'business-context-two', 'shared-kernel-one', 'transactional'])
+      ).toBe(true);
     });
 
     it('Should be false with wrong directories', () => {
