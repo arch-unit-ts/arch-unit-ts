@@ -9,13 +9,22 @@ export class TypeScriptMethod {
   readonly declaringClass: TypeScriptClass;
   private readonly _isPublic: boolean;
   private readonly _isAbstract: boolean;
+  private readonly _isAsync: boolean;
   readonly decorators: string[];
 
-  private constructor(methodName: string, declaringClass: TypeScriptClass, isPublic: boolean, isAbstract: boolean, decorators: string[]) {
+  private constructor(
+    methodName: string,
+    declaringClass: TypeScriptClass,
+    isPublic: boolean,
+    isAbstract: boolean,
+    decorators: string[],
+    isAsync: boolean
+  ) {
     this.methodName = methodName;
     this.declaringClass = declaringClass;
     this._isPublic = isPublic;
     this._isAbstract = isAbstract;
+    this._isAsync = isAsync;
     this.decorators = decorators;
   }
 
@@ -30,7 +39,7 @@ export class TypeScriptMethod {
 
     for (const interfaceDecl of sourceFile.getInterfaces()) {
       for (const signature of interfaceDecl.getMethods()) {
-        methods.push(new TypeScriptMethod(signature.getName(), declaringClass, true, false, []));
+        methods.push(new TypeScriptMethod(signature.getName(), declaringClass, true, false, [], false));
       }
     }
 
@@ -45,7 +54,8 @@ export class TypeScriptMethod {
       declaringClass,
       isPublic,
       method.isAbstract(),
-      method.getDecorators().map(d => d.getName())
+      method.getDecorators().map(d => d.getName()),
+      method.isAsync()
     );
   }
 
@@ -55,6 +65,10 @@ export class TypeScriptMethod {
 
   isAbstract(): boolean {
     return this._isAbstract;
+  }
+
+  isAsync(): boolean {
+    return this._isAsync;
   }
 
   isDecoratedWith(decorator: string): boolean {
@@ -67,6 +81,10 @@ export class TypeScriptMethod {
 
   static areNotAbstract(): DescribedPredicate<TypeScriptMethod> {
     return new NotAbstractMethodPredicate();
+  }
+
+  static areAsync(): DescribedPredicate<TypeScriptMethod> {
+    return new AsyncMethodPredicate();
   }
 
   static areDecoratedWith(decorator: string): DescribedPredicate<TypeScriptMethod> {
@@ -95,6 +113,16 @@ class NotAbstractMethodPredicate extends DescribedPredicate<TypeScriptMethod> {
 
   test(method: TypeScriptMethod): boolean {
     return !method.isAbstract();
+  }
+}
+
+class AsyncMethodPredicate extends DescribedPredicate<TypeScriptMethod> {
+  constructor() {
+    super('are async');
+  }
+
+  test(method: TypeScriptMethod): boolean {
+    return method.isAsync();
   }
 }
 

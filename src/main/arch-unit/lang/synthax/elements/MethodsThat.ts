@@ -5,5 +5,9 @@ export interface MethodsThat<CONJUNCTION> {
 
   areNotAbstract(): CONJUNCTION;
 
+  areAsync(): CONJUNCTION;
+
+  areDecoratedWith(decorator: string): CONJUNCTION;
+
   areDeclaredInClassesThat(): ClassesThat<CONJUNCTION>;
 }

@@ -10,6 +10,10 @@ export abstract class MethodConditions {
     return new MethodDecoratedWithCondition(decorator);
   }
 
+  static beAsync(): ArchCondition<TypeScriptMethod> {
+    return new AsyncMethodCondition();
+  }
+
   static beDeclaredInClassThat(classPredicate: DescribedPredicate<TypeScriptClass>): ArchCondition<TypeScriptMethod> {
     return new DeclaredInClassCondition(classPredicate);
   }
@@ -28,6 +32,22 @@ class MethodDecoratedWithCondition extends ArchCondition<TypeScriptMethod> {
     events.add(
       new SimpleConditionEvent(
         `${method.methodName} in ${method.declaringClass.getSimpleName()} ${satisfied ? 'is' : 'is not'} decorated with @${this.decorator} in ${method.declaringClass.getPath().get()}`,
+        !satisfied
+      )
+    );
+  }
+}
+
+class AsyncMethodCondition extends ArchCondition<TypeScriptMethod> {
+  constructor() {
+    super('be async');
+  }
+
+  check(method: TypeScriptMethod, events: ConditionEvents): void {
+    const satisfied = method.isAsync();
+    events.add(
+      new SimpleConditionEvent(
+        `${method.methodName} in ${method.declaringClass.getSimpleName()} ${satisfied ? 'is' : 'is not'} async in ${method.declaringClass.getPath().get()}`,
         !satisfied
       )
     );

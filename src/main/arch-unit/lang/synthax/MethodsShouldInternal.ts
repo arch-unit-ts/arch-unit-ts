@@ -80,6 +80,10 @@ export class MethodsShouldInternal implements ArchRule, MethodsShould, MethodsSh
     return this.addCondition(MethodConditions.beDecoratedWith(decorator));
   }
 
+  beAsync(): MethodsShouldConjunction {
+    return this.addCondition(MethodConditions.beAsync());
+  }
+
   beDeclaredInClassesThat(): ClassesThat<MethodsShouldConjunction> {
     return new ClassesThatInternal<MethodsShouldConjunction>((classPredicate: DescribedPredicate<TypeScriptClass>) =>
       this.addCondition(MethodConditions.beDeclaredInClassThat(classPredicate))

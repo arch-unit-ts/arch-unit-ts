@@ -64,6 +64,56 @@ describe('MethodConditions', () => {
     });
   });
 
+  describe('beAsync', () => {
+    it('should have correct description', () => {
+      expect(MethodConditions.beAsync().description).toBe('be async');
+    });
+
+    it('should not add violation when method is async', () => {
+      const methods = getMethodsFrom('AsyncApplicationService.ts');
+      const asyncMethod = methods.find(m => m.methodName === 'doSomethingAsync')!;
+
+      const events = new SimpleConditionEvents();
+      MethodConditions.beAsync().check(asyncMethod, events);
+
+      expect(events.getViolating()).toHaveLength(0);
+    });
+
+    it('should add violation when method is not async', () => {
+      const methods = getMethodsFrom('AsyncApplicationService.ts');
+      const syncMethod = methods.find(m => m.methodName === 'doSomethingSync')!;
+
+      const events = new SimpleConditionEvents();
+      MethodConditions.beAsync().check(syncMethod, events);
+
+      expect(events.getViolating()).toHaveLength(1);
+      expect(events.getViolating()[0].getDescriptionLines()[0]).toContain('is not async');
+    });
+
+    it('should include method name and class in violation message', () => {
+      const methods = getMethodsFrom('AsyncApplicationService.ts');
+      const syncMethod = methods.find(m => m.methodName === 'doSomethingSync')!;
+
+      const events = new SimpleConditionEvents();
+      MethodConditions.beAsync().check(syncMethod, events);
+
+      const message = events.getViolating()[0].getDescriptionLines()[0];
+      expect(message).toContain('doSomethingSync');
+      expect(message).toContain('AsyncApplicationService.ts');
+    });
+
+    it('should store allowed event when method is async', () => {
+      const methods = getMethodsFrom('AsyncApplicationService.ts');
+      const asyncMethod = methods.find(m => m.methodName === 'doSomethingAsync')!;
+
+      const events = new ViolatedAndSatisfiedConditionEvents();
+      MethodConditions.beAsync().check(asyncMethod, events);
+
+      expect(events.getAllowed()).toHaveLength(1);
+      expect(events.getAllowed()[0].getDescriptionLines()[0]).toContain('is async');
+    });
+  });
+
   describe('beDeclaredInClassThat', () => {
     it('should have correct description', () => {
       const classPredicate = TypeScriptClass.simpleNameEndingWith('ApplicationService.ts');

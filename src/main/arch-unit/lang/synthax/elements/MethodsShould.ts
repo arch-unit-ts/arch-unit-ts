@@ -5,6 +5,8 @@ import { ClassesThat } from './ClassesThat';
 export interface MethodsShould {
   beDecoratedWith(decorator: string): MethodsShouldConjunction;
 
+  beAsync(): MethodsShouldConjunction;
+
   beDeclaredInClassesThat(): ClassesThat<MethodsShouldConjunction>;
 }
 

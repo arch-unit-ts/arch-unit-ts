@@ -80,6 +80,34 @@ describe('TypeScriptMethod', () => {
     });
   });
 
+  describe('isAsync', () => {
+    it('should return true for async method', () => {
+      const sourceFile = fakeSrc.getSourceFile('AsyncApplicationService.ts')!;
+      const declaringClass = TypeScriptClass.of(sourceFile);
+      const methods = TypeScriptMethod.fromSourceFile(sourceFile, declaringClass);
+
+      const asyncMethod = methods.find(m => m.methodName === 'doSomethingAsync')!;
+      expect(asyncMethod.isAsync()).toBe(true);
+    });
+
+    it('should return false for non-async method', () => {
+      const sourceFile = fakeSrc.getSourceFile('AsyncApplicationService.ts')!;
+      const declaringClass = TypeScriptClass.of(sourceFile);
+      const methods = TypeScriptMethod.fromSourceFile(sourceFile, declaringClass);
+
+      const syncMethod = methods.find(m => m.methodName === 'doSomethingSync')!;
+      expect(syncMethod.isAsync()).toBe(false);
+    });
+
+    it('should return false for interface methods', () => {
+      const sourceFile = otherSrc.getSourceFile('InterfaceWithMethods.ts')!;
+      const declaringClass = TypeScriptClass.of(sourceFile);
+      const methods = TypeScriptMethod.fromSourceFile(sourceFile, declaringClass);
+
+      methods.forEach(method => expect(method.isAsync()).toBe(false));
+    });
+  });
+
   describe('isDecoratedWith', () => {
     it('should return true when method has the decorator', () => {
       const sourceFile = fakeSrc.getSourceFile('MethodTransactionalApplicationService.ts')!;
@@ -131,6 +159,32 @@ describe('TypeScriptMethod', () => {
 
       const predicate = TypeScriptMethod.areNotAbstract();
       methods.forEach(method => expect(predicate.test(method)).toBe(true));
+    });
+  });
+
+  describe('areAsync static predicate', () => {
+    it('should have correct description', () => {
+      expect(TypeScriptMethod.areAsync().description).toBe('are async');
+    });
+
+    it('should return true for async method', () => {
+      const sourceFile = fakeSrc.getSourceFile('AsyncApplicationService.ts')!;
+      const declaringClass = TypeScriptClass.of(sourceFile);
+      const methods = TypeScriptMethod.fromSourceFile(sourceFile, declaringClass);
+
+      const predicate = TypeScriptMethod.areAsync();
+      const asyncMethod = methods.find(m => m.methodName === 'doSomethingAsync')!;
+      expect(predicate.test(asyncMethod)).toBe(true);
+    });
+
+    it('should return false for non-async method', () => {
+      const sourceFile = fakeSrc.getSourceFile('AsyncApplicationService.ts')!;
+      const declaringClass = TypeScriptClass.of(sourceFile);
+      const methods = TypeScriptMethod.fromSourceFile(sourceFile, declaringClass);
+
+      const predicate = TypeScriptMethod.areAsync();
+      const syncMethod = methods.find(m => m.methodName === 'doSomethingSync')!;
+      expect(predicate.test(syncMethod)).toBe(false);
     });
   });
 

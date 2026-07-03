@@ -2,7 +2,7 @@
 
 arch-unit-ts is a free library for checking your typescript architecture. Inspired by [ArchUnit](https://github.com/TNG/ArchUnit) .
 
-This library can check dependencies between packages and classes. The main goal of Arch-Unit-ts is to automatically test architecture and coding rules of your project.
+This library can check dependencies between packages and classes, and enforce method-level conventions (decorators, async). The main goal of Arch-Unit-ts is to automatically test architecture and coding rules of your project.
 
 We began to implement functionalities in order to be able to test a hexagonal architecture the same way it is done in [JhipsterLite](https://github.com/jhipster/jhipster-lite/blob/main/src/test/java/tech/jhipster/lite/HexagonalArchTest.java)
 
@@ -10,7 +10,8 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 
 - [How to use](#how-to-use)
   - [Installation](#installation)
-  - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
+  - [Hexago/compactnal Arch Test example](#hexagonal-arch-test-example)
+  - [Method-level rules](#method-level-rules)
   - [Configuration](#configuration)
   - [Troubleshooting](#troubleshooting)
   <!-- TOC -->
@@ -196,6 +197,126 @@ describe('HexagonalArchTest', () => {
   });
 });
 ```
+
+### Method-level rules
+
+In addition to class-level rules, arch-unit-ts supports architecture rules at the **method level** using `methods()` and `noMethods()`. This is useful for enforcing decorator and async conventions on service methods.
+
+#### Import
+
+```ts
+import { ArchRuleDefinition } from 'arch-unit-ts/dist/arch-unit/lang/synthax/ArchRuleDefinition';
+```
+
+#### Available predicates in `.that()`
+
+| Predicate                     | Description                                                                                        |
+| ----------------------------- | -------------------------------------------------------------------------------------------------- |
+| `.arePublic()`                | Matches methods without a private/protected modifier                                               |
+| `.areNotAbstract()`           | Matches concrete (non-abstract) methods                                                            |
+| `.areAsync()`                 | Matches methods declared with the `async` keyword                                                  |
+| `.areDecoratedWith('Name')`   | Matches methods annotated with `@Name(...)`                                                        |
+| `.areDeclaredInClassesThat()` | Delegates to a class predicate (e.g. `.resideInAnyPackage(...)`, `.haveSimpleNameEndingWith(...)`) |
+
+Predicates can be chained with `.and()` and `.or()`.
+
+#### Available conditions in `.should()`
+
+| Condition                    | Description                                      |
+| ---------------------------- | ------------------------------------------------ |
+| `.beDecoratedWith('Name')`   | The method must carry the decorator `@Name`      |
+| `.beAsync()`                 | The method must be declared `async`              |
+| `.beDeclaredInClassesThat()` | The declaring class must match a class predicate |
+
+Conditions can be chained with `.andShould()` and `.orShould()`.
+
+#### Example: all public application-service methods must be `@Transactional` or `@NotTransactional`
+
+```ts
+import { TypeScriptProject } from 'arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject';
+import { RelativePath } from 'arch-unit-ts/dist/arch-unit/core/domain/RelativePath';
+import { ArchRuleDefinition } from 'arch-unit-ts/dist/arch-unit/lang/synthax/ArchRuleDefinition';
+
+describe('TransactionalArchTest', () => {
+  const project = new TypeScriptProject(RelativePath.of('src/main/app'));
+  const allClasses = project.allClasses();
+
+  it('public methods of application services must be @Transactional or @NotTransactional', () => {
+    ArchRuleDefinition.methods()
+      .that()
+      .arePublic()
+      .and()
+      .areNotAbstract()
+      .and()
+      .areDeclaredInClassesThat()
+      .resideInAnyPackage('..application..')
+      .and()
+      .areDeclaredInClassesThat()
+      .haveSimpleNameEndingWith('ApplicationService.ts')
+      .should()
+      .beDecoratedWith('Transactional')
+      .orShould()
+      .beDecoratedWith('NotTransactional')
+      .orShould()
+      .beDeclaredInClassesThat()
+      .areDecoratedWith('Transactional')
+      .orShould()
+      .beDeclaredInClassesThat()
+      .areDecoratedWith('NotTransactional')
+      .because('All application service methods must declare their transactional intent')
+      .allowEmptyShould(true)
+      .check(allClasses);
+  });
+});
+```
+
+#### Example: methods decorated with `@Transactional` must be `async`
+
+```ts
+it('methods decorated with @Transactional must be async', () => {
+  ArchRuleDefinition.methods().that().areDecoratedWith('Transactional').should().beAsync().allowEmptyShould(true).check(allClasses);
+});
+```
+
+#### Example: async methods in application services must carry `@Transactional`
+
+```ts
+it('async application service methods must be @Transactional', () => {
+  ArchRuleDefinition.methods()
+    .that()
+    .areAsync()
+    .and()
+    .areDeclaredInClassesThat()
+    .resideInAnyPackage('..application..')
+    .should()
+    .beDecoratedWith('Transactional')
+    .allowEmptyShould(true)
+    .check(allClasses);
+});
+```
+
+#### Using `noMethods()` (inverted rule)
+
+`noMethods()` fails if **any** method matches the condition, instead of failing when one does not:
+
+```ts
+it('no application service method should be decorated with @Deprecated', () => {
+  ArchRuleDefinition.noMethods()
+    .that()
+    .areDeclaredInClassesThat()
+    .haveSimpleNameEndingWith('ApplicationService.ts')
+    .should()
+    .beDecoratedWith('Deprecated')
+    .allowEmptyShould(true)
+    .check(allClasses);
+});
+```
+
+#### `allowEmptyShould` and `because`
+
+- `.allowEmptyShould(true)` — silently passes when no method matches the `.that()` clause (useful when a feature is not yet present in all projects).
+- `.allowEmptyShould(false)` — throws if no method is checked (default: driven by `arch-unit-ts.json`).
+- `.because('reason')` — appends a human-readable explanation to the violation message.
 
 ### Configuration
 

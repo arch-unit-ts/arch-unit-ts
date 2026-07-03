@@ -21,6 +21,14 @@ export class MethodsThatInternal<CONJUNCTION> implements MethodsThat<CONJUNCTION
     return this.addPredicate(TypeScriptMethod.areNotAbstract());
   }
 
+  areAsync(): CONJUNCTION {
+    return this.addPredicate(TypeScriptMethod.areAsync());
+  }
+
+  areDecoratedWith(decorator: string): CONJUNCTION {
+    return this.addPredicate(TypeScriptMethod.areDecoratedWith(decorator));
+  }
+
   areDeclaredInClassesThat(): ClassesThat<CONJUNCTION> {
     return new ClassesThatInternal<CONJUNCTION>((classPredicate: DescribedPredicate<TypeScriptClass>) =>
       this.addPredicate(TypeScriptMethod.areDeclaredInClassThat(classPredicate))

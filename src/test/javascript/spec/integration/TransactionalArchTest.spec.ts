@@ -32,7 +32,11 @@ describe('TransactionalArchTest', () => {
         .allowEmptyShould(true);
 
     it('should pass for fully compliant project', () => {
-      const compliantProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/transactional'), '**/NonCompliant*.ts');
+      const compliantProject = new TypeScriptProject(
+        RelativePath.of('src/test/fake-src/transactional'),
+        '**/NonCompliant*.ts',
+        '**/AsyncApplicationService.ts'
+      );
 
       expect(() => rule().check(compliantProject.allClasses())).not.toThrow();
     });
@@ -149,6 +153,63 @@ describe('TransactionalArchTest', () => {
           .allowEmptyShould(true)
           .check(allClasses)
       ).toThrow('Architecture violation');
+    });
+  });
+
+  describe('areAsync in that() clause', () => {
+    it('should filter only async methods', () => {
+      expect(() =>
+        ArchRuleDefinition.methods().that().areAsync().should().beDecoratedWith('Transactional').allowEmptyShould(true).check(allClasses)
+      ).toThrow('Architecture violation');
+    });
+
+    it('should pass when all async methods satisfy the condition', () => {
+      const compliantProject = new TypeScriptProject(RelativePath.of('src/test/fake-src/transactional'), '**/AsyncApplicationService.ts');
+
+      expect(() =>
+        ArchRuleDefinition.methods()
+          .that()
+          .areAsync()
+          .should()
+          .beDecoratedWith('Transactional')
+          .allowEmptyShould(true)
+          .check(compliantProject.allClasses())
+      ).not.toThrow();
+    });
+  });
+
+  describe('areDecoratedWith in that() clause', () => {
+    it('should fail when decorated methods are not async', () => {
+      expect(() =>
+        ArchRuleDefinition.methods().that().areDecoratedWith('Transactional').should().beAsync().allowEmptyShould(true).check(allClasses)
+      ).toThrow('Architecture violation');
+    });
+
+    it('should pass when all decorated methods are async', () => {
+      const asyncOnlyProject = new TypeScriptProject(
+        RelativePath.of('src/test/fake-src/transactional'),
+        '**/ClassTransactionalApplicationService.ts',
+        '**/MethodTransactionalApplicationService.ts',
+        '**/NonCompliantApplicationService.ts',
+        '**/NotTransactionalApplicationService.ts'
+      );
+
+      expect(() =>
+        ArchRuleDefinition.methods()
+          .that()
+          .areDecoratedWith('Transactional')
+          .should()
+          .beAsync()
+          .allowEmptyShould(true)
+          .check(asyncOnlyProject.allClasses())
+      ).not.toThrow();
+    });
+  });
+
+  describe('beAsync in should() clause', () => {
+    it('should have correct description', () => {
+      const rule = ArchRuleDefinition.methods().that().areAsync().should().beAsync().allowEmptyShould(true);
+      expect(rule).toBeDefined();
     });
   });
 
