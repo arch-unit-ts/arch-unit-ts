@@ -10,7 +10,7 @@ We began to implement functionalities in order to be able to test a hexagonal ar
 
 - [How to use](#how-to-use)
   - [Installation](#installation)
-  - [Hexago/compactnal Arch Test example](#hexagonal-arch-test-example)
+  - [Hexagonal Arch Test example](#hexagonal-arch-test-example)
   - [Method-level rules](#method-level-rules)
   - [Configuration](#configuration)
   - [Troubleshooting](#troubleshooting)
