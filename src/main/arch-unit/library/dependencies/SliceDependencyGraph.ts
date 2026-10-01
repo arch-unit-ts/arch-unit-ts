@@ -1,3 +1,4 @@
+import { Comparators } from '../../../common/domain/Comparators';
 import { Dependency } from '../../core/domain/TypeScriptClass';
 
 import { Slices } from './Slices';
@@ -40,6 +41,6 @@ export class SliceDependencyGraph {
 
   dependenciesBetween(origin: string, target: string): Dependency[] {
     const dependencies = this.dependenciesBySlices.get(origin)?.get(target) ?? [];
-    return [...dependencies].sort((first, second) => first.getDescription().localeCompare(second.getDescription()));
+    return [...dependencies].sort((first, second) => Comparators.compareStrings(first.getDescription(), second.getDescription()));
   }
 }

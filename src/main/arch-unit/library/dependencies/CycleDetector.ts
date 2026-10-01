@@ -1,3 +1,4 @@
+import { Comparators } from '../../../common/domain/Comparators';
 import { Assert } from '../../../error/domain/Assert';
 
 export interface DetectedCycles {
@@ -8,8 +9,9 @@ export interface DetectedCycles {
 /**
  * Finds the elementary cycles of a directed graph given as an adjacency map (node -> nodes it points to).
  *
- * Each cycle is listed once, starting with its smallest node (alphabetical order), and cycles are sorted by length then alphabetically,
+ * Each cycle is listed once, starting with its smallest node, and cycles are sorted by length then node by node,
  * so that the result does not depend on the insertion order of the graph.
+ * Nodes are compared by code unit, whatever the locale: uppercase letters come before lowercase ones.
  * Self loops and edges to unknown nodes are ignored.
  * At most `maxNumberOfCycles` cycles are returned, `limitReached` tells that more exist.
  * When the limit is reached, the cycles kept are the first ones found (searching from the smallest node), not the shortest ones:
@@ -60,7 +62,7 @@ export class CycleDetector {
   }
 
   private compare(first: string[], second: string[]): number {
-    return first.length - second.length || first.join('\u0000').localeCompare(second.join('\u0000'));
+    return first.length - second.length || Comparators.compareStringArrays(first, second);
   }
 
   /** Nodes greater than start that are on a cycle through start, start included. */

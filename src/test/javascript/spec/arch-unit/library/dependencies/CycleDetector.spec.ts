@@ -77,4 +77,13 @@ describe('CycleDetector', () => {
   it('should reject a maximum number of cycles below one', () => {
     expect(() => CycleDetector.detect(new Map(), 0)).toThrow('maxNumberOfCycles should not be less than 1');
   });
+
+  it('should order cycles by code unit order, whatever the locale', () => {
+    const result = CycleDetector.detect(graphOf({ Billing: ['api'], api: ['Billing', 'orders'], orders: ['api'] }), 100);
+
+    expect(result.cycles).toEqual([
+      ['Billing', 'api'],
+      ['api', 'orders'],
+    ]);
+  });
 });

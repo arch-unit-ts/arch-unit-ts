@@ -78,4 +78,17 @@ describe('SliceDependencyGraph', () => {
       expect(adjacencyOf(onlyOrder)).toEqual(new Map([['orders', []]]));
     });
   });
+
+  it('should order the dependencies of an edge by code unit order, whatever the locale', () => {
+    const mixedCaseGraph = graphOf({
+      'src/billing/apple.ts': "import { Order } from '../orders/Order';\nexport class Apple {}",
+      'src/billing/Zebra.ts': "import { Order } from '../orders/Order';\nexport class Zebra {}",
+      'src/orders/Order.ts': 'export class Order {}',
+    });
+
+    expect(mixedCaseGraph.dependenciesBetween('billing', 'orders').map(dependency => dependency.getDescription())).toEqual([
+      'src.orders.Order.ts in src.billing.Zebra.ts',
+      'src.orders.Order.ts in src.billing.apple.ts',
+    ]);
+  });
 });
