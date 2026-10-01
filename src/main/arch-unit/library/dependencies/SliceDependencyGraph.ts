@@ -41,6 +41,9 @@ export class SliceDependencyGraph {
 
   dependenciesBetween(origin: string, target: string): Dependency[] {
     const dependencies = this.dependenciesBySlices.get(origin)?.get(target) ?? [];
-    return [...dependencies].sort((first, second) => Comparators.compareStrings(first.getDescription(), second.getDescription()));
+    const distinctDependencies = new Map(dependencies.map(dependency => [dependency.getDescription(), dependency]));
+    return [...distinctDependencies.values()].sort((first, second) =>
+      Comparators.compareStrings(first.getDescription(), second.getDescription())
+    );
   }
 }

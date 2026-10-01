@@ -68,4 +68,16 @@ describe('SlicesFluentApi', () => {
         'Errors : Cycle detected: Invoice.ts -> Order.ts -> Invoice.ts'
     );
   });
+
+  it('should detect a cycle with an assignment that relies on the source file of the classes', () => {
+    const bySourceFileName: SliceAssignment = {
+      getIdentifierOf: (typeScriptClass: TypeScriptClass): Optional<SliceIdentifier> =>
+        Optional.of(SliceIdentifier.of(typeScriptClass.getSourceFile()!.getBaseNameWithoutExtension())),
+      getDescription: () => 'slices by source file name',
+    };
+
+    expect(() => SlicesRuleDefinition.slices().assignedFrom(bySourceFileName).should().beFreeOfCycles().check(cyclicClasses)).toThrow(
+      'Errors : Cycle detected: Invoice -> Order -> Invoice'
+    );
+  });
 });

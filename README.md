@@ -379,9 +379,14 @@ Errors : Cycle detected: billing -> orders -> billing
     - src.billing.Invoice.ts in src.orders.Order.ts
 ```
 
-At most 100 cycles are reported, and 20 imports for each dependency between two slices. `.allowEmptyShould(true)` lets the rule pass when no class is assigned to a slice.
+At most 100 cycles are reported, and 20 imports for each dependency between two slices.
 
-**Limitation:** only `import` declarations are followed. Re-exports (`export * from './x'`, `export { a } from './x'`) and dynamic `import()` are not, so a cycle going through a barrel file (`index.ts`) is not detected.
+When no class is assigned to a slice, the rule passes silently by default (`failOnEmptyShould` is `false`): a typo in the package identifier would then disable it. Add `.allowEmptyShould(false)` to make the rule fail instead. `.allowEmptyShould(true)` keeps it passing.
+
+**Limitations:**
+
+- Only `import` declarations are followed. Re-exports (`export * from './x'`, `export { a } from './x'`) and dynamic `import()` are not, so a cycle going through a barrel file (`index.ts`) is not detected.
+- `import type { X } from './x'` is followed like any other import, although it is erased at runtime: a cycle made only of type imports is reported.
 
 ### Configuration
 

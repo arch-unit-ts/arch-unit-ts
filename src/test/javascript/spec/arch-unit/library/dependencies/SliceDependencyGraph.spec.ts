@@ -91,4 +91,16 @@ describe('SliceDependencyGraph', () => {
       'src.orders.Order.ts in src.billing.apple.ts',
     ]);
   });
+
+  it('should list once an import repeated in the same file', () => {
+    const repeatedImportsGraph = graphOf({
+      'src/billing/Invoice.ts':
+        "import { Order } from '../orders/Order';\nimport type { Order as OrderType } from '../orders/Order';\nexport class Invoice {}",
+      'src/orders/Order.ts': 'export class Order {}',
+    });
+
+    expect(repeatedImportsGraph.dependenciesBetween('billing', 'orders').map(dependency => dependency.getDescription())).toEqual([
+      'src.orders.Order.ts in src.billing.Invoice.ts',
+    ]);
+  });
 });

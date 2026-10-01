@@ -89,7 +89,7 @@ Internally, `ClassesThatInternal` accumulates predicates via `PredicateAggregato
 
 ### Slices and cycles
 
-`slices().matching('..myapp.(*)..').should().beFreeOfCycles()` (exported as `slices` in `main.ts`) groups classes into slices from the capturing groups of a package identifier (`PackageMatcher.matchExactly`, anchored), builds the dependency graph between slices from `TypeScriptClass.dependencies`, and reports each elementary cycle (`CycleDetector`). Only `import` declarations are followed: re-exports (`export ... from`) and dynamic imports are not, so cycles through barrel files are missed.
+`slices().matching('..myapp.(*)..').should().beFreeOfCycles()` (exported as `slices` in `main.ts`) groups classes into slices from the capturing groups of a package identifier (`PackageMatcher.matchExactly`, anchored), builds the dependency graph between slices from `TypeScriptClass.dependencies`, and reports each elementary cycle (`CycleDetector`). Only `import` declarations are followed: re-exports (`export ... from`) and dynamic imports are not, so cycles through barrel files are missed. `import type` is followed like any other import, so a cycle made only of type imports is reported.
 
 ### Test fixtures
 

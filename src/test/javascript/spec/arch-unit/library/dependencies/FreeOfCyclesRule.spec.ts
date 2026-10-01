@@ -101,7 +101,7 @@ describe('FreeOfCyclesRule', () => {
 
     expect(report.match(/Cycle detected/g)).toHaveLength(FreeOfCyclesRule.MAX_NUMBER_OF_CYCLES);
     expect(report).toContain(
-      `Only the first ${FreeOfCyclesRule.MAX_NUMBER_OF_CYCLES} cycles are reported, more cycles exist between these slices`
+      `The search stops after ${FreeOfCyclesRule.MAX_NUMBER_OF_CYCLES} cycles, more cycles exist between these slices`
     );
   });
 

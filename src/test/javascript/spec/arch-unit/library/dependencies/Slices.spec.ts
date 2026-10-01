@@ -1,6 +1,9 @@
 import { TypeScriptClass } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
 import { PackageIdentifierSliceAssignment } from '../../../../../../main/arch-unit/library/dependencies/PackageIdentifierSliceAssignment';
+import { SliceAssignment } from '../../../../../../main/arch-unit/library/dependencies/SliceAssignment';
+import { SliceIdentifier } from '../../../../../../main/arch-unit/library/dependencies/SliceIdentifier';
 import { Slices } from '../../../../../../main/arch-unit/library/dependencies/Slices';
+import { Optional } from '../../../../../../main/common/domain/Optional';
 import { InMemoryTypeScriptClassesFixture } from '../../morph/InMemoryTypeScriptClassesFixture';
 
 describe('Slices', () => {
@@ -73,5 +76,28 @@ describe('Slices', () => {
 
   it('should be described by its assignment', () => {
     expect(slices.getDescription()).toEqual("slices matching 'src.(*)'");
+  });
+
+  describe('with an assignment that needs more than the name and the package of a class', () => {
+    const bySourceFile: SliceAssignment = {
+      getIdentifierOf: (typeScriptClass: TypeScriptClass) =>
+        Optional.of(SliceIdentifier.of(typeScriptClass.getSourceFile() ? 'analysed' : 'unknown')),
+      getDescription: () => 'slices by source file',
+    };
+
+    it('should give the assignment the class of the analysed set for the target of a dependency', () => {
+      const slicesBySourceFile = Slices.of(classes, bySourceFile);
+      const dependencyTarget = classNamed('Order.ts').dependencies[0].typeScriptClass;
+
+      expect(dependencyTarget.getSourceFile()).toBeUndefined();
+      expect(slicesBySourceFile.sliceOf(dependencyTarget).orElseThrow().getName()).toEqual('analysed');
+    });
+
+    it('should give the assignment the class itself when it is not in the analysed set', () => {
+      const slicesBySourceFile = Slices.of(classes, bySourceFile);
+      const outsideTarget = TypeScriptClass.withoutDependencies(classNamed('Order.ts').name, classNamed('Money.ts').packagePath);
+
+      expect(slicesBySourceFile.sliceOf(outsideTarget).isEmpty()).toEqual(true);
+    });
   });
 });

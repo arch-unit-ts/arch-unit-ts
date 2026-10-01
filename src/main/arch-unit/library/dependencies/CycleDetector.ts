@@ -16,6 +16,8 @@ export interface DetectedCycles {
  * At most `maxNumberOfCycles` cycles are returned, `limitReached` tells that more exist.
  * When the limit is reached, the cycles kept are the first ones found (searching from the smallest node), not the shortest ones:
  * they are sorted afterwards, but a shorter cycle starting from a larger node may be missing.
+ * Paths that do not lead back to the starting node are not pruned: the search time can grow exponentially on a large, densely
+ * connected group of slices whose smallest slice is on a small isolated cycle. Realistic graphs are not affected.
  */
 export class CycleDetector {
   private readonly nodes: string[];

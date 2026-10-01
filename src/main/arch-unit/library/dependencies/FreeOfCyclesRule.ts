@@ -60,7 +60,7 @@ export class FreeOfCyclesRule implements ArchRule {
     if (detectedCycles.limitReached) {
       conditionEvents.add(
         SimpleConditionEvent.violated(
-          `Only the first ${FreeOfCyclesRule.MAX_NUMBER_OF_CYCLES} cycles are reported, more cycles exist between these slices`
+          `The search stops after ${FreeOfCyclesRule.MAX_NUMBER_OF_CYCLES} cycles, more cycles exist between these slices`
         )
       );
     }
