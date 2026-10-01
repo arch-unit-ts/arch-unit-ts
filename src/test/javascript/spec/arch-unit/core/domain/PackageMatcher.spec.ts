@@ -37,6 +37,17 @@ describe('PackageMatcher', () => {
     ['..[a|b*].pk*..', 'some.arbitrary.pkg.whatever', false],
     ['..[*c*|*d*].pk*..', 'some.anydinside.pkg.whatever', true],
     ['..[*c*|*d*].pk*..', 'some.nofit.pkg.whatever', false],
+    ['some.*.pkg', 'some.kebab-case.pkg', true],
+    ['some..pkg', 'some.first-segment.second-segment.pkg', true],
+    ['*.*.*', 'kebab-one.kebab-two.kebab-three', true],
+    ['some.*.pkg', 'some.$dollar.pkg', true],
+    ['some.*.pkg', 'some.kebab case.pkg', false],
+    ['some.$x.pkg', 'some.$x.pkg', true],
+    ['some.$x.pkg', 'some.ax.pkg', false],
+    ['some.$x.pkg', 'some.x.pkg', false],
+    ['some.[$a|b].pkg', 'some.$a.pkg', true],
+    ['some..$pkg', 'some.in.$pkg', true],
+    ['some.*.pkg', 'some.@scope-name.pkg', true],
   ];
 
   it.each(listOfPackageName)('should matcher %s on target %s be %s', (matcher, target, matches) => {
@@ -72,6 +83,11 @@ describe('PackageMatcher', () => {
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.domain.api.a', 'a'],
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.domain.logic.a', 'a'],
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.infrastructure.a.file', 'a'],
+    ['..fake-src.(*)..', 'src.test.fake-src.business-context-one.domain.fruit', 'business-context-one'],
+    ['..myapp.(*)..', 'src.myapp.order-mgmt.domain', 'order-mgmt'],
+    ['some.(**).pkg', 'some.in-between.sub-pkg.pkg', 'in-between.sub-pkg'],
+    ['some.(*).pkg', 'some.@scope.pkg', '@scope'],
+    ['some.($x|y).pkg', 'some.$x.pkg', '$x'],
   ];
 
   it.each(listOfCaptureGroup)('should matcher %s on target %s get capture groups %s', (matcher, target, groupString) => {
@@ -140,6 +156,29 @@ describe('PackageMatcher', () => {
   it('should transform match to groups', () => {
     const result: Optional<ResultMatcher> = PackageMatcher.of('com.(*)..service.(**)').match('com.mycompany.some.service.special.name');
     expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['mycompany', 'special.name']);
+  });
+
+  describe('matchExactly', () => {
+    it('should capture groups of a full match', () => {
+      const result: Optional<ResultMatcher> = PackageMatcher.of('..myapp.(*)..').matchExactly('src.myapp.order-mgmt.domain');
+
+      expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['order-mgmt']);
+    });
+
+    it('should capture groups of every segment of a full match', () => {
+      const result: Optional<ResultMatcher> = PackageMatcher.of('(*).(**)').matchExactly('src.business-context-one.domain');
+
+      expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['src', 'business-context-one.domain']);
+    });
+
+    it('should be absent when the package only matches partially', () => {
+      expect(PackageMatcher.of('myapp.(*)..').match('src.myapp.billing').isPresent()).toEqual(true);
+      expect(PackageMatcher.of('myapp.(*)..').matchExactly('src.myapp.billing').isEmpty()).toEqual(true);
+    });
+
+    it('should be absent when nothing matches', () => {
+      expect(PackageMatcher.of('..myapp.(*)..').matchExactly('src.myapp').isEmpty()).toEqual(true);
+    });
   });
 
   it('should transform mismatch to absent', () => {
