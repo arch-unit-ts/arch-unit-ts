@@ -56,6 +56,7 @@ src/main/
       synthax/     # Fluent API implementation (GivenClassesInternal, ClassesThatInternal, ClassesShouldInternal)
         elements/  # Public DSL interfaces: GivenClasses, ClassesThat, ClassesShould
     library/       # High-level APIs: Architectures (layeredArchitecture)
+      dependencies/  # slices() DSL: Slices, SliceAssignment, SliceDependencyGraph, CycleDetector, FreeOfCyclesRule
   common/domain/   # Optional<T>, BooleanUtils
   error/domain/    # Assert (input validation)
   main.ts          # Public entry: exports classes() and noClasses()
@@ -86,7 +87,13 @@ Internally, `ClassesThatInternal` accumulates predicates via `PredicateAggregato
 
 `PackageMatcher` supports ArchUnit-style patterns with `..` as wildcard segments (e.g., `..domain..`, `com.example..`). `PackageMatchers` combines multiple patterns with OR semantics.
 
+### Slices and cycles
+
+`slices().matching('..myapp.(*)..').should().beFreeOfCycles()` (exported as `slices` in `main.ts`) groups classes into slices from the capturing groups of a package identifier (`PackageMatcher.matchExactly`, anchored), builds the dependency graph between slices from `TypeScriptClass.dependencies`, and reports each elementary cycle (`CycleDetector`). Only `import` declarations are followed: re-exports (`export ... from`) and dynamic imports are not, so cycles through barrel files are missed.
+
 ### Test fixtures
+
+Circular dependencies must not be added as files: CI runs `madge --circular` on the whole repository, tests that need them build their sources in memory with `InMemoryTypeScriptClassesFixture.fromSources`.
 
 `src/test/fake-src/` contains fake TypeScript source trees used in integration tests. `src/test/hexagonal/` contains `BusinessContext.ts` and `SharedKernel.ts` base classes used by the hexagonal arch test fixture.
 
