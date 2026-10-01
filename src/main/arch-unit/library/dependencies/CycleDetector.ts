@@ -12,6 +12,8 @@ export interface DetectedCycles {
  * so that the result does not depend on the insertion order of the graph.
  * Self loops and edges to unknown nodes are ignored.
  * At most `maxNumberOfCycles` cycles are returned, `limitReached` tells that more exist.
+ * When the limit is reached, the cycles kept are the first ones found (searching from the smallest node), not the shortest ones:
+ * they are sorted afterwards, but a shorter cycle starting from a larger node may be missing.
  */
 export class CycleDetector {
   private readonly nodes: string[];

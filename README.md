@@ -346,11 +346,15 @@ it('bounded contexts should be free of cycles', () => {
 });
 ```
 
-Slices are defined by the capturing groups `(*)` (one package) and `(**)` (several packages) of a package identifier. With `..myapp.(*)..`, each first package under `myapp` is a slice. Several groups give a slice named after all of them joined with `.`. Classes whose package does not match the whole identifier belong to no slice, and so do the classes they import: these imports are ignored, like the ones inside a slice.
+Slices are defined by the capturing groups `(*)` (one package) and `(**)` (several packages) of a package identifier. With `..myapp.(*)..`, each first package under `myapp` is a slice. Several groups give a slice named after all of them joined with `.`. A class whose package does not match the whole identifier belongs to no slice: dependencies on it and from it are ignored, like the dependencies between classes of the same slice.
 
 When the packages do not follow a convention, assign slices yourself:
 
 ```ts
+import { slices } from 'arch-unit-ts/dist/main';
+import { Optional } from 'arch-unit-ts/dist/common/domain/Optional';
+import { SliceIdentifier } from 'arch-unit-ts/dist/arch-unit/library/dependencies/SliceIdentifier';
+
 slices()
   .assignedFrom({
     getIdentifierOf: typeScriptClass =>

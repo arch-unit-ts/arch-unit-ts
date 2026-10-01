@@ -1,3 +1,4 @@
+import { TypeScriptClasses } from '../../../../../../main/arch-unit/core/domain/TypeScriptClass';
 import { PackageIdentifierSliceAssignment } from '../../../../../../main/arch-unit/library/dependencies/PackageIdentifierSliceAssignment';
 import { SliceDependencyGraph } from '../../../../../../main/arch-unit/library/dependencies/SliceDependencyGraph';
 import { Slices } from '../../../../../../main/arch-unit/library/dependencies/Slices';
@@ -49,5 +50,32 @@ describe('SliceDependencyGraph', () => {
   it('should have no dependency between slices that do not depend on each other', () => {
     expect(graph.dependenciesBetween('shared', 'orders')).toEqual([]);
     expect(graph.dependenciesBetween('unknown', 'orders')).toEqual([]);
+  });
+
+  describe('with classes filtered out of the analysis', () => {
+    const allClasses = InMemoryTypeScriptClassesFixture.fromSources({
+      'src/orders/Order.ts': "import { Invoice } from '../billing/Invoice';\nexport class Order {}",
+      'src/billing/Invoice.ts': 'export class Invoice {}',
+      'src/billing/Payment.ts': 'export class Payment {}',
+    });
+    const without = (excluded: string): TypeScriptClasses =>
+      new TypeScriptClasses(allClasses.get().filter(typeScriptClass => typeScriptClass.getSimpleName() !== excluded));
+    const adjacencyOf = (classes: TypeScriptClasses) =>
+      SliceDependencyGraph.of(Slices.of(classes, new PackageIdentifierSliceAssignment('src.(*)'))).toAdjacency();
+
+    it('should link to a slice through an import of a filtered class when another class of the slice is analysed', () => {
+      expect(adjacencyOf(without('Invoice.ts'))).toEqual(
+        new Map([
+          ['billing', []],
+          ['orders', ['billing']],
+        ])
+      );
+    });
+
+    it('should ignore the import of a filtered class when no other class of the slice is analysed', () => {
+      const onlyOrder = new TypeScriptClasses(allClasses.get().filter(typeScriptClass => typeScriptClass.getSimpleName() === 'Order.ts'));
+
+      expect(adjacencyOf(onlyOrder)).toEqual(new Map([['orders', []]]));
+    });
   });
 });
