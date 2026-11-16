@@ -8,7 +8,7 @@ README.md
 tsconfig.json
 tsconfig.*.json
 .editorconfig
-.eslintrc.js
+eslint.config.mjs
 .gitattributes
 .gitlab-ci.yml
 .lintstagedrc.js
