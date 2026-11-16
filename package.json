@@ -10,7 +10,7 @@
     "node": ">=18.18.2"
   },
   "main": "dist/main.js",
-  "typings": "src/main/main.ts",
+  "typings": "dist/main.d.ts",
   "cacheDirectories": [
     "node_modules"
   ],
