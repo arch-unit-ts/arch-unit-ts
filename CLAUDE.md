@@ -100,4 +100,4 @@ Tests require **100% coverage** (statements, branches, functions, lines) — enf
 
 ## Publishing
 
-The library entry point is `dist/main.js`. Consumers import from paths like `arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject`. The `typings` field in `package.json` points to `src/main/main.ts`.
+The library entry point is `dist/main.js`. Consumers import from paths like `arch-unit-ts/dist/arch-unit/core/domain/TypeScriptProject`. The `typings` field in `package.json` points to `dist/main.d.ts` (`src/` is not published).
