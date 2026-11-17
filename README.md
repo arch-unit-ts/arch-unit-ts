@@ -318,6 +318,22 @@ it('no application service method should be decorated with @Deprecated', () => {
 - `.allowEmptyShould(false)` — throws if no method is checked (default: driven by `arch-unit-ts.json`).
 - `.because('reason')` — appends a human-readable explanation to the violation message.
 
+### Package identifiers
+
+`resideInAPackage`, `resideInAnyPackage`, `resideOutsideOfPackages` and the layers of `layeredArchitecture` take package identifiers:
+
+- `*` matches one package name, `..` matches any number of packages (including none).
+- `(*)` and `(**)` do the same and capture the matched names.
+- `[a|b]` matches either alternative.
+
+A package name is made of letters, digits, `_`, `-`, `@` and `$`, so kebab-case directories (`business-context-one`) and scoped names (`@scope`) are matched whole.
+
+**Changed in 1.1.0.** Before, `*`, `(*)`, `(**)` and `..` only crossed packages made of letters, digits and `_`. Review rules written before this version:
+
+- A `*` or `..` now crosses kebab-case packages: a `noClasses()` rule can reveal violations it missed, and `resideInAnyPackage('src.*.domain..')` selects more classes.
+- `(*)` and `(**)` return the whole name (`business-context-one`) instead of a name truncated at the first `-`.
+- `$` is a literal character, no longer an end-of-name anchor.
+
 ### Configuration
 
 You can add a configuration file at your project root called arch-unit-ts.json with the following properties (default values bellow).

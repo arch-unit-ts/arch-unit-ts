@@ -4,6 +4,32 @@ import { TypeScriptProjectFixture } from '../arch-unit/core/domain/TypeScriptPro
 
 describe('FluentApi', () => {
   const archProjectFakeSrc = TypeScriptProjectFixture.fakeSrc();
+  describe('kebab-case packages', () => {
+    it('should select classes of kebab-case packages with a wildcard', () => {
+      expect(() =>
+        ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage('src.test.fake-src.*.domain..')
+          .should()
+          .haveSimpleNameStartingWith('')
+          .allowEmptyShould(false)
+          .check(archProjectFakeSrc.allClasses())
+      ).not.toThrow();
+    });
+
+    it('should select classes of kebab-case packages with two dots', () => {
+      expect(() =>
+        ArchRuleDefinition.noClasses()
+          .that()
+          .resideInAPackage('..fake-src..shared-kernel-one..')
+          .should()
+          .haveSimpleNameStartingWith('NoClassStartsWithThis')
+          .allowEmptyShould(false)
+          .check(archProjectFakeSrc.allClasses())
+      ).not.toThrow();
+    });
+  });
+
   it('should test "and" and "or" predicate combination', () => {
     expect(() =>
       ArchRuleDefinition.classes()
