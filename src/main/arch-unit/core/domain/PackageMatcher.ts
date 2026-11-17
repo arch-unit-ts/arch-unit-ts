@@ -14,21 +14,26 @@ export class PackageMatcher {
 
   private static readonly PACKAGE_CONTROL_SYMBOLS: Array<string> = Array.from(['*', '(', ')', '.', '|', '[', ']']);
 
-  private static readonly OPT_LETTERS_AT_START: string = '(?:^\\w*)?';
-  private static readonly OPT_LETTERS_AT_END: string = '(?:\\w*$)?';
-  private static readonly ARBITRARY_PACKAGES: string = '\\.(?:\\w+\\.)*';
+  private static readonly SEGMENT_CHAR: string = '[\\w@$-]';
+
+  private static readonly OPT_LETTERS_AT_START: string = `(?:^${PackageMatcher.SEGMENT_CHAR}*)?`;
+  private static readonly OPT_LETTERS_AT_END: string = `(?:${PackageMatcher.SEGMENT_CHAR}*$)?`;
+  private static readonly ARBITRARY_PACKAGES: string = `\\.(?:${PackageMatcher.SEGMENT_CHAR}+\\.)*`;
 
   private static readonly TWO_DOTS_REGEX: string = `(?:${PackageMatcher.OPT_LETTERS_AT_START}${PackageMatcher.ARBITRARY_PACKAGES}${PackageMatcher.OPT_LETTERS_AT_END})?`;
 
   private static readonly TWO_STAR_CAPTURE_LITERAL: string = '(**)';
-  private static readonly TWO_STAR_CAPTURE_REGEX: string = '(\\w+(?:\\.\\w+)*)';
+  private static readonly TWO_STAR_CAPTURE_REGEX: string = `(${PackageMatcher.SEGMENT_CHAR}+(?:\\.${PackageMatcher.SEGMENT_CHAR}+)*)`;
   static readonly TWO_STAR_REGEX_MARKER: string = '#%#%#';
 
   private readonly packagePattern: RegExp;
+  private readonly exactPackagePattern: RegExp;
 
   private constructor(packageIdentifier: string) {
     this.validate(packageIdentifier);
-    this.packagePattern = new RegExp(this.convertToRegex(packageIdentifier));
+    const regex = this.convertToRegex(packageIdentifier);
+    this.packagePattern = new RegExp(regex);
+    this.exactPackagePattern = new RegExp(`^${regex}$`);
   }
 
   public static of(packageIdentifier: string): PackageMatcher {
@@ -37,12 +42,13 @@ export class PackageMatcher {
 
   convertToRegex(packageIdentifier: string): string {
     return packageIdentifier
+      .replaceAll('$', () => '\\$')
       .replace(new RegExp('\\[(.*?)]', 'g'), '(?:$1)')
       .replaceAll(PackageMatcher.TWO_STAR_CAPTURE_LITERAL, PackageMatcher.TWO_STAR_REGEX_MARKER)
-      .replaceAll('*', '\\w+')
+      .replaceAll('*', () => `${PackageMatcher.SEGMENT_CHAR}+`)
       .replaceAll('.', '\\.')
-      .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, PackageMatcher.TWO_STAR_CAPTURE_REGEX)
-      .replaceAll('\\.\\.', PackageMatcher.TWO_DOTS_REGEX);
+      .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, () => PackageMatcher.TWO_STAR_CAPTURE_REGEX)
+      .replaceAll('\\.\\.', () => PackageMatcher.TWO_DOTS_REGEX);
   }
 
   private validate(packageIdentifier: string): void {
@@ -97,7 +103,7 @@ export class PackageMatcher {
   }
 
   public exactMatches(aPackage: string): boolean {
-    return new RegExp('^' + this.packagePattern.source + '$').test(aPackage);
+    return this.exactPackagePattern.test(aPackage);
   }
 
   public partialMatches(aPackage: string): boolean {
@@ -106,6 +112,11 @@ export class PackageMatcher {
 
   public match(aPackage: string): Optional<ResultMatcher> {
     const matcher: RegExpExecArray | null = this.packagePattern.exec(aPackage);
+    return matcher !== null ? Optional.of(new ResultMatcher(matcher)) : Optional.empty();
+  }
+
+  public matchExactly(aPackage: string): Optional<ResultMatcher> {
+    const matcher: RegExpExecArray | null = this.exactPackagePattern.exec(aPackage);
     return matcher !== null ? Optional.of(new ResultMatcher(matcher)) : Optional.empty();
   }
 

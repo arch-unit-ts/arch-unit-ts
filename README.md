@@ -318,6 +318,76 @@ it('no application service method should be decorated with @Deprecated', () => {
 - `.allowEmptyShould(false)` — throws if no method is checked (default: driven by `arch-unit-ts.json`).
 - `.because('reason')` — appends a human-readable explanation to the violation message.
 
+### Package identifiers
+
+`resideInAPackage`, `resideInAnyPackage`, `resideOutsideOfPackages` and the layers of `layeredArchitecture` take package identifiers:
+
+- `*` matches one package name, `..` matches any number of packages (including none).
+- `(*)` and `(**)` do the same and capture the matched names.
+- `[a|b]` matches either alternative.
+
+A package name is made of letters, digits, `_`, `-`, `@` and `$`, so kebab-case directories (`business-context-one`) and scoped names (`@scope`) are matched whole.
+
+**Changed in 1.1.0.** Before, `*`, `(*)`, `(**)` and `..` only crossed packages made of letters, digits and `_`. Review rules written before this version:
+
+- A `*` or `..` now crosses kebab-case packages: a `noClasses()` rule can reveal violations it missed, and `resideInAnyPackage('src.*.domain..')` selects more classes.
+- `(*)` and `(**)` return the whole name (`business-context-one`) instead of a name truncated at the first `-`.
+- `$` is a literal character, no longer an end-of-name anchor.
+
+### Slices and circular dependencies
+
+`slices()` checks that groups of classes (slices) do not depend on each other in a cycle: `billing` imports `orders`, which imports `billing`.
+
+```ts
+import { slices } from 'arch-unit-ts/dist/main';
+
+it('bounded contexts should be free of cycles', () => {
+  slices().matching('..myapp.(*)..').should().beFreeOfCycles().because('bounded contexts must be independent').check(project.allClasses());
+});
+```
+
+Slices are defined by the capturing groups `(*)` (one package) and `(**)` (several packages) of a package identifier. With `..myapp.(*)..`, each first package under `myapp` is a slice. Several groups give a slice named after all of them joined with `.`. A class whose package does not match the whole identifier belongs to no slice: dependencies on it and from it are ignored, like the dependencies between classes of the same slice.
+
+When the packages do not follow a convention, assign slices yourself:
+
+```ts
+import { slices } from 'arch-unit-ts/dist/main';
+import { Optional } from 'arch-unit-ts/dist/common/domain/Optional';
+import { SliceIdentifier } from 'arch-unit-ts/dist/arch-unit/library/dependencies/SliceIdentifier';
+
+slices()
+  .assignedFrom({
+    getIdentifierOf: typeScriptClass =>
+      typeScriptClass.getSimpleName().startsWith('Legacy')
+        ? Optional.of(SliceIdentifier.of('legacy'))
+        : Optional.of(SliceIdentifier.of('current')),
+    getDescription: () => 'slices by legacy prefix',
+  })
+  .should()
+  .beFreeOfCycles()
+  .check(project.allClasses());
+```
+
+A violation lists each cycle and the imports that cause it:
+
+```
+Architecture violation : Rule slices matching '..myapp.(*)..' should be free of cycles.
+Errors : Cycle detected: Slice billing -> Slice orders -> Slice billing
+  Dependencies of Slice billing on Slice orders:
+    - src.orders.Order.ts in src.billing.Invoice.ts
+  Dependencies of Slice orders on Slice billing:
+    - src.billing.Invoice.ts in src.orders.Order.ts
+```
+
+At most 100 cycles are reported, and 20 imports for each dependency between two slices.
+
+When no class is assigned to a slice, the rule passes silently by default (`failOnEmptyShould` is `false`): a typo in the package identifier would then disable it. Add `.allowEmptyShould(false)` to make the rule fail instead. `.allowEmptyShould(true)` keeps it passing.
+
+**Limitations:**
+
+- Only `import` declarations are followed. Re-exports (`export * from './x'`, `export { a } from './x'`) and dynamic `import()` are not, so a cycle going through a barrel file (`index.ts`) is not detected.
+- `import type { X } from './x'` is followed like any other import, although it is erased at runtime: a cycle made only of type imports is reported.
+
 ### Configuration
 
 You can add a configuration file at your project root called arch-unit-ts.json with the following properties (default values bellow).
