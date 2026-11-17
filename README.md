@@ -372,7 +372,7 @@ A violation lists each cycle and the imports that cause it:
 
 ```
 Architecture violation : Rule slices matching '..myapp.(*)..' should be free of cycles.
-Errors : Cycle detected: billing -> orders -> billing
+Errors : Cycle detected: Slice billing -> Slice orders -> Slice billing
   Dependencies of Slice billing on Slice orders:
     - src.orders.Order.ts in src.billing.Invoice.ts
   Dependencies of Slice orders on Slice billing:

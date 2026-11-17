@@ -46,7 +46,7 @@ describe('SlicesFluentApi', () => {
         .check(cyclicClasses)
     ).toThrow(
       "Architecture violation : Rule slices matching 'src.(*)..' should be free of cycles because bounded contexts are independent.\n" +
-        'Errors : Cycle detected: billing -> orders -> billing'
+        'Errors : Cycle detected: Slice billing -> Slice orders -> Slice billing'
     );
   });
 
@@ -65,7 +65,7 @@ describe('SlicesFluentApi', () => {
 
     expect(() => SlicesRuleDefinition.slices().assignedFrom(byClassName).should().beFreeOfCycles().check(cyclicClasses)).toThrow(
       'Architecture violation : Rule slices by class name should be free of cycles.\n' +
-        'Errors : Cycle detected: Invoice.ts -> Order.ts -> Invoice.ts'
+        'Errors : Cycle detected: Slice Invoice.ts -> Slice Order.ts -> Slice Invoice.ts'
     );
   });
 
@@ -77,7 +77,7 @@ describe('SlicesFluentApi', () => {
     };
 
     expect(() => SlicesRuleDefinition.slices().assignedFrom(bySourceFileName).should().beFreeOfCycles().check(cyclicClasses)).toThrow(
-      'Errors : Cycle detected: Invoice -> Order -> Invoice'
+      'Errors : Cycle detected: Slice Invoice -> Slice Order -> Slice Invoice'
     );
   });
 });

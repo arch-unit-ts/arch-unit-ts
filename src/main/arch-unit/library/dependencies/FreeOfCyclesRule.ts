@@ -69,7 +69,7 @@ export class FreeOfCyclesRule implements ArchRule {
 
   private describeCycle(cycle: string[], graph: SliceDependencyGraph): string {
     const edges = cycle.map((origin, index) => ({ origin, target: cycle[(index + 1) % cycle.length] }));
-    const lines = [`Cycle detected: ${[...cycle, cycle[0]].join(' -> ')}`];
+    const lines = [`Cycle detected: ${[...cycle, cycle[0]].map(name => `Slice ${name}`).join(' -> ')}`];
 
     edges.forEach(({ origin, target }) => {
       const dependencies = graph.dependenciesBetween(origin, target);

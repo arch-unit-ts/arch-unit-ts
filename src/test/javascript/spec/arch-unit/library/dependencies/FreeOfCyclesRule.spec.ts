@@ -42,7 +42,7 @@ describe('FreeOfCyclesRule', () => {
     expect(() => rule().check(classes)).toThrow(
       new Error(
         "Architecture violation : Rule slices matching 'src.(*)..' should be free of cycles.\n" +
-          'Errors : Cycle detected: billing -> orders -> billing\n' +
+          'Errors : Cycle detected: Slice billing -> Slice orders -> Slice billing\n' +
           '  Dependencies of Slice billing on Slice orders:\n' +
           '    - src.orders.Order.ts in src.billing.Invoice.ts\n' +
           '  Dependencies of Slice orders on Slice billing:\n' +
@@ -68,9 +68,11 @@ describe('FreeOfCyclesRule', () => {
     });
     const report = rule().evaluate(classes);
 
-    expect(report.violationReport()).toContain('Cycle detected: c -> d -> c');
-    expect(report.violationReport()).toContain('Cycle detected: a -> b -> c -> a');
-    expect(report.violationReport().indexOf('c -> d -> c')).toBeLessThan(report.violationReport().indexOf('a -> b -> c -> a'));
+    expect(report.violationReport()).toContain('Cycle detected: Slice c -> Slice d -> Slice c');
+    expect(report.violationReport()).toContain('Cycle detected: Slice a -> Slice b -> Slice c -> Slice a');
+    expect(report.violationReport().indexOf('Slice c -> Slice d -> Slice c')).toBeLessThan(
+      report.violationReport().indexOf('Slice a -> Slice b -> Slice c -> Slice a')
+    );
   });
 
   it('should limit the number of dependencies reported for each edge of a cycle', () => {
