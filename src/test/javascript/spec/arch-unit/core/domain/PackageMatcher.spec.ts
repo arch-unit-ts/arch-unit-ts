@@ -37,6 +37,25 @@ describe('PackageMatcher', () => {
     ['..[a|b*].pk*..', 'some.arbitrary.pkg.whatever', false],
     ['..[*c*|*d*].pk*..', 'some.anydinside.pkg.whatever', true],
     ['..[*c*|*d*].pk*..', 'some.nofit.pkg.whatever', false],
+    // Segments accept '-', '@' and '$' on top of word characters
+    ['some.*.pkg', 'some.kebab-case.pkg', true],
+    ['some..pkg', 'some.first-segment.second-segment.pkg', true],
+    ['*.*.*', 'kebab-one.kebab-two.kebab-three', true],
+    ['some.*.pkg', 'some.$dollar.pkg', true],
+    ['some.*.pkg', 'some.@scope-name.pkg', true],
+    ['some.*.pkg', 'some.kebab case.pkg', false],
+    ['some.[$a|b].pkg', 'some.$a.pkg', true],
+    ['some..$pkg', 'some.in.$pkg', true],
+    // '$' is a literal character, not an end anchor
+    ['some.$x.pkg', 'some.$x.pkg', true],
+    ['some.$x.pkg', 'some.ax.pkg', false],
+    ['some.$x.pkg', 'some.x.pkg', false],
+    ['some.pkg$', 'some.pkg', false],
+    ['some.pkg$', 'some.pkg$', true],
+    // Behaviour unchanged for word-character segments
+    ['some.*.pkg', 'some.word_1.pkg', true],
+    ['some.*.pkg', 'some.two.words.pkg', false],
+    ['some..pkg', 'some.pkg', true],
   ];
 
   it.each(listOfPackageName)('should matcher %s on target %s be %s', (matcher, target, matches) => {
@@ -72,6 +91,12 @@ describe('PackageMatcher', () => {
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.domain.api.a', 'a'],
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.domain.logic.a', 'a'],
     ['..[application|domain.*|infrastructure].(*)..', 'com.example.infrastructure.a.file', 'a'],
+    // Captured names are no longer truncated at '-', '@' or '$'
+    ['..fake-src.(*)..', 'src.test.fake-src.business-context-one.domain.fruit', 'business-context-one'],
+    ['..myapp.(*)..', 'src.myapp.order-mgmt.domain', 'order-mgmt'],
+    ['some.(**).pkg', 'some.in-between.sub-pkg.pkg', 'in-between.sub-pkg'],
+    ['some.(*).pkg', 'some.@scope.pkg', '@scope'],
+    ['some.($x|y).pkg', 'some.$x.pkg', '$x'],
   ];
 
   it.each(listOfCaptureGroup)('should matcher %s on target %s get capture groups %s', (matcher, target, groupString) => {

@@ -14,14 +14,16 @@ export class PackageMatcher {
 
   private static readonly PACKAGE_CONTROL_SYMBOLS: Array<string> = Array.from(['*', '(', ')', '.', '|', '[', ']']);
 
-  private static readonly OPT_LETTERS_AT_START: string = '(?:^\\w*)?';
-  private static readonly OPT_LETTERS_AT_END: string = '(?:\\w*$)?';
-  private static readonly ARBITRARY_PACKAGES: string = '\\.(?:\\w+\\.)*';
+  private static readonly SEGMENT_CHAR: string = '[\\w@$-]';
+
+  private static readonly OPT_LETTERS_AT_START: string = `(?:^${PackageMatcher.SEGMENT_CHAR}*)?`;
+  private static readonly OPT_LETTERS_AT_END: string = `(?:${PackageMatcher.SEGMENT_CHAR}*$)?`;
+  private static readonly ARBITRARY_PACKAGES: string = `\\.(?:${PackageMatcher.SEGMENT_CHAR}+\\.)*`;
 
   private static readonly TWO_DOTS_REGEX: string = `(?:${PackageMatcher.OPT_LETTERS_AT_START}${PackageMatcher.ARBITRARY_PACKAGES}${PackageMatcher.OPT_LETTERS_AT_END})?`;
 
   private static readonly TWO_STAR_CAPTURE_LITERAL: string = '(**)';
-  private static readonly TWO_STAR_CAPTURE_REGEX: string = '(\\w+(?:\\.\\w+)*)';
+  private static readonly TWO_STAR_CAPTURE_REGEX: string = `(${PackageMatcher.SEGMENT_CHAR}+(?:\\.${PackageMatcher.SEGMENT_CHAR}+)*)`;
   static readonly TWO_STAR_REGEX_MARKER: string = '#%#%#';
 
   private readonly packagePattern: RegExp;
@@ -37,12 +39,13 @@ export class PackageMatcher {
 
   convertToRegex(packageIdentifier: string): string {
     return packageIdentifier
+      .replaceAll('$', () => '\\$')
       .replace(new RegExp('\\[(.*?)]', 'g'), '(?:$1)')
       .replaceAll(PackageMatcher.TWO_STAR_CAPTURE_LITERAL, PackageMatcher.TWO_STAR_REGEX_MARKER)
-      .replaceAll('*', '\\w+')
+      .replaceAll('*', () => `${PackageMatcher.SEGMENT_CHAR}+`)
       .replaceAll('.', '\\.')
-      .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, PackageMatcher.TWO_STAR_CAPTURE_REGEX)
-      .replaceAll('\\.\\.', PackageMatcher.TWO_DOTS_REGEX);
+      .replaceAll(PackageMatcher.TWO_STAR_REGEX_MARKER, () => PackageMatcher.TWO_STAR_CAPTURE_REGEX)
+      .replaceAll('\\.\\.', () => PackageMatcher.TWO_DOTS_REGEX);
   }
 
   private validate(packageIdentifier: string): void {
