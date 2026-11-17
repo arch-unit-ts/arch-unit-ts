@@ -54,9 +54,9 @@ src/main/
     lang/          # DSL engine: ArchRule, ArchCondition, ConditionEvents, ClassesTransformer
       conditions/  # Built-in predicates (ArchConditions, ArchPredicates) and event aggregators
       synthax/     # Fluent API implementation (GivenClassesInternal, ClassesThatInternal, ClassesShouldInternal)
-        elements/  # Public DSL interfaces: GivenClasses, ClassesThat, ClassesShould
+        elements/  # Public DSL interfaces: GivenClasses, ClassesThat, ClassesShould, SlicesCreator, GivenSlices, SlicesShould
     library/       # High-level APIs: Architectures (layeredArchitecture)
-      dependencies/  # slices() DSL: Slices, SliceAssignment, SliceDependencyGraph, CycleDetector, FreeOfCyclesRule
+      dependencies/  # slices() DSL: Slices, SliceAssignment, SliceDependencyGraph, CycleDetector, FreeOfCyclesRule, SlicesCreatorInternal (implements the elements/ interfaces)
   common/domain/   # Optional<T>, BooleanUtils
   error/domain/    # Assert (input validation)
   main.ts          # Public entry: exports classes() and noClasses()
