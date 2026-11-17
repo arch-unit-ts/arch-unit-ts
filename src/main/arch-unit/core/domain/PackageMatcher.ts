@@ -27,10 +27,13 @@ export class PackageMatcher {
   static readonly TWO_STAR_REGEX_MARKER: string = '#%#%#';
 
   private readonly packagePattern: RegExp;
+  private readonly exactPackagePattern: RegExp;
 
   private constructor(packageIdentifier: string) {
     this.validate(packageIdentifier);
-    this.packagePattern = new RegExp(this.convertToRegex(packageIdentifier));
+    const regex = this.convertToRegex(packageIdentifier);
+    this.packagePattern = new RegExp(regex);
+    this.exactPackagePattern = new RegExp(`^${regex}$`);
   }
 
   public static of(packageIdentifier: string): PackageMatcher {
@@ -100,7 +103,7 @@ export class PackageMatcher {
   }
 
   public exactMatches(aPackage: string): boolean {
-    return new RegExp('^' + this.packagePattern.source + '$').test(aPackage);
+    return this.exactPackagePattern.test(aPackage);
   }
 
   public partialMatches(aPackage: string): boolean {
@@ -109,6 +112,11 @@ export class PackageMatcher {
 
   public match(aPackage: string): Optional<ResultMatcher> {
     const matcher: RegExpExecArray | null = this.packagePattern.exec(aPackage);
+    return matcher !== null ? Optional.of(new ResultMatcher(matcher)) : Optional.empty();
+  }
+
+  public matchExactly(aPackage: string): Optional<ResultMatcher> {
+    const matcher: RegExpExecArray | null = this.exactPackagePattern.exec(aPackage);
     return matcher !== null ? Optional.of(new ResultMatcher(matcher)) : Optional.empty();
   }
 

@@ -167,6 +167,29 @@ describe('PackageMatcher', () => {
     expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['mycompany', 'special.name']);
   });
 
+  describe('matchExactly', () => {
+    it('should capture groups of a full match', () => {
+      const result: Optional<ResultMatcher> = PackageMatcher.of('..myapp.(*)..').matchExactly('src.myapp.order-mgmt.domain');
+
+      expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['order-mgmt']);
+    });
+
+    it('should capture groups of every segment of a full match', () => {
+      const result: Optional<ResultMatcher> = PackageMatcher.of('(*).(**)').matchExactly('src.business-context-one.domain');
+
+      expect(result.map(ResultMatcher.TO_GROUPS).orElseThrow()).toEqual(['src', 'business-context-one.domain']);
+    });
+
+    it('should be absent when the package only matches partially', () => {
+      expect(PackageMatcher.of('myapp.(*)..').match('src.myapp.billing').isPresent()).toEqual(true);
+      expect(PackageMatcher.of('myapp.(*)..').matchExactly('src.myapp.billing').isEmpty()).toEqual(true);
+    });
+
+    it('should be absent when nothing matches', () => {
+      expect(PackageMatcher.of('..myapp.(*)..').matchExactly('src.myapp').isEmpty()).toEqual(true);
+    });
+  });
+
   it('should transform mismatch to absent', () => {
     const result: Optional<ResultMatcher> = PackageMatcher.of('com.(*)..').match('mycompany');
 
